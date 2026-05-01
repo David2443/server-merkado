@@ -1,0 +1,252 @@
+/* =========================================
+   --- FOOTER PREMIUM BOMBA --- 
+   ========================================= */
+.footer-premium {
+  background-color: #020617; /* Negru/Bleumarin ultra premium */
+  color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  margin-top: 50px;
+}
+
+/* --- NEWSLETTER SECTION --- */
+.footer-newsletter {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  padding: 40px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.newsletter-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.newsletter-text h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.newsletter-text p {
+  color: #94a3b8;
+  font-size: 1.05rem;
+}
+
+.newsletter-text strong {
+  color: #10b981;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  max-width: 500px;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 15px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.2);
+  color: #ffffff;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s;
+}
+
+.newsletter-form input:focus {
+  border-color: #3b82f6;
+  background: rgba(0,0,0,0.4);
+}
+
+.newsletter-form button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0 25px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.newsletter-form button:hover {
+  background: #2563eb;
+  transform: translateX(3px);
+}
+
+/* --- MAIN FOOTER LINKS --- */
+.footer-main {
+  padding: 70px 0 50px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+
+.footer-col h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #ffffff;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.footer-col ul a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: 0.3s;
+  display: inline-block;
+}
+
+.footer-col ul a:hover {
+  color: #3b82f6;
+  transform: translateX(5px); /* Efect mișcare fină la hover */
+}
+
+/* Coloana Brand */
+.footer-logo {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 20px;
+  color: #ffffff;
+  letter-spacing: -1px;
+}
+
+.footer-logo span {
+  color: #3b82f6;
+}
+
+.brand-desc {
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  color: #ffffff;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.social-icon:hover {
+  background: #3b82f6;
+  transform: translateY(-3px);
+}
+
+/* Coloana Contact */
+.contact-col li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+.c-icon {
+  color: #3b82f6;
+  font-size: 1.2rem;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+/* --- FOOTER BOTTOM --- */
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 25px 0;
+}
+
+.bottom-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.copyright {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.legal-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legal-links a {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+
+.legal-links a:hover {
+  color: #ffffff;
+}
+
+.dot {
+  color: #334155;
+  font-size: 0.8rem;
+}
+
+.payment-icons {
+  display: flex;
+  gap: 15px;
+  font-size: 2rem;
+  color: #64748b;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .brand-col { grid-column: span 2; }
+}
+
+@media (max-width: 768px) {
+  .newsletter-grid { flex-direction: column; text-align: center; }
+  .newsletter-form { width: 100%; flex-direction: column; }
+  .newsletter-form button { padding: 15px; justify-content: center; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .brand-col { grid-column: span 1; }
+  .bottom-grid { flex-direction: column; text-align: center; justify-content: center; }
+}.footer-premium {
+  background-color: #020617; /* Negru/Bleumarin ultra premium */
+  color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  /* margin-top: 50px; <-- AM ȘTERS ASTA */
+}

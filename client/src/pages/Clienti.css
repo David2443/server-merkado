@@ -1,0 +1,195 @@
+/* ==================================================
+   👤 CLIENȚI & MESAJE - STILURI GENERALE / DESKTOP
+================================================== */
+.cl-wrapper {
+    width: 100%;
+}
+
+.cl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.cl-header h2 {
+    margin: 0;
+    color: var(--text-dark, #0f172a);
+}
+
+/* Tab-uri Desktop */
+.cl-tabs-container {
+    display: flex;
+    gap: 10px;
+    background: #f1f5f9;
+    padding: 6px;
+    border-radius: 12px;
+}
+
+.cl-tab-btn {
+    display: flex;
+    align-items: center;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    color: #64748b;
+}
+
+.cl-icon {
+    margin-right: 8px;
+    font-size: 1.1rem;
+}
+
+.cl-tab-btn.active-mesaje { background: #ffffff; color: #3b82f6; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.cl-tab-btn.active-conturi { background: #ffffff; color: #10b981; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+
+/* Card Tabel */
+.cl-card { padding: 0 !important; overflow: hidden; }
+.cl-table-responsive { width: 100%; overflow-x: auto; }
+.cl-empty { padding: 3rem; text-align: center; color: #64748b; font-weight: 500; font-size: 1.1rem; }
+
+/* Elemente text & Badges Tabel Desktop */
+.cl-td-data { color: #64748b; font-size: 0.9rem; font-weight: 500; }
+.cl-link-blue { color: #3b82f6; text-decoration: none; font-size: 0.9rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
+.cl-link-green { color: #10b981; text-decoration: none; font-size: 0.95rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+
+.cl-badge-orange { background: #fef3c7; color: #b45309; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; }
+.cl-badge-red { background: #fee2e2; color: #ef4444; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+.cl-badge-purple { background: #e0e7ff; color: #4338ca; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.cl-td-msg { max-width: 350px; font-size: 0.9rem; color: #334155; line-height: 1.5; }
+.cl-del-btn { background: #fee2e2; color: #ef4444; margin: 0; padding: 12px; border-radius: 10px; }
+
+/* =========================================================================
+   📱 TELEFON - VARIANTA ULTIMATUM (DESIGN IDENTIC POZA 1)
+   ========================================================================= */
+@media (max-width: 850px) {
+  .cl-wrapper { padding: 0; background: #f9fafb; }
+  
+  /* Header curat, fără culori de fundal aiurea */
+  .cl-header { padding: 20px 16px; flex-direction: column; align-items: flex-start; gap: 15px; }
+  .cl-header h2 { font-size: 1.6rem; color: #000; font-weight: 800; }
+
+/* 🔴 BUTOANELE DE SCHIMBARE (SEGMENTED CONTROL - BOMBA) */
+  .cl-tabs-container {
+    width: 100%;
+    background: #efefef; /* Griul specific de fundal control */
+    padding: 3px;
+    border-radius: 12px;
+    display: flex;
+    gap: 2px;
+    margin-bottom: 24px;
+    border: 1px solid #e5e5e5;
+  }
+
+  .cl-tab-btn {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent !important; /* Transparent când e inactiv */
+    color: #636366 !important; /* Gri închis iOS */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: none !important;
+  }
+
+  /* Butonul ACTIV - alb, plutește */
+  .cl-tab-btn.active-mesaje, 
+  .cl-tab-btn.active-conturi {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-weight: 700;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 3px 1px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .cl-icon { margin-right: 6px; font-size: 1rem; }
+
+  /* LISTA - NU MAI FOLOSIM DISPLAY: BLOCK PE TABEL CĂ ÎL STRICĂ */
+  .cl-card { background: transparent; border: none; box-shadow: none; }
+  .orders-table, .orders-table tbody, .orders-table tr, .orders-table td {
+    display: block; width: 100%; box-sizing: border-box;
+  }
+  .orders-table thead { display: none; }
+
+  /* CARDUL - CURAT, ALB, FĂRĂ MARGINI ROTUNJITE EXAGERATE */
+  .orders-table tr {
+    background: #ffffff;
+    padding: 20px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 0; /* Listă continuă ca în poză */
+    position: relative;
+  }
+
+  /* Eliminăm complet etichetele de tip ::before care încurcă vizual */
+  .orders-table td::before { display: none !important; }
+
+  /* RÂNDUL 1: DATA (Sus, Gri, Mic) */
+  .cl-td-data {
+    font-size: 0.8rem !important;
+    color: #999 !important;
+    margin-bottom: 6px;
+  }
+
+  /* RÂNDUL 2: NUMELE (Bold, Mare) */
+  .orders-table td:nth-child(2) strong {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #000;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* RÂNDUL 3: SUBIECT / ROL (Lângă Nume sau sub el) */
+  .cl-badge-orange, .cl-badge-purple, .cl-badge-red {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  /* RÂNDUL 4: EMAIL (Albastru/Verde fin) */
+  .cl-link-blue, .cl-link-green {
+    font-size: 0.9rem !important;
+    margin-bottom: 10px;
+  }
+
+  /* RÂNDUL 5: MESAJUL (Text normal, ocupă lățimea) */
+  .cl-td-msg {
+    font-size: 0.95rem !important;
+    color: #444 !important;
+    line-height: 1.4;
+    max-width: 100% !important;
+  }
+
+  /* BUTONUL DE ȘTERGERE - Îl punem discret în colț dreapta sus */
+  .cl-del-btn {
+    position: absolute;
+    top: 20px;
+    right: 16px;
+    background: #fdf2f2 !important;
+    border: none !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  .cl-del-btn svg { font-size: 1.2rem; }
+
+  /* Mesaj de listă goală */
+  .cl-empty { padding: 40px 20px; font-size: 1rem; }
+}

@@ -1,0 +1,401 @@
+/* =========================================
+   1. STILURI GENERALE & ANIMAȚII
+   ========================================= */
+.account-auth-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #0f172a;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   2. FORMULAR LOGARE / CREARE CONT
+   ========================================= */
+.auth-card-premium {
+  background: #ffffff;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+}
+
+.auth-toggle {
+  display: flex;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.auth-toggle button {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.auth-toggle button.active {
+  color: #3b82f6;
+}
+
+.auth-toggle button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #3b82f6;
+  border-radius: 3px 3px 0 0;
+}
+
+.auth-form-premium {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-box-premium {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-box-premium .icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  font-size: 1.2rem;
+}
+
+.input-box-premium input {
+  width: 100%;
+  padding: 14px 14px 14px 45px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #f8fafc;
+}
+
+.input-box-premium input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background: #ffffff;
+}
+
+.btn-auth-premium {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-auth-premium:hover:not(:disabled) { background: #2563eb; }
+.btn-auth-premium:active:not(:disabled) { transform: scale(0.98); }
+.btn-auth-premium:disabled { background: #94a3b8; cursor: not-allowed; }
+
+.auth-form-premium a {
+  text-align: right;
+  font-size: 0.85rem;
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: -5px;
+}
+
+.auth-form-premium a:hover { color: #3b82f6; text-decoration: underline; }
+
+/* =========================================
+   3. DASHBOARD CLIENT (LOGAT)
+   ========================================= */
+.client-dashboard-premium {
+  width: 100%;
+  max-width: 800px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.dashboard-header h2 {
+  margin: 0 0 5px 0;
+  font-size: 1.8rem;
+  color: #0f172a;
+}
+
+.dashboard-header h2 span { color: #3b82f6; }
+.dashboard-header p { margin: 0; color: #64748b; font-size: 1rem; }
+
+.btn-logout {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #ef4444;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.btn-logout:hover { background: #fef2f2; border-color: #fecaca; }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.dashboard-card {
+  background: white;
+  padding: 30px 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+  border-color: #cbd5e1;
+}
+
+.dashboard-card svg { font-size: 2.5rem; color: #3b82f6; margin-bottom: 15px; }
+.dashboard-card h3 { margin: 0 0 10px 0; color: #1e293b; font-size: 1.2rem; }
+.card-link { color: #3b82f6; font-weight: 600; font-size: 0.9rem; }
+
+.btn-back-dash {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+}
+
+.btn-back-dash:hover { color: #0f172a; }
+.section-title { margin-top: 0; margin-bottom: 25px; color: #0f172a; font-size: 1.4rem; }
+
+/* =========================================
+   4. CARDURI ISTORIC COMENZI
+   ========================================= */
+.empty-orders { text-align: center; padding: 50px 20px; color: #64748b; }
+.empty-icon { font-size: 3rem; color: #cbd5e1; margin-bottom: 10px; }
+
+.order-item-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px dashed #e2e8f0;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.order-info h4 { margin: 0 0 5px 0; color: #0f172a; font-size: 1.1rem; }
+.order-date { color: #64748b; font-size: 0.9rem; font-weight: 500; }
+
+.order-price { text-align: right; }
+.total-label { color: #64748b; font-size: 0.85rem; display: block; margin-bottom: 2px; }
+.total-value { color: #e61938; font-weight: 800; font-size: 1.2rem; }
+
+.order-details-mini {
+  background: #f8fafc;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.order-details-mini p { margin: 5px 0; }
+.order-details-mini strong { color: #1e293b; }
+
+/* =========================================
+   5. 🚚 BARA DE TRACKING PREMIUM ("BOMBA")
+   ========================================= */
+.tracking-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: 25px;
+  padding: 10px 5px 15px 5px;
+  width: 100%;
+  position: relative;
+}
+
+.track-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  flex: 1; 
+}
+
+.track-icon {
+  width: 44px;
+  height: 44px;
+  background: #f8fafc;
+  border: 2px solid #cbd5e1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #94a3b8;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 0 5px white; /* Efect tăietură 3D pe linie */
+}
+
+.track-step span {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  transition: color 0.4s ease;
+}
+
+/* Liniile dintre buline */
+.track-line {
+  flex: 1;
+  height: 4px;
+  background: #e2e8f0;
+  margin-top: 20px; /* Aliniază perfect la jumătatea iconiței */
+  z-index: 1;
+  border-radius: 2px;
+  transition: background 0.5s ease;
+  min-width: 10px;
+}
+
+/* 🟢 STAREA ACTIVĂ (VERDE) */
+.track-step.active .track-icon {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
+  box-shadow: 0 0 0 4px white, 0 4px 12px rgba(16, 185, 129, 0.4); 
+}
+
+.track-step.active span {
+  color: #10b981;
+}
+
+.track-line.active-line {
+  background: linear-gradient(90deg, #10b981, #34d399); 
+  box-shadow: 0 1px 4px rgba(16, 185, 129, 0.2);
+}
+
+.tracking-cancelled {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #ef4444;
+  background: #fef2f2;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1px solid #fecaca;
+  margin-top: 15px;
+}
+
+/* =========================================
+   6. 📱 RESPONSIVE (Telefoane) - ZERO SCROLL
+   ========================================= */
+@media screen and (max-width: 600px) {
+  .account-auth-page { padding: 20px 10px; }
+  .auth-card-premium { padding: 20px; }
+  
+  .dashboard-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .btn-logout { width: 100%; justify-content: center; margin-top: 10px; }
+  
+  .order-header { flex-direction: column; align-items: stretch; gap: 5px; }
+  .order-price { text-align: left; margin-top: 5px; }
+  
+  /* Optimizare Tracking Container */
+  .tracking-container {
+    padding: 10px 0 5px 0;
+  }
+
+  .track-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    box-shadow: 0 0 0 3px white;
+  }
+
+  .track-line {
+    margin-top: 14px;
+  }
+
+  /* Forțăm textul să curgă în jos, să nu spargă lățimea ecranului */
+  .track-step span {
+    font-size: 0.65rem;
+    letter-spacing: 0;
+    margin-top: 8px;
+    max-width: 65px; 
+    word-wrap: break-word; 
+    line-height: 1.2;
+  }
+}

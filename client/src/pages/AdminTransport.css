@@ -1,0 +1,231 @@
+/* ==================================================
+   🚚 SETĂRI TRANSPORT - TEMA GLOBALĂ & DESKTOP
+================================================== */
+:root {
+    --bg-page: #f8fafc;
+    --card-bg: #ffffff;
+    --text-dark: #0f172a;
+    --text-muted: #64748b;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --success: #10b981;
+    --border-soft: #e2e8f0;
+}
+
+.ac-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: var(--bg-page);
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ac-page-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    letter-spacing: -0.03em;
+}
+
+/* CARDURI DESKTOP */
+.ac-form-row {
+    display: flex;
+    gap: 30px;
+}
+
+.ac-main-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-soft);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ac-main-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* INPUT PREȚ (MARE ȘI CLAR) */
+.ac-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.ac-form-group label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.ac-form-group input[type="number"] {
+    width: 100%;
+    padding: 16px 20px;
+    background: #f8fafc;
+    border: 2px solid var(--border-soft);
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.ac-form-group input[type="number"]:focus {
+    background: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+/* 🔴 MAGIA 1: CHECKBOX TRANSFORMAT ÎN TOGGLE SWITCH iOS */
+.ac-form-group input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 54px !important;
+    height: 30px !important;
+    background: #cbd5e1;
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.ac-form-group input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.ac-form-group input[type="checkbox"]:checked {
+    background: var(--success);
+}
+
+.ac-form-group input[type="checkbox"]:checked::after {
+    transform: translateX(24px);
+}
+
+/* BUTON SALVARE */
+.ac-btn-convert {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+    transition: all 0.2s;
+}
+
+.ac-btn-convert:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4);
+}
+
+/* LOADER */
+.ac-loader { display: flex; justify-content: center; align-items: center; height: 100vh; }
+.ac-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+
+/* ==================================================
+   📱 MAGIA DE TELEFON (CSS BOMBA 100%)
+================================================== */
+@media (max-width: 850px) {
+    /* Fundal plat, margini curate */
+    .ac-container {
+        padding: 16px;
+        background-color: #f1f5f9;
+        overflow-x: hidden;
+    }
+
+    .ac-page-title { font-size: 1.7rem; }
+    .ac-header-bar p { font-size: 0.95rem; line-height: 1.4; }
+
+    /* 🔴 FORȚĂM CARDURILE SĂ STEA PE VERTICALĂ */
+    .ac-form-row {
+        flex-direction: column !important; /* Anulează inline style-ul tău de React */
+        gap: 20px !important;
+    }
+
+    .ac-main-card {
+        padding: 24px !important;
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Iconițele susținute frumos */
+    .ac-main-card > div:first-child {
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 25px !important;
+    }
+
+    /* Input-ul de preț masiv pentru deget */
+    .ac-form-group input[type="number"] {
+        font-size: 1.5rem !important;
+        padding: 18px 20px;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+
+    /* 🔴 BLOCUL DE ACTIVARE CA LA iPHONE SETTINGS */
+    .ac-form-group[style*="flexDirection: 'row'"] {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 16px 20px;
+        border-radius: 16px;
+        margin-top: 25px !important;
+        display: flex;
+        justify-content: space-between !important; /* Aruncă textul la stânga și butonul la dreapta */
+        align-items: center;
+    }
+
+    /* Modificăm ordinea: Textul primul, Butonul (Switch-ul) al doilea pe dreapta */
+    .ac-form-group[style*="flexDirection: 'row'"] label {
+        order: 1;
+        font-size: 1.05rem !important;
+        font-weight: 700;
+        color: #0f172a;
+        text-transform: none; /* Scoatem literele mari ca să fie nativ */
+        letter-spacing: normal;
+    }
+    
+    .ac-form-group[style*="flexDirection: 'row'"] input {
+        order: 2;
+    }
+
+    /* 🔴 BUTONUL DE SALVARE URIAȘ JOS DE TOT */
+    .ac-container > div:last-child {
+        margin-top: 30px !important;
+        justify-content: center !important;
+    }
+
+    .ac-btn-convert {
+        width: 100%;
+        justify-content: center;
+        padding: 20px !important;
+        font-size: 1.15rem !important;
+        border-radius: 16px;
+    }
+}

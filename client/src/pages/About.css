@@ -1,0 +1,143 @@
+.about-wrapper {
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+/* --- HERO --- */
+.about-hero {
+  padding: 100px 0 80px;
+  background: radial-gradient(circle at top right, #f0f9ff, #ffffff);
+  text-align: center;
+}
+
+.about-badge {
+  display: inline-block;
+  background: #eff6ff;
+  color: #3b82f6;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.about-hero h1 {
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  color: #0f172a;
+}
+
+.about-hero h1 span {
+  color: #3b82f6;
+}
+
+.about-hero p {
+  font-size: 1.25rem;
+  color: #64748b;
+  max-width: 700px;
+  margin: 20px auto 0;
+}
+
+/* --- VALORI --- */
+.about-values {
+  padding: 80px 0;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.value-card {
+  background: #f8fafc;
+  padding: 40px;
+  border-radius: 24px;
+  transition: 0.3s;
+  border: 1px solid #f1f5f9;
+}
+
+.value-card:hover {
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  transform: translateY(-5px);
+}
+
+.v-icon {
+  font-size: 2.5rem;
+  color: #3b82f6;
+  margin-bottom: 20px;
+}
+
+.value-card h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.value-card p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* --- STORY SPLIT --- */
+.about-story-split {
+  padding: 100px 0;
+  background: #fdfdfd;
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 80px;
+}
+
+.story-image {
+  position: relative;
+}
+
+.story-image img {
+  width: 100%;
+  border-radius: 30px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+}
+
+.experience-badge {
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  background: #111827;
+  color: white;
+  padding: 30px;
+  border-radius: 25px;
+  text-align: center;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.experience-badge strong { font-size: 2.5rem; display: block; line-height: 1; color: #3b82f6; }
+.experience-badge span { font-size: 0.9rem; font-weight: 600; opacity: 0.8; }
+
+.story-content h2 { font-size: 2.8rem; font-weight: 900; margin-bottom: 25px; }
+.story-content p { font-size: 1.1rem; color: #475569; line-height: 1.7; margin-bottom: 20px; }
+
+.about-stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.stat-item { display: flex; flex-direction: column; gap: 5px; }
+.stat-item strong { font-size: 1.8rem; font-weight: 900; color: #0f172a; }
+.stat-item span { color: #94a3b8; font-weight: 600; font-size: 0.9rem; }
+.stat-item svg { color: #3b82f6; font-size: 1.5rem; }
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .story-grid { grid-template-columns: 1fr; gap: 60px; }
+  .values-grid { grid-template-columns: 1fr; }
+  .about-hero h1 { font-size: 2.5rem; }
+}

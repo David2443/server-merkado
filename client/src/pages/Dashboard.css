@@ -1,0 +1,724 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* =========================================
+   VARIABILE DE THEME (PREMIUM)
+   ========================================= */
+:root {
+  --bg-main: #f4f7f9;
+  --bg-sidebar: #0f172a;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --accent-blue: #3b82f6;
+  --accent-hover: #2563eb;
+  --success: #10b981;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --border-color: #e5e7eb;
+  --card-bg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+  
+  /* REPARAT SCROLL-UL ȘI BARA ALBĂ */
+  position: relative;
+  margin-top: -100px;
+  padding-top: 100px;
+  z-index: 9999;
+  background-color: var(--bg-main);
+}
+
+/* =========================================
+   CONȚINUT PRINCIPAL
+   ========================================= */
+.admin-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 2.5rem 3.5rem;
+  background-color: var(--bg-main);
+  min-height: 100vh;
+}
+
+.admin-content h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   CARDS & STATS
+   ========================================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border: 1px solid rgba(0,0,0,0.02);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+}
+
+.stat-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.stat-icon.income { background: #ecfdf5; color: var(--success); }
+.stat-icon.orders { background: #eff6ff; color: var(--accent-blue); }
+.stat-icon.products { background: #f5f3ff; color: #8b5cf6; }
+
+.stat-info h3 {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-info p {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+.recharts-wrapper {
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* =========================================
+   TABELE
+   ========================================= */
+.admin-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 2px solid var(--border-color);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.orders-table td {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.orders-table tr:hover td {
+  background: #f8fafc;
+}
+
+.status-select {
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 2px solid transparent;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.status-select.nouă { background-color: #fef3c7; color: #b45309; }
+.status-select.confirmată { background-color: #d1fae5; color: #047857; }
+.status-select.expediată { background-color: #dbeafe; color: #1d4ed8; }
+.status-select.anulată { background-color: #fee2e2; color: #b91c1c; }
+.status-select:hover { filter: brightness(0.95); }
+
+/* --- BUTOANE ACTIUNI TABEL --- */
+.btn-action {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+  margin-right: 8px;
+}
+
+.btn-action.edit { background: #eff6ff; color: #3b82f6; }
+.btn-action.edit:hover { background: #3b82f6; color: white; transform: translateY(-2px); }
+.btn-action.delete { background: #fee2e2; color: #ef4444; }
+.btn-action.delete:hover { background: #ef4444; color: white; transform: translateY(-2px); }
+.btn-action.approve { background: #d1fae5; color: #10b981; }
+.btn-action.approve:hover { background: #10b981; color: white; transform: translateY(-2px); }
+.btn-action.reject { background: #fef3c7; color: #f59e0b; }
+.btn-action.reject:hover { background: #f59e0b; color: white; transform: translateY(-2px); }
+
+/* BADGES SIMPLE */
+.badge-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+.badge-status.in_asteptare { background: #fef3c7; color: #b45309; }
+.badge-status.aprobata { background: #d1fae5; color: #047857; }
+.badge-status.respinsa { background: #fee2e2; color: #b91c1c; }
+
+/* =========================================
+   FORMULARE & INPUTS
+   ========================================= */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.input-group label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+
+.input-group input, .input-group textarea, .input-group select {
+  padding: 14px;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+}
+
+.input-group input:focus, .input-group textarea:focus {
+  border-color: var(--accent-blue);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+/* =========================================
+   DRAG & DROP ZONE
+   ========================================= */
+.drag-drop-zone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.drag-drop-zone:hover {
+  border-color: var(--accent-blue);
+  background: #eff6ff;
+}
+
+.drag-drop-content p {
+  font-weight: 600;
+  color: #475569;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 250px;
+  border-radius: 8px;
+  object-fit: contain;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-remove-image {
+  margin-top: 12px;
+  background: transparent;
+  color: var(--danger);
+  border: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-remove-image:hover { text-decoration: underline; }
+
+/* =========================================
+   BUILDER LANDING PAGE
+   ========================================= */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.btn-add-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--text-main);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-add-section:hover { background: #374151; transform: translateY(-2px); }
+
+.builder-block {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.btn-remove {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fee2e2;
+  color: var(--danger);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-remove:hover { background: #fca5a5; }
+
+/* =========================================
+   BUTOANE ACȚIUNI FORMULAR
+   ========================================= */
+.admin-submit-btn {
+  background: var(--bg-sidebar);
+  color: white;
+  border: none;
+  padding: 18px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-submit-btn:hover:not(:disabled) {
+  background: #000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.admin-submit-btn:disabled {
+  cursor: not-allowed;
+}
+
+/* =========================================
+   POPUP MODAL (ȘTERGERE)
+   ========================================= */
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.custom-modal-content {
+  background: #fff;
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-icon-danger {
+  width: 64px;
+  height: 64px;
+  background: #fee2e2;
+  color: var(--danger);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 1.5rem;
+}
+
+.custom-modal-content h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 1rem;
+}
+
+.custom-modal-content p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-cancel, .btn-confirm-delete {
+  flex: 1;
+  padding: 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-cancel {
+  background: #fff;
+  border: 2px solid var(--border-color);
+  color: var(--text-main);
+}
+.btn-cancel:hover { background: var(--bg-main); }
+
+.btn-confirm-delete {
+  background: var(--danger);
+  border: 2px solid var(--danger);
+  color: #fff;
+}
+.btn-confirm-delete:hover { background: var(--danger-hover); border-color: var(--danger-hover); }
+
+/* =========================================
+   LOGIN SCREEN
+   ========================================= */
+.login-screen-wrapper {
+  min-height: 100vh;
+  background-color: #0b0f19; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-screen-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.login-box {
+  background: #151e2e;
+  width: 100%;
+  max-width: 420px;
+  padding: 3.5rem 2.5rem;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.login-logo h2 {
+  color: #ffffff;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.login-logo h2 span {
+  color: var(--accent-blue);
+}
+
+.login-logo p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-bottom: 2.5rem;
+  font-weight: 500;
+}
+
+.login-form .input-group input {
+  width: 100%;
+  padding: 18px;
+  background: #0b0f19;
+  border: 1px solid #334155;
+  color: #f8fafc;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  text-align: center;
+  letter-spacing: 3px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-form .input-group input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+  outline: none;
+  background: #0f172a;
+}
+.login-form .input-group input::placeholder { color: #475569; letter-spacing: normal; font-weight: 500; }
+
+.login-error {
+  color: #fca5a5;
+  font-weight: 600;
+  margin-top: 20px;
+  font-size: 0.95rem;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  display: inline-block;
+  width: 100%;
+}
+
+.btn-login {
+  width: 100%;
+  margin-top: 25px;
+  padding: 18px;
+  background: var(--accent-blue);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+}
+
+.btn-login:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.5);
+}
+
+
+/* =========================================================================
+   📱 RESPONSIVE MOBIL (TELEFON - BOMBA DESIGN)
+   Aici am rescris tot pentru o experiență perfectă pe ecrane mici
+   ========================================================================= */
+@media (max-width: 1024px) {
+  /* Anulăm offset-urile de desktop care strică scroll-ul pe mobil */
+  .admin-layout { 
+    flex-direction: column; 
+    margin-top: 0;
+    padding-top: 0;
+  }
+  
+  .admin-content { 
+    margin-left: 0; 
+    padding: 1rem; 
+    background-color: #ffffff; /* Mai curat pe mobil */
+  }
+
+  .admin-content h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Formulare & Grid-uri */
+  .form-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .stats-grid { grid-template-columns: 1fr; gap: 1rem; }
+  
+  .stat-card {
+    padding: 1.2rem;
+    border-radius: 12px;
+  }
+  .stat-icon { width: 55px; height: 55px; font-size: 1.5rem; border-radius: 12px; }
+  .stat-info p { font-size: 1.8rem; }
+
+  /* ---------------------------------------------------
+     🔥 TABELELE GENERICE DEVIN CARDURI (LISTE) PE MOBIL
+     --------------------------------------------------- */
+  .admin-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    overflow: visible; /* Nu mai facem scroll lateral */
+  }
+
+  .orders-table { display: block; width: 100%; }
+  .orders-table thead { display: none; } /* Ascundem capul de tabel complet */
+  .orders-table tbody { display: block; width: 100%; }
+
+  .orders-table tr {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    position: relative;
+  }
+
+  .orders-table td {
+    display: flex;
+    justify-content: space-between; /* Stânga - Dreapta */
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    font-size: 0.9rem;
+    color: var(--text-main);
+  }
+
+  /* Magia pentru a ști ce reprezintă fiecare rând, dacă ai data-label în React */
+  .orders-table td::before {
+    content: attr(data-label);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-right: 15px;
+  }
+
+  /* Ajustări fine pentru elemente din tabel pe mobil */
+  .orders-table td > span, .orders-table td > div {
+    text-align: right;
+  }
+
+  .status-select {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+  }
+
+  /* Rândul cu butoanele de acțiuni (Editează/Șterge) pe toată lățimea jos */
+  .orders-table td:last-child {
+    margin-top: 10px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border-color);
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .btn-action {
+    flex: 1; /* Butoanele ocupă lățimea egal */
+    padding: 10px;
+    font-size: 1rem;
+    margin-right: 0;
+    border-radius: 8px;
+  }
+
+  /* ---------------------------------------------------
+     LOGIN & MODALS
+     --------------------------------------------------- */
+  .login-box {
+    padding: 2.5rem 1.5rem;
+    border-radius: 20px;
+  }
+  
+  .login-form .input-group input { padding: 15px; font-size: 1rem; }
+
+  .custom-modal-content {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+  
+  .modal-actions { flex-direction: column-reverse; gap: 10px; }
+  .btn-cancel, .btn-confirm-delete { padding: 12px; font-size: 0.95rem; }
+}

@@ -1,0 +1,95 @@
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Animația iconiței care plutește */
+.icon-pulse {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: float 2s ease-in-out infinite;
+}
+
+/* Umbra de sub iconiță care se micșorează/mărește */
+.icon-pulse::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  width: 30px;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  filter: blur(4px);
+  animation: shadowScale 2s ease-in-out infinite;
+}
+
+.loading-bar {
+  width: 180px;
+  height: 4px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Progresul cu gradient și sclipire */
+.loading-progress {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 10px;
+  transform: translateX(-100%);
+  animation: progressMove 1.5s infinite ease-in-out;
+}
+
+.loader-content p {
+  font-family: 'Inter', sans-serif;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin: 0;
+  opacity: 0.8;
+  animation: fadeText 2s infinite;
+}
+
+/* Keyframes pentru efectul de plutire */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes shadowScale {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(0.6); opacity: 0.2; }
+}
+
+/* Mișcarea barei de progres */
+@keyframes progressMove {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
+/* Pulsarea textului */
+@keyframes fadeText {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}

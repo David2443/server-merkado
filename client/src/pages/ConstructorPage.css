@@ -1,0 +1,490 @@
+/* =======================================================
+   💎 ADMIN PAGE BUILDER - ULTIMATE EDITION (2026)
+   ======================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+.admin-builder-view {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  color: #0f172a;
+  /* Măsură de siguranță: Conținutul builderului stă "cuminte" sub nivelul navbar-ului */
+  position: relative;
+  z-index: 1; 
+}
+
+/* =======================================================
+   1. HEADER & NAVIGARE (STICKY GLASSMORPHISM)
+   ======================================================= */
+.builder-header {
+  position: sticky;
+  top: 15px;
+  /* REPARAT: Am scăzut z-index-ul la 800 ca să nu se suprapună cu navbar-ul de mobil (care e 900) */
+  z-index: 800; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 15px 25px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  margin-bottom: 35px;
+}
+
+.tab-nav {
+  display: flex;
+  gap: 8px;
+  background: #f1f5f9;
+  padding: 6px;
+  border-radius: 14px;
+}
+
+.tab-nav button {
+  border: none;
+  background: transparent;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: 0.95rem;
+}
+
+.tab-nav button:hover:not(.active) {
+  color: #334155;
+  background: #e2e8f0;
+}
+
+.tab-nav button.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.btn-save-main {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+}
+
+.btn-save-main:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(225, 29, 72, 0.4);
+}
+
+.btn-save-main:disabled {
+  background: #94a3b8;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* =======================================================
+   2. ANIMAȚII PANOURI & CARDS
+   ======================================================= */
+.builder-panel {
+  animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.editor-col {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.editor-col.full { grid-column: 1 / -1; }
+
+.glass-box {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+}
+
+h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1e293b;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 12px;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: -10px 0 10px 0;
+  font-weight: 500;
+}
+
+/* =======================================================
+   3. INPUTS & TEXTAREAS (MODERN FORMS)
+   ======================================================= */
+input, textarea, select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #0f172a;
+  background: #f8fafc;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+input::placeholder, textarea::placeholder { color: #94a3b8; font-weight: 400; }
+
+input:focus, textarea:focus, select:focus {
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+.row { display: flex; gap: 15px; width: 100%; align-items: center; }
+
+/* =======================================================
+   4. DRAG & DROP ZONES (INTERACTIVE)
+   ======================================================= */
+.drop-zone {
+  width: 100%;
+  height: 180px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.drop-zone:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.drop-zone img { width: 100%; height: 100%; object-fit: contain; }
+
+.drop-zone.fb { border-color: #93c5fd; }
+.drop-zone.fb:hover { border-color: #3b82f6; background: #eff6ff; }
+
+.drop-zone.mini { height: 120px; margin-top: 10px; }
+
+.mini-drop {
+  width: 60px;
+  height: 60px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 50%;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  overflow: hidden;
+  transition: 0.2s;
+  color: #94a3b8;
+}
+
+.mini-drop:hover { border-color: #3b82f6; color: #3b82f6; }
+.mini-drop img { width: 100%; height: 100%; object-fit: cover; }
+
+/* =======================================================
+   5. PAGE BUILDER MODULES (TAB 3)
+   ======================================================= */
+.toolbar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.toolbar button {
+  flex: 1;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  font-weight: 800;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.toolbar button:hover {
+  border-color: #0f172a;
+  color: #0f172a;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+}
+
+.block-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+  /* Asigură-te că aceste carduri nu sar peste navbar */
+  position: relative;
+  z-index: 10;
+}
+
+.block-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+}
+
+.block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.block-title { display: flex; align-items: center; gap: 15px; font-size: 1.1rem; }
+
+.badge {
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+/* =======================================================
+   6. CONTROALE REORDONARE & ȘTERGERE
+   ======================================================= */
+.block-actions { display: flex; gap: 10px; }
+
+.block-actions button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+}
+
+.block-actions button:hover:not(:disabled) {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.block-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-delete:hover {
+  background: #fef2f2 !important;
+  color: #ef4444 !important;
+  border-color: #fecaca !important;
+}
+
+/* =======================================================
+   7. EDITARE TABEL & PROCENTE
+   ======================================================= */
+.module-edit-zone { display: flex; flex-direction: column; gap: 15px; }
+
+.table-row-edit {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #f8fafc;
+  padding: 10px 15px;
+  border-radius: 14px;
+  border: 1px solid #f1f5f9;
+}
+
+.table-row-edit button {
+  padding: 14px 20px;
+  border-radius: 10px;
+  border: 2px solid #cbd5e1;
+  background: #ffffff;
+  font-weight: 800;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.table-row-edit button.on {
+  background: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+
+.btn-del-mini {
+  width: 46px !important;
+  height: 46px !important;
+  padding: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ef4444 !important;
+  border-color: #fecaca !important;
+  background: #fef2f2 !important;
+  font-size: 1.2rem;
+}
+
+.btn-del-mini:hover { background: #fee2e2 !important; color: #dc2626 !important; }
+
+.add-sub {
+  background: transparent;
+  border: 2px dashed #cbd5e1;
+  color: #64748b;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.add-sub:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: #eff6ff;
+}
+
+/* =======================================================
+   8. RESPONSIVE (PENTRU CÂND TE UITI DE PE LAPTOP MIC)
+   ======================================================= */
+@media (max-width: 1024px) {
+  .editor-grid { grid-template-columns: 1fr; }
+  /* Pe mobil, scoatem lipirea de sus pentru builder-header, fiindcă avem deja navbar-ul de mobil acolo */
+  .builder-header { position: relative; top: auto; flex-direction: column; gap: 20px; padding: 20px; z-index: 10; }
+  .tab-nav { width: 100%; justify-content: space-between; }
+  .tab-nav button { flex: 1; justify-content: center; }
+  .btn-save-main { width: 100%; justify-content: center; }
+  .toolbar { flex-wrap: wrap; }
+  .toolbar button { min-width: 45%; }
+  .table-row-edit { flex-wrap: wrap; }
+  .table-row-edit input { width: 100%; }
+}/* ==================================================
+   🛠️ BUILDER OFERTE DINAMICE
+   ================================================== */
+.section-header-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-add-offer {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+.btn-add-offer:hover { background: #059669; transform: scale(1.05); }
+
+.offers-builder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.offer-row-item {
+    display: flex;
+    gap: 15px;
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    align-items: flex-end;
+}
+
+.off-col { display: flex; flex-direction: column; gap: 5px; }
+.off-col.small { width: 80px; }
+.off-col.medium { width: 120px; }
+.off-col.large { flex: 1; }
+
+.off-col label { font-size: 0.7rem; font-weight: 800; color: #64748b; text-transform: uppercase; }
+
+.btn-remove-offer {
+    background: #fee2e2;
+    color: #ef4444;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+.btn-remove-offer:hover { background: #ef4444; color: white; }
+
+/* MOBIL ADMIN */
+@media (max-width: 850px) {
+    .offer-row-item { flex-direction: column; align-items: stretch; gap: 10px; }
+    .off-col { width: 100% !important; }
+    .btn-remove-offer { width: 100%; margin-top: 5px; }
+}

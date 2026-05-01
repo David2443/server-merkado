@@ -1,0 +1,36 @@
+/* client/src/index.css */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  /* 🚩 IMPORTANT: Fără height: 100% aici, altfel scroll-ul se blochează! */
+  min-height: 100vh;
+  width: 100%;
+  /* Forțăm scroll-ul să fie controlat de JS, nu de browser */
+  scroll-behavior: auto !important; 
+}
+
+/* 🧼 Scăpăm de bara albă prin prevenirea "Margin Collapse" */
+body {
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Dacă ai pus un div "app-container" în App.jsx, asigură-te că nu are spații */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}/* Lipește Navbar-ul de restul paginii */
+.general-ecom-wrapper {
+    margin-top: 0 !important;
+    padding-top: 1px; /* Truc: forțează containerul să nu lase margini să "scape" deasupra */
+}
+
+body {
+    background-color: #ffffff; /* Să nu se vadă gri-ul de fundal prin bară */
+}html {
+  scroll-behavior: smooth !important;
+}

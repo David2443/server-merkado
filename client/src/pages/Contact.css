@@ -1,0 +1,246 @@
+/* =========================================
+   --- PAGINA CONTACT PREMIUM (OPTIMIZATĂ) --- 
+   ========================================= */
+
+.contact-page-wrapper {
+    font-family: 'Inter', sans-serif;
+    color: #0f172a;
+    background: #f8fafc;
+    min-height: 100vh;
+    padding-bottom: 100px; /* Mai mult spațiu jos pentru a nu "cădea" în footer */
+}
+
+/* HERO SECTION - Mai aerisit */
+.contact-hero {
+    background: #ffffff;
+    text-align: center;
+    padding: 100px 20px 140px; /* Padding generos pentru a crea spațiu de plutire */
+    border-bottom: 1px solid #e2e8f0;
+}
+.contact-hero h1 { 
+    font-size: 3rem; 
+    font-weight: 900; 
+    margin-bottom: 20px; 
+    color: #0f172a; 
+    letter-spacing: -1px;
+}
+.contact-hero p { 
+    font-size: 1.15rem; 
+    color: #64748b; 
+    max-width: 650px; 
+    margin: 0 auto; 
+    line-height: 1.8; 
+}
+
+/* MAIN GRID - Corecție poziționare */
+.contact-main-container {
+    max-width: 1200px;
+    margin: -80px auto 0; /* Ridicăm containerul peste Hero cu un balans mai bun */
+    padding: 0 25px;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr; /* Formularul primește mai mult spațiu */
+    gap: 50px; /* Spațiu mai mare între coloane */
+    position: relative;
+    z-index: 10;
+}
+
+/* CARDS (STÂNGA) - Aliniere la început */
+.contact-info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-self: start; /* Previne întinderea cardurilor pe toată înălțimea coloanei */
+}
+
+.info-card {
+    background: white;
+    padding: 35px;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+}
+.info-card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.08); 
+    border-color: #3b82f6;
+}
+
+.icon-wrapper { 
+    width: 60px; 
+    height: 60px; 
+    border-radius: 18px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 1.8rem; 
+    margin-bottom: 20px; 
+}
+.icon-wrapper.blue { background: #eff6ff; color: #3b82f6; }
+.icon-wrapper.green { background: #f0fdf4; color: #10b981; }
+.icon-wrapper.purple { background: #fdf4ff; color: #d946ef; }
+
+.info-card h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
+.info-card p { color: #64748b; font-size: 1rem; margin-bottom: 20px; line-height: 1.5; }
+.contact-link { font-weight: 800; font-size: 1.15rem; color: #0f172a; text-decoration: none; transition: 0.2s; }
+.contact-link:hover { color: #3b82f6; }
+.status-badge { background: #dcfce7; color: #166534; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; }
+
+/* FORM (DREAPTA) - Mai solid și spațios */
+.contact-form-container {
+    background: white;
+    padding: 50px; /* Padding interior crescut pentru "Premium feel" */
+    border-radius: 32px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.06);
+    border: 1px solid #f1f5f9;
+}
+
+.form-header { margin-bottom: 40px; }
+.form-header h2 { font-size: 2rem; font-weight: 900; margin-bottom: 12px; }
+.form-header p { color: #64748b; font-size: 1.05rem; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+
+.input-group { margin-bottom: 25px; display: flex; flex-direction: column; }
+.input-group label { font-size: 0.95rem; font-weight: 700; color: #334155; margin-bottom: 10px; }
+.input-group input, .input-group select, .input-group textarea {
+    padding: 18px;
+    border: 2px solid #f1f5f9;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+}
+.input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+    border-color: #3b82f6; 
+    background: white; 
+    outline: none; 
+    box-shadow: 0 0 0 5px rgba(59, 130, 246, 0.08);
+}
+
+.btn-send-message {
+    width: 100%;
+    padding: 20px;
+    background: #0f172a;
+    color: white;
+    border: none;
+    border-radius: 18px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+.btn-send-message:hover { background: #3b82f6; transform: translateY(-3px); box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3); }
+
+/* SUCCESS STATE */
+.success-message-box {
+    text-align: center;
+    padding: 80px 30px;
+    background: #f0fdf4;
+    border: 2px dashed #86efac;
+    border-radius: 24px;
+}
+.success-icon-large { font-size: 5rem; color: #10b981; margin-bottom: 25px; }
+
+/* RESPONSIVE PENTRU MOBIL */
+@media (max-width: 1024px) {
+    .contact-main-container { grid-template-columns: 1fr; margin-top: -50px; }
+    .contact-info-grid { flex-direction: row; flex-wrap: wrap; }
+    .info-card { flex: 1; min-width: 300px; }
+}
+
+@media (max-width: 768px) {
+    .contact-hero { padding: 80px 20px 100px; }
+    .contact-hero h1 { font-size: 2.2rem; }
+    .contact-info-grid { flex-direction: column; }
+    .form-row { grid-template-columns: 1fr; gap: 0; }
+    .contact-form-container { padding: 35px 20px; }
+}/* --- VALIDARE ȘI ERORI --- */
+.input-group.has-error input,
+.input-group.has-error select,
+.input-group.has-error textarea {
+    border-color: #ef4444 !important; /* Roșu de eroare */
+    background-color: #fffafb; /* O nuanță foarte slabă de roz */
+}
+
+.input-group.has-error label {
+    color: #ef4444;
+}
+
+.error-msg {
+    color: #ef4444;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    animation: shake 0.4s ease-in-out;
+}
+
+/* Animație de tremurat pentru eroare */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* --- REPARAȚII MOBIL (CRITICAL) --- */
+@media (max-width: 768px) {
+    .contact-page-wrapper {
+        padding-bottom: 50px;
+    }
+
+    .contact-hero {
+        padding: 60px 20px 80px; /* Reducem padding-ul pe mobil */
+    }
+
+    .contact-hero h1 {
+        font-size: 2rem;
+    }
+
+    .contact-main-container {
+        margin-top: -40px; /* Mai puțină suprapunere pe mobil */
+        gap: 20px;
+        display: flex; /* Schimbăm grid în flex pentru control mai bun */
+        flex-direction: column;
+    }
+
+    .contact-info-grid {
+        order: 2; /* Punem cardurile SUB formular pe mobil pentru UX mai bun */
+        flex-direction: row;
+        gap: 15px;
+    }
+
+    .info-card {
+        padding: 20px;
+        flex: 1;
+        min-width: 140px;
+        text-align: center;
+    }
+
+    .info-card h3 { font-size: 1rem; }
+    .contact-link { font-size: 0.9rem; }
+
+    .contact-form-container {
+        order: 1; /* Formularul apare primul */
+        padding: 25px 20px;
+        border-radius: 20px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr; /* Forțăm o singură coloană pe mobil */
+        gap: 0;
+    }
+
+    .btn-send-message {
+        padding: 16px;
+        font-size: 1rem;
+    }
+}
