@@ -977,12 +977,14 @@ app.get('/api/admin/users', verifyAdmin, async (req, res) => {
   } catch (err) { res.status(500).json({ eroare: err.message }); }
 });
 
+// 📄 LISTARE MESAJE
 app.get('/api/admin/mesaje', verifyAdmin, async (req, res) => {
   try {
-    const mesaje = await mongoose.connection.db.collection('contacts')
-      .find().sort({ createdAt: -1 }).toArray();
+    const mesaje = await Contact.find().sort({ createdAt: -1 });
     res.json(mesaje);
-  } catch (err) { res.status(500).json({ eroare: err.message }); }
+  } catch (err) { 
+    res.status(500).json({ eroare: err.message }); 
+  }
 });
 
 // ==========================================
