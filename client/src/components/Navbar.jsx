@@ -11,17 +11,29 @@ const Navbar = () => {
   const [filtered, setFiltered] = useState([]);
   const navigate = useNavigate();
 
+  // 🛡️ FIX 1: URL dinamic, exact cum am făcut și la Dashboard / Clienți
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
   useEffect(() => {
-    fetch('http://localhost:5000/api/produse')
+    // 🛡️ FIX 2: Folosim API_URL în loc de localhost hardcodat
+    fetch(`${API_URL}/api/produse`)
       .then(res => res.json())
-      .then(data => setAllProducts(data))
-      .catch(err => console.log(err));
-  }, []);
+      .then(data => {
+        // Ne asigurăm că primim un array înainte să setăm state-ul
+        if (Array.isArray(data)) {
+          setAllProducts(data);
+        } else {
+          setAllProducts([]);
+        }
+      })
+      .catch(err => console.error("Eroare la aducerea produselor pentru search:", err));
+  }, [API_URL]);
 
   useEffect(() => {
     if (searchTerm.trim().length > 1) {
       const results = allProducts.filter(p => 
-        p.nume.toLowerCase().includes(searchTerm.toLowerCase())
+        // 🛡️ FIX 3: Verificăm dacă p.nume există înainte de a apela .toLowerCase()
+        p.nume && p.nume.toLowerCase().includes(searchTerm.toLowerCase())
       ).slice(0, 5);
       setFiltered(results);
     } else {
@@ -44,20 +56,20 @@ const Navbar = () => {
 
   return (
     <>
-     <nav className="navbar-merkado-pro"> {/* Nume nou! */}
-        <div className="nav-container-pro"> {/* Nume nou! */}
+     <nav className="navbar-merkado-pro">
+        <div className="nav-container-pro">
           
-          <Link to="/" className="brand-logo-pro" onClick={() => setShowSearch(false)}> {/* Nume nou! */}
+          <Link to="/" className="brand-logo-pro" onClick={() => setShowSearch(false)}>
             MERK<span>ADO</span>
           </Link>
 
-          <ul className="desktop-links-pro"> {/* Nume nou! */}
+          <ul className="desktop-links-pro">
             <li><Link to="/">Acasă</Link></li>
             <li><Link to="/shop">Magazin</Link></li>
             <li><Link to="/contact">Contact</Link></li>
           </ul>
 
-          <div className="nav-actions-pro"> {/* Nume nou! */}
+          <div className="nav-actions-pro">
             <button className="icon-btn-pro" onClick={() => setShowSearch(true)}>
               <FiSearch />
             </button>
