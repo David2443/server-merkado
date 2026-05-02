@@ -39,12 +39,13 @@ const Dashboard = () => {
   // ==========================================
   // 📡 RADARUL LIVE (Socket.io)
   // ==========================================
-  useEffect(() => {
-    // 🛡️ FIX 2: Forțăm 'websocket' pentru a evita erorile de CORS/Polling pe platforme cloud
+useEffect(() => {
+    // 🛡️ NOU: Îi spunem serverului clar cine suntem prin "query"
     const socket = io(API_URL, {
       transports: ['websocket'],
-      upgrade: false
-    }); 
+      upgrade: false,
+      query: { source: 'admin_dashboard' } // <--- ECUSONUL TĂU VIP
+    });
 
     socket.on('connect', () => {
       console.log('✅ Dashboard conectat la Socket.io!');

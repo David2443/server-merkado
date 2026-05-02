@@ -1028,32 +1028,42 @@ let cosuriLive = {};
 // 🟢 Funcția a devenit `async` pentru a putea salva în baza de date
 io.on('connection', async (socket) => {
   
-  // 1. Un client nou a deschis site-ul -> Creștem contorul LIVE pe radar
-  vizitatoriActivi++;
-  io.emit('vizitatori_live', vizitatoriActivi); 
+  // 🛑 CITIM ECUSONUL: Verificăm dacă cel care se conectează e din Dashboard
+  const isDashboard = socket.handshake.query.source === 'admin_dashboard';
 
-  // 2. 🛡️ SALVĂM VIZITA ÎN BAZA DE DATE (Pentru istoric / Vizite Totale în Dashboard)
-  try {
-    await VizitaSite.create({});
-  } catch (err) { 
-    console.log("Eroare la salvare vizită în DB:", err.message); 
+  // Dacă NU este admin, îl numărăm ca trafic real
+  if (!isDashboard) {
+    // 1. Creștem contorul LIVE pe radar
+    vizitatoriActivi++;
+    io.emit('vizitatori_live', vizitatoriActivi); 
+
+    // 2. Salvăm vizita în baza de date (Pentru totalul din Dashboard)
+    try {
+      await VizitaSite.create({});
+    } catch (err) { 
+      console.log("Eroare la salvare vizită în DB:", err.message); 
+    }
   }
 
   // 3. Ascultăm ce scrie clientul în formular (Live Checkout)
   socket.on('client_typing', (dateCos) => {
+    if (isDashboard) return; // Un admin nu are cum să completeze coșul din greșeală
     cosuriLive[socket.id] = { ...dateCos, ultimaActualizare: Date.now() };
     io.emit('admin_update_carts', Object.values(cosuriLive));
   });
 
-  // 4. Când clientul închide tab-ul sau iese de pe site
+  // 4. Când cineva închide tab-ul
   socket.on('disconnect', () => {
-    vizitatoriActivi = Math.max(0, vizitatoriActivi - 1);
-    io.emit('vizitatori_live', vizitatoriActivi); // Trimitem noul număr scăzut
+    // Dacă se deconectează un client normal, scădem numărul
+    if (!isDashboard) {
+      vizitatoriActivi = Math.max(0, vizitatoriActivi - 1);
+      io.emit('vizitatori_live', vizitatoriActivi); 
 
-    // Dacă avea un coș live, îl ștergem din memorie și actualizăm dashboard-ul Admin
-    if (cosuriLive[socket.id]) {
-      delete cosuriLive[socket.id]; 
-      io.emit('admin_update_carts', Object.values(cosuriLive)); 
+      // Ștergem coșul lui dacă exista
+      if (cosuriLive[socket.id]) {
+        delete cosuriLive[socket.id]; 
+        io.emit('admin_update_carts', Object.values(cosuriLive)); 
+      }
     }
   });
 });
