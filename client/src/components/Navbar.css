@@ -1,348 +1,461 @@
 /* ==========================================
-   🎨 VARIABILE PREMIUM MERKADO
+   💎 NAVBAR & SEARCH PREMIUM (MERKADO)
    ========================================== */
+
 :root {
-  --navy: #133E70;
-  --orange: #F05A28;
-  --blue: #2196F3;
-  --white: #ffffff;
-  --bg-light: #f8fafc;
-  --nav-height: 85px;
-  --nav-mobile-height: 75px;
-  /* Umbre 3D pentru butoane */
-  --shadow-sm: 0 2px 8px rgba(19, 62, 112, 0.08);
-  --shadow-md: 0 8px 24px rgba(19, 62, 112, 0.15);
-  --shadow-orange: 0 8px 24px rgba(240, 90, 40, 0.25);
+  --nav-navy: #153A7A;
+  --nav-orange: #FF5A00;
+  --nav-blue: #00A3FF;
+  --nav-dark: #0f172a;
+  --nav-gray: #64748b;
+  --bg-glass: rgba(255, 255, 255, 0.95);
 }
 
 /* ==========================================
-   🛸 NAVBAR-UL PRINCIPAL (Glassmorphism)
+   1. BARA DE NAVIGAȚIE PRINCIPALĂ
    ========================================== */
 .navbar-merkado-pro {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: var(--nav-height) !important;
-  /* Efectul de sticlă mată (Apple Style) */
-  background: rgba(255, 255, 255, 0.92) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 9999 !important;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  margin: 0 !important;
-  transition: all 0.3s ease;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 
 .nav-container-pro {
-  width: 100%;
-  max-width: 1400px;
+  max-width: 1250px;
   margin: 0 auto;
   padding: 0 25px;
+  height: 80px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
 }
 
-/* 🔥 LOGO (Cu efect de hover) */
+/* Logo */
 .brand-logo-pro {
-  font-size: 1.9rem;
+  font-size: 2rem;
   font-weight: 900;
-  color: var(--navy) !important;
+  color: var(--nav-navy);
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  letter-spacing: -1px;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.brand-logo-pro:hover {
-  transform: scale(1.02);
+  letter-spacing: 0.5px;
 }
 
 .brand-logo-pro span {
-  color: var(--orange) !important;
-  text-shadow: 0 2px 10px rgba(240, 90, 40, 0.2);
+  color: var(--nav-orange);
 }
 
-/* 💻 LINK-URI DESKTOP (Micro-interacțiuni) */
+/* Link-uri Desktop (Efect underline la hover) */
 .desktop-links-pro {
   display: flex;
-  gap: 15px;
+  gap: 35px;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.desktop-links-pro a {
+.desktop-links-pro li a {
+  color: var(--nav-dark);
   text-decoration: none;
-  color: var(--navy) !important;
-  font-weight: 800;
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  padding: 10px 18px;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  font-size: 1rem;
   position: relative;
-  overflow: hidden;
+  padding: 5px 0;
+  transition: color 0.3s;
 }
 
-/* Hover sub formă de bulă (Pill effect) */
-.desktop-links-pro a:hover {
-  color: var(--orange) !important;
-  background: rgba(240, 90, 40, 0.08);
-  transform: translateY(-2px);
+.desktop-links-pro li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--nav-blue);
+  transition: width 0.3s ease;
 }
 
-/* 🛒 ACȚIUNI (Lupă, Cont, Cos, Burger) - Butoane Premium */
+.desktop-links-pro li a:hover {
+  color: var(--nav-blue);
+}
+
+.desktop-links-pro li a:hover::after {
+  width: 100%;
+}
+
+/* Butoane Acțiune (Lupa, User) */
 .nav-actions-pro {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
 }
 
-.icon-btn-pro, .mobile-toggle-pro {
-  background: var(--white);
-  border: 1px solid #f1f5f9;
-  width: 50px;
-  height: 50px;
-  border-radius: 16px; /* Colțuri moderne */
+.icon-btn-pro {
+  background: transparent;
+  border: none;
+  color: var(--nav-navy);
+  font-size: 1.4rem;
+  cursor: pointer;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--navy) !important;
-  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.icon-btn-pro:hover {
+  background: #f1f5f9;
+  color: var(--nav-blue);
+  transform: translateY(-2px);
+}
+
+.mobile-toggle-pro {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--nav-navy);
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efect de "arc" */
-}
-
-/* Efect de click și hover pe butoane */
-.icon-btn-pro:hover, .mobile-toggle-pro:hover {
-  background: var(--navy);
-  color: var(--white) !important;
-  border-color: var(--navy);
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: var(--shadow-md);
-}
-
-.icon-btn-pro:active, .mobile-toggle-pro:active {
-  transform: scale(0.95); /* Senzație fizică de apăsare */
 }
 
 /* ==========================================
-   🔍 SEARCH OVERLAY (Animație Smooth & Glow)
+   🔍 2. OVERLAY SEARCH (Stil Apple Spotlight)
    ========================================== */
 .search-overlay {
-  position: fixed !important;
-  top: -100%;
+  position: fixed;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 100dvh;
-  background: rgba(248, 250, 252, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  z-index: 10000 !important;
-  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6); /* Fundal întunecat */
+  backdrop-filter: blur(8px); /* Blurează site-ul din spate */
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 15vh;
+  padding-top: 10vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 .search-overlay.active {
-  top: 0 !important;
+  opacity: 1;
+  pointer-events: auto;
 }
 
+/* Caseta Albă Centrală */
 .search-content-container {
-  width: 100%;
-  max-width: 800px;
-  padding: 0 20px;
-  transform: scale(0.95);
-  opacity: 0;
-  transition: all 0.5s ease 0.1s;
+  background: #fff;
+  width: 90%;
+  max-width: 650px;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transform: translateY(-20px) scale(0.95);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .search-overlay.active .search-content-container {
-  transform: scale(1);
-  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Bara de input */
+.search-top-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .search-input-wrapper {
   display: flex;
   align-items: center;
-  background: var(--white);
-  padding: 22px 35px;
-  border-radius: 100px;
-  border: 2px solid #e2e8f0;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.4s ease;
+  flex: 1;
+  gap: 15px;
 }
 
-.search-input-wrapper:focus-within {
-  border-color: var(--orange);
-  box-shadow: 0 0 0 5px rgba(240, 90, 40, 0.15), var(--shadow-orange);
-  transform: translateY(-2px);
+.inner-search-icon {
+  font-size: 1.5rem;
+  color: var(--nav-blue);
 }
 
 .search-input-wrapper input {
-  width: 100%;
+  flex: 1;
   border: none;
-  background: transparent;
+  padding: 20px 0;
+  font-size: 1.3rem;
+  color: var(--nav-dark);
   outline: none;
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--navy);
-  margin-left: 20px;
+  background: transparent;
 }
 
 .search-input-wrapper input::placeholder {
   color: #94a3b8;
-  font-weight: 600;
 }
 
 .close-search {
-  margin-top: 30px;
-  background: var(--navy);
-  color: white;
+  background: #f1f5f9;
   border: none;
-  padding: 15px 40px;
-  border-radius: 50px;
-  font-weight: 800;
-  font-size: 1.1rem;
+  color: var(--nav-gray);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: var(--shadow-md);
-  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
 }
 
 .close-search:hover {
-  background: var(--orange);
-  transform: scale(1.05);
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+/* Rezultatele căutării */
+.search-results-wrapper {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.results-label {
+  margin: 0;
+  padding: 15px 20px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--nav-gray);
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: #f8fafc;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  gap: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.search-result-item:hover {
+  background: #f8fafc;
+}
+
+.search-result-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.res-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.res-name {
+  font-weight: 600;
+  color: var(--nav-dark);
+  font-size: 1.05rem;
+}
+
+.res-price {
+  color: var(--nav-orange);
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+.res-arrow {
+  color: var(--nav-gray);
+  font-size: 1.2rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.search-result-item:hover .res-arrow {
+  color: var(--nav-blue);
+  transform: translateX(5px); /* Săgeata glisează dreapta la hover */
+}
+
+/* Buton "Vezi toate" */
+.view-all-res {
+  width: 100%;
+  background: #fff;
+  border: none;
+  color: var(--nav-blue);
+  font-weight: 700;
+  padding: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.view-all-res:hover {
+  background: #f1f5f9;
+}
+
+.no-res-text {
+  padding: 30px;
+  text-align: center;
+  color: var(--nav-gray);
+  font-size: 1.1rem;
 }
 
 /* ==========================================
-   📱 MOBILE MENU (Drawer Ultra Premium)
+   📱 3. MENIU MOBIL (Sertar lateral)
    ========================================== */
 .mobile-menu-overlay {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100dvh;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(8px);
-  z-index: 10001 !important;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100vh;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 998;
   opacity: 0;
-  visibility: hidden;
-  transition: all 0.4s ease;
+  pointer-events: none;
+  transition: opacity 0.3s;
 }
 
 .mobile-menu-overlay.active {
   opacity: 1;
-  visibility: visible;
+  pointer-events: auto;
 }
 
 .mobile-drawer {
-  position: fixed !important;
-  top: 0;
-  right: -100%;
-  width: 340px;
-  max-width: 85vw;
-  height: 100dvh;
-  background: var(--white);
-  z-index: 10002 !important;
-  transition: right 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0; right: -100%;
+  width: 300px;
+  height: 100vh;
+  background: #fff;
+  z-index: 999;
+  box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+  transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   display: flex;
   flex-direction: column;
-  padding: 40px 30px;
-  border-radius: 30px 0 0 30px; /* Colțuri rotunjite doar pe stânga, stil aplicație */
 }
 
 .mobile-drawer.open {
-  right: 0 !important;
+  right: 0;
 }
 
 .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 50px;
+  padding: 25px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.drawer-header .nav-logo {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--nav-navy);
+}
+
+.drawer-header .nav-logo span {
+  color: var(--nav-orange);
 }
 
 .close-drawer-btn {
-  background: var(--bg-light);
-  border: 1px solid #e2e8f0;
-  width: 50px;
-  height: 50px;
+  background: #f1f5f9;
+  border: none;
+  width: 35px; height: 35px;
   border-radius: 50%;
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--nav-gray);
   cursor: pointer;
-  color: var(--navy);
-  transition: 0.3s;
-}
-
-.close-drawer-btn:hover {
-  background: #ef4444; /* Roșu la închidere */
-  color: white;
-  transform: rotate(90deg);
 }
 
 .drawer-links {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
 
 .drawer-links a {
   text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--navy) !important;
-  padding: 18px 20px;
-  background: var(--bg-light);
-  border-radius: 16px;
+  color: var(--nav-dark);
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 15px;
+  border-radius: 10px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
+  align-items: center;
+  background: #f8fafc;
+  transition: all 0.2s;
 }
 
 .drawer-links a:hover {
-  background: var(--white);
-  border-color: var(--orange);
-  color: var(--orange) !important;
-  box-shadow: var(--shadow-sm);
-  transform: translateX(-5px); /* Efect de glisare subtilă */
+  background: #e0e7ff;
+  color: var(--nav-blue);
+  padding-left: 20px;
+}
+
+.drawer-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 10px 0;
+}
+
+.drawer-account {
+  color: var(--nav-navy) !important;
+  background: transparent !important;
+  justify-content: flex-start !important;
+  gap: 15px;
 }
 
 /* ==========================================
-   📱 AJUSTĂRI MOBIL
+   📐 RESPONSIVITATE (Media Queries)
    ========================================== */
-@media (max-width: 900px) {
-  .desktop-links-pro, .desktop-only-pro {
+@media (max-width: 768px) {
+  .desktop-links-pro {
+    display: none;
+  }
+  
+  .desktop-only-pro {
     display: none !important;
   }
+  
   .mobile-toggle-pro {
     display: flex;
   }
-  .navbar-merkado-pro {
-    height: var(--nav-mobile-height) !important;
+
+  .nav-container-pro {
+    padding: 0 15px;
   }
-  .brand-logo-pro {
-    font-size: 1.6rem;
+  
+  .search-content-container {
+    width: 95%;
+    margin-top: 5vh;
   }
-  .icon-btn-pro, .mobile-toggle-pro {
-    width: 44px;
-    height: 44px;
-    font-size: 1.3rem;
+  
+  .search-input-wrapper input {
+    font-size: 1.1rem;
+  }
+  
+  .close-search span {
+    display: none; /* Ascundem textul "Închide" pe mobil, lăsăm doar X-ul */
+  }
+  .close-search {
+    padding: 10px;
   }
 }
