@@ -2,7 +2,7 @@
    🚀 NAVBAR PRINCIPAL (MATCH EXACT PE JSX-ul TĂU)
    ========================================== */
 .navbar-merkado-pro {
-  position: sticky !important;
+  position: fixed !important;
   top: 0;
   left: 0;
   width: 100%;
