@@ -1,71 +1,121 @@
-.shop-page-wrapper {
-  background-color: #ffffff;
-  min-height: 100vh;
-  padding-bottom: 100px;
+/* ==========================================
+   🎨 VARIABILE & SETUP
+   ========================================== */
+:root {
+  --navy: #133E70;
+  --orange: #F05A28;
+  --blue: #2196F3;
+  --white: #ffffff;
+  --bg-light: #f8fafc;
+  --shadow-sm: 0 4px 15px rgba(19, 62, 112, 0.05);
+  --shadow-md: 0 15px 35px rgba(19, 62, 112, 0.08);
+  --shadow-hover: 0 25px 50px rgba(19, 62, 112, 0.12);
 }
 
-/* --- HERO SHOP --- */
+/* ==========================================
+   🛍️ FIX DUBLU-PADDING (Spațiul Alb)
+   ========================================== */
+.shop-page-wrapper {
+  /* 🛡️ Am pus 0 pentru că body-ul ține deja Navbar-ul din index.css */
+  padding-top: 0 !important; 
+  background-color: var(--white);
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ==========================================
+   🌟 SHOP HERO (Banner-ul de sus)
+   ========================================== */
 .shop-hero {
-  background: #f8fafc;
-  padding: 60px 0;
+  margin-top: 0 !important; /* Omoară orice margine ascunsă de la h1 */
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  padding: 60px 25px;
   text-align: center;
-  border-bottom: 1px solid #f1f5f9;
-  margin-bottom: 40px;
+  border-bottom: 1px solid #cbd5e1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Un efect de "glow" pe fundal */
+.shop-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: 50%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(240, 90, 40, 0.05) 0%, rgba(255,255,255,0) 70%);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .shop-hero h1 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 900;
-  color: #c4cbdb;
-  margin-bottom: 10px;
+  color: var(--navy);
+  margin-bottom: 15px;
+  letter-spacing: -1px;
 }
 
 .shop-hero p {
+  font-size: 1.2rem;
   color: #64748b;
-  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  font-weight: 500;
 }
 
-/* --- TOOLBAR (SEARCH & FILTERS) --- */
+/* ==========================================
+   🎛️ TOOLBAR (Căutare & Filtre - Glassmorphism)
+   ========================================== */
 .shop-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  background: #ffffff;
-  padding: 20px;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px 25px;
   border-radius: 20px;
-  margin-bottom: 40px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+  box-shadow: var(--shadow-sm);
+  margin: -30px auto 40px; /* Se suprapune puțin peste hero */
+  position: relative;
+  z-index: 10;
+  max-width: 1400px;
+  border: 1px solid #f1f5f9;
 }
 
 .search-box {
-  position: relative;
-  flex: 1;
-  max-width: 400px;
-}
-
-.search-icon {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #94a3b8;
-}
-
-.search-box input {
+  display: flex;
+  align-items: center;
+  background: var(--bg-light);
+  padding: 12px 25px;
+  border-radius: 100px; /* Pill shape */
   width: 100%;
-  padding: 12px 15px 12px 45px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  outline: none;
-  font-size: 1rem;
+  max-width: 400px;
+  border: 2px solid transparent;
   transition: 0.3s;
 }
 
-.search-box input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+.search-box:focus-within {
+  border-color: var(--orange);
+  background: var(--white);
+  box-shadow: 0 10px 25px rgba(240, 90, 40, 0.1);
+}
+
+.search-icon {
+  color: var(--navy);
+  font-size: 1.3rem;
+  margin-right: 15px;
+}
+
+.search-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--navy);
+  width: 100%;
 }
 
 .filter-group {
@@ -74,120 +124,156 @@
 }
 
 .filter-item {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #f1f5f9;
-  padding: 10px 15px;
-  border-radius: 12px;
-  color: #475569;
-  font-weight: 600;
+}
+
+.filter-item svg {
+  position: absolute;
+  left: 15px;
+  color: var(--navy);
+  font-size: 1.2rem;
+  pointer-events: none;
 }
 
 .filter-item select {
-  background: transparent;
-  border: none;
-  outline: none;
+  appearance: none;
+  background: var(--white);
+  border: 1px solid #e2e8f0;
+  padding: 12px 40px 12px 45px;
+  border-radius: 100px;
+  font-size: 1rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--navy);
   cursor: pointer;
+  transition: 0.3s;
+  box-shadow: var(--shadow-sm);
 }
 
-/* --- GRID --- */
-.results-count {
-  margin-bottom: 25px;
-  font-weight: 600;
+.filter-item select:hover, .filter-item select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 10px 20px rgba(33, 150, 243, 0.1);
+  outline: none;
+}
+
+/* ==========================================
+   📦 GRID-UL DE PRODUSE (Main Content)
+   ========================================== */
+.shop-main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 25px 80px;
+}
+
+.results-info {
+  margin-bottom: 30px;
+  font-size: 1.1rem;
   color: #64748b;
+  font-weight: 600;
 }
-
-.results-count span {
-  color: #0f172a;
-  font-weight: 800;
-}
+.results-info span { color: var(--navy); font-weight: 900; }
 
 .shop-products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
+  gap: 35px;
 }
 
-/* --- CARD PRODUS SHOP --- */
+/* --- CARD PRODUS PREMIUM (3D Hover Effect) --- */
 .shop-card {
-  background: #fff;
+  background: var(--white);
   border-radius: 24px;
-  border: 1px solid #f1f5f9;
   overflow: hidden;
-  transition: 0.4s;
+  border: 1px solid #f1f5f9;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  position: relative;
 }
 
 .shop-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-hover);
+  border-color: #cbd5e1;
 }
 
 .shop-card-img {
-  height: 280px;
   position: relative;
-  background: #f8fafc;
+  aspect-ratio: 1/1;
+  background: var(--bg-light);
+  overflow: hidden;
+  padding: 15px; /* Spațiu fin pe margini */
 }
 
 .shop-card-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 16px;
+  transition: transform 0.6s ease;
+}
+
+.shop-card:hover .shop-card-img img {
+  transform: scale(1.05);
 }
 
 .shop-badge {
   position: absolute;
-  top: 15px;
-  left: 15px;
+  top: 25px; left: 25px;
   background: #ef4444;
   color: white;
-  padding: 5px 12px;
+  font-weight: 900;
+  padding: 6px 12px;
   border-radius: 8px;
-  font-weight: 800;
   font-size: 0.8rem;
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
 
 .shop-wishlist {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  top: 25px; right: 25px;
   background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(5px);
   border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
   color: #94a3b8;
   cursor: pointer;
   transition: 0.3s;
+  z-index: 2;
 }
 
-.shop-wishlist:hover {
-  color: #ef4444;
-  background: #fff;
-}
+.shop-wishlist:hover { color: #ef4444; transform: scale(1.1); }
 
 .shop-card-body {
-  padding: 25px;
+  padding: 25px 20px;
 }
 
 .shop-cat-label {
-  font-size: 0.75rem;
+  display: block;
+  font-size: 0.85rem;
   font-weight: 800;
-  color: #3b82f6;
+  color: var(--blue);
   text-transform: uppercase;
   letter-spacing: 1px;
+  margin-bottom: 8px;
 }
 
 .shop-card-body h3 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 800;
-  margin: 10px 0;
-  color: #0f172a;
+  color: var(--navy);
+  margin-bottom: 12px;
+  line-height: 1.4;
+  /* Trunchiem la 2 rânduri */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .shop-rating {
@@ -195,205 +281,129 @@
   align-items: center;
   gap: 2px;
   color: #fbbf24;
+  font-size: 1rem;
   margin-bottom: 20px;
 }
-
-.star-f { fill: #fbbf24; }
-
-.shop-rating small {
-  color: #94a3b8;
-  margin-left: 5px;
-  font-weight: 600;
-}
+.shop-rating small { color: #94a3b8; font-weight: 700; margin-left: 5px; font-size: 0.9rem; }
 
 .shop-price-box {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding-top: 15px;
-  border-top: 1px solid #f1f5f9;
+  align-items: flex-end;
 }
 
-.shop-prices .old {
+.current {
   display: block;
-  font-size: 0.9rem;
-  text-decoration: line-through;
-  color: #94a3b8;
-  font-weight: 600;
-}
-
-.shop-prices .current {
   font-size: 1.6rem;
   font-weight: 900;
-  color: #10b981;
+  color: var(--navy);
+}
+
+.old {
+  display: block;
+  font-size: 1rem;
+  color: #94a3b8;
+  text-decoration: line-through;
+  margin-bottom: 2px;
 }
 
 .shop-cart-btn {
-  background: #0f172a;
-  color: white;
-  width: 50px;
-  height: 50px;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  transition: 0.3s;
+  background: var(--bg-light);
+  border: none;
+  width: 50px; height: 50px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  color: var(--navy);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .shop-cart-btn:hover {
-  background: #3b82f6;
-  transform: scale(1.05);
+  background: var(--navy);
+  color: var(--white);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: var(--shadow-md);
 }
 
-/* --- NO RESULTS --- */
+/* ==========================================
+   💀 SKELETON LOADING (Efectul Shimmer)
+   ========================================== */
+.skeleton-card {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 15px;
+  border: 1px solid #f1f5f9;
+  position: relative;
+  overflow: hidden;
+  height: 450px; /* Înălțime estimată card */
+}
+
+.skeleton-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer { 100% { left: 100%; } }
+
+.skeleton-img { width: 100%; height: 250px; background: #e2e8f0; border-radius: 16px; margin-bottom: 20px; }
+.skeleton-line { height: 16px; background: #e2e8f0; border-radius: 8px; margin-bottom: 10px; }
+.skeleton-line.title { width: 90%; height: 20px; }
+.skeleton-line.subtitle { width: 60%; margin-bottom: 30px; }
+.skeleton-line.price { width: 40%; height: 30px; }
+
+/* ==========================================
+   📭 EMPTY STATE (Fără rezultate)
+   ========================================== */
 .no-results {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 100px 0;
+  padding: 80px 20px;
+  background: var(--bg-light);
+  border-radius: 30px;
+  border: 2px dashed #cbd5e1;
 }
 
+.no-results h2 { font-size: 2rem; font-weight: 900; color: var(--navy); margin: 20px 0 10px; }
+.no-results p { font-size: 1.1rem; color: #64748b; margin-bottom: 30px; }
 .btn-reset {
-  margin-top: 20px;
-  padding: 12px 30px;
-  background: #0f172a;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
+  background: var(--orange); color: white; border: none; padding: 15px 35px; border-radius: 100px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(240, 90, 40, 0.3);
+}
+.btn-reset:hover { background: #ea580c; transform: translateY(-3px); }
+
+/* ==========================================
+   📱 RESPONSIVE MOBIL
+   ========================================== */
+@media (max-width: 1000px) {
+  .shop-toolbar {
+    flex-direction: column;
+    margin: -30px 20px 40px;
+    padding: 20px;
+  }
+  .search-box { max-width: 100%; }
+  .filter-group { width: 100%; flex-direction: column; }
+  .filter-item { width: 100%; }
+  .filter-item select { width: 100%; }
 }
 
-/* ==================================================
-   📱 SHOP MOBILE - DESIGN BOMBA (Nr. 1)
-================================================== */
-@media (max-width: 850px) {
-    /* Reset & Container */
-    .shop-page-wrapper { background: #ffffff; }
-    .container { padding: 0 15px; }
+@media (max-width: 900px) {
+  .shop-page-wrapper { padding-top: 75px !important; }
+  .shop-hero h1 { font-size: 2.5rem; }
+  
+  .shop-products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  
+  .shop-card-body { padding: 20px 15px; }
+  .current { font-size: 1.4rem; }
+  .shop-cart-btn { width: 45px; height: 45px; }
+}
 
-    /* HERO - Mai mic, să ajungem repede la produse */
-    .shop-hero {
-        padding: 40px 20px;
-        text-align: left;
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        border-radius: 0 0 30px 30px;
-        margin-bottom: 25px;
-    }
-    .shop-hero h1 { font-size: 1.8rem; margin-bottom: 8px; }
-    .shop-hero p { font-size: 0.95rem; opacity: 0.8; max-width: 100%; }
-
-    /* TOOLBAR - Căutare sus, Filtre jos side-by-side */
-    .shop-toolbar {
-        flex-direction: column;
-        gap: 15px;
-        margin-bottom: 20px;
-        padding: 0;
-    }
-    .search-box { 
-        width: 100%; 
-        background: #f1f5f9; 
-        border: none;
-        border-radius: 14px;
-    }
-    .filter-group { 
-        width: 100%; 
-        display: grid; 
-        grid-template-columns: 1fr 1fr; 
-        gap: 10px; 
-    }
-    .filter-item {
-        width: 100%;
-        justify-content: center;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 10px;
-    }
-    .filter-item select { font-size: 0.85rem; width: 100%; }
-
-    /* GRID PRODUSE - 2 PE RÂND (Obligatoriu pentru nr. 1) */
-    .shop-main-content { margin: 0; }
-    .results-info { text-align: center; margin-bottom: 15px; font-size: 0.85rem; }
-    
-    .shop-products-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr); /* 2 coloane */
-        gap: 12px;
-        padding-bottom: 40px;
-    }
-
-    /* CARDUL DE PRODUS - PREMIUM LOOK */
-    .shop-card {
-        background: #ffffff;
-        border: 1px solid #f1f5f9;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        transition: none;
-    }
-
-    .shop-card-img {
-        height: 170px; /* Înălțime fixă pentru aliniere perfectă */
-        position: relative;
-    }
-    .shop-badge {
-        font-size: 0.65rem;
-        padding: 4px 8px;
-        top: 8px;
-        left: 8px;
-        border-radius: 6px;
-    }
-    .shop-wishlist {
-      display: none;
-        top: 8px;
-        right: 8px;
-        width: 32px;
-        height: 32px;
-        background: rgba(255,255,255,0.9);
-        backdrop-filter: blur(4px);
-    }
-
-    .shop-card-body {
-        padding: 12px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    .shop-cat-label { font-size: 0.7rem; margin-bottom: 4px; }
-    .shop-card-body h3 {
-        font-size: 0.9rem;
-        line-height: 1.3;
-        height: 2.6em; /* Forțează 2 rânduri de text */
-        overflow: hidden;
-        margin-bottom: 8px;
-        font-weight: 700;
-    }
-
-    .shop-rating { font-size: 0.75rem; margin-bottom: 10px; gap: 2px; }
-    .star-f { font-size: 0.7rem; }
-
-    /* PRICE BOX & CART BUTTON */
-    .shop-price-box {
-        margin-top: auto;
-        padding-top: 10px;
-        border-top: 1px solid #f8fafc;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .shop-prices { display: flex; flex-direction: column; gap: 0; }
-    .shop-prices .old { font-size: 0.75rem; }
-    .shop-prices .current { font-size: 1rem; font-weight: 800; color: #ef4444; }
-
-    .shop-cart-btn {
-      display: none;
-    }
-
-    /* EMPTY STATE */
-    .no-results { padding: 60px 20px; }
-    .no-results h2 { font-size: 1.3rem; }
+@media (max-width: 500px) {
+  .shop-products-grid { grid-template-columns: 1fr; } /* Pe iPhone intră 1 card pe rând, mare și clar */
 }
