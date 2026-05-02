@@ -156,6 +156,7 @@
  
   .search-wrapper {
       display: flex;
+      z-index: 999999;
       align-items: center;
       position: relative;
   }
