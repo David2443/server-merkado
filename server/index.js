@@ -36,7 +36,31 @@ const trimiteEmail = async (to, subject, htmlContent) => {
   }
 };
 
+const trimiteTelegram = async (mesaj) => {
+  const token = process.env.TELEGRAM_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  
+  // Folosim fetch (disponibil nativ în Node.js 18+)
+  const url = `https://api.telegram.org/bot${token}/sendMessage`;
+  
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: mesaj,
+        parse_mode: 'HTML'
+      })
+    });
+    console.log("🚀 Notificare Telegram trimisă!");
+  } catch (error) {
+    console.error("❌ Eroare Telegram:", error.message);
+  }
+};
 
+// Folosește-o în ruta de comandă nouă:
+await trimiteTelegram(`🚀 <b>Comandă Nouă!</b>\n\n👤 Client: ${nouaComanda.numeClient}\n🛒 Produs: ${nouaComanda.numeProdus}\n💰 Total: ${nouaComanda.total} Lei`);
 
 // 🎨 CONSTRUCTORUL DE TEMPLATE "SUPER PRODUSE"
 const genereazaEmailSuperProduse = (titlu, statusMesaj, comanda) => {
@@ -868,7 +892,22 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
     // 5. Salvare în baza de date
     const nouaComanda = new Comanda(payloadComanda);
     await nouaComanda.save(); 
-    
+
+// 🔔 NOTIFICARE TELEGRAM
+const textMesaj = `
+🚀 <b>COMANDĂ NOUĂ!</b>
+
+👤 <b>Client:</b> ${nouaComanda.numeClient}
+📞 <b>Telefon:</b> ${nouaComanda.telefon}
+🛒 <b>Produs:</b> ${nouaComanda.numeProdus} (x${nouaComanda.cantitate || 1})
+💰 <b>Total:</b> ${nouaComanda.total} Lei
+📍 <b>Oraș:</b> ${nouaComanda.localitate}, ${nouaComanda.judet}
+💳 <b>Plată:</b> ${nouaComanda.metodaPlata}
+
+<a href="https://merkado.ro/admin/dashboard">👉 Deschide Dashboard-ul</a>
+`;
+
+trimiteTelegram(textMesaj);
     // 6. Ștergem numărul din lista de "Coșuri Abandonate"
     await CosAbandonat.findOneAndDelete({ telefon: payloadComanda.telefon });
 
@@ -977,7 +1016,7 @@ app.get('/api/admin/users', verifyAdmin, async (req, res) => {
   } catch (err) { res.status(500).json({ eroare: err.message }); }
 });
 
-// 📄 LISTARE MESAJE
+// 📄 LISTARE MESAJE (Rămâne la fel, e corectă)
 app.get('/api/admin/mesaje', verifyAdmin, async (req, res) => {
   try {
     const mesaje = await Contact.find().sort({ createdAt: -1 });
@@ -988,28 +1027,27 @@ app.get('/api/admin/mesaje', verifyAdmin, async (req, res) => {
 });
 
 // ==========================================
-// 🗑️ ȘTERGERE MESAJ (REPARATĂ)
+// 🗑️ ȘTERGERE MESAJ (SIMPLIFICATĂ ȘI SIGURĂ)
 // ==========================================
 app.delete('/api/admin/mesaje/:id', verifyAdmin, async (req, res) => {
   try {
     const idMesaj = req.params.id;
 
-    // 🛡️ Verificăm dacă ID-ul este valid pentru MongoDB înainte de orice
+    // 1. Verificăm dacă ID-ul este valid înainte de a interoga baza de date
     if (!mongoose.Types.ObjectId.isValid(idMesaj)) {
-      return res.status(400).json({ eroare: "ID-ul mesajului este invalid!" });
+      return res.status(400).json({ eroare: "Formatul ID-ului este invalid!" });
     }
 
-    // 🧹 Ștergem direct din colecția 'contacts'
-    const rezultat = await mongoose.connection.db.collection('contacts').deleteOne({
-      _id: new mongoose.Types.ObjectId(idMesaj)
-    });
+    // 2. Ștergem folosind Modelul 'Contact' (Metoda recomandată)
+    const sters = await Contact.findByIdAndDelete(idMesaj);
 
-    if (rezultat.deletedCount === 0) {
-      return res.status(404).json({ eroare: "Mesajul a fost deja șters sau nu există." });
+    if (!sters) {
+      return res.status(404).json({ eroare: "Mesajul nu a fost găsit sau a fost deja șters." });
     }
 
-    console.log(`🗑️ Mesaj eliminat: ${idMesaj}`);
+    console.log(`🗑️ Mesaj eliminat cu succes: ${idMesaj}`);
     res.json({ success: true, mesaj: "Mesaj șters cu succes!" });
+
   } catch (err) {
     console.error("❌ Eroare la ștergerea mesajului:", err);
     res.status(500).json({ eroare: "Eroare server: " + err.message });
