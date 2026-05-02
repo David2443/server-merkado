@@ -1016,40 +1016,44 @@ app.get('/api/admin/users', verifyAdmin, async (req, res) => {
   } catch (err) { res.status(500).json({ eroare: err.message }); }
 });
 
-// 📄 LISTARE MESAJE (Rămâne la fel, e corectă)
+// ==========================================
+// 📄 LISTARE MESAJE (Admin)
+// ==========================================
 app.get('/api/admin/mesaje', verifyAdmin, async (req, res) => {
   try {
+    // Folosim modelul definit 'Contact' - e varianta cea mai sigură
     const mesaje = await Contact.find().sort({ createdAt: -1 });
     res.json(mesaje);
   } catch (err) { 
-    res.status(500).json({ eroare: err.message }); 
+    res.status(500).json({ eroare: "Nu am putut încărca mesajele: " + err.message }); 
   }
 });
 
 // ==========================================
-// 🗑️ ȘTERGERE MESAJ (SIMPLIFICATĂ ȘI SIGURĂ)
+// 🗑️ ȘTERGERE MESAJ (Reparată definitiv)
 // ==========================================
 app.delete('/api/admin/mesaje/:id', verifyAdmin, async (req, res) => {
   try {
     const idMesaj = req.params.id;
 
-    // 1. Verificăm dacă ID-ul este valid înainte de a interoga baza de date
+    // 🛡️ Pasul 1: Verificăm formatul ID-ului
     if (!mongoose.Types.ObjectId.isValid(idMesaj)) {
-      return res.status(400).json({ eroare: "Formatul ID-ului este invalid!" });
+      return res.status(400).json({ eroare: "ID-ul mesajului este invalid!" });
     }
 
-    // 2. Ștergem folosind Modelul 'Contact' (Metoda recomandată)
-    const sters = await Contact.findByIdAndDelete(idMesaj);
+    // 🛡️ Pasul 2: Ștergem folosind modelul 'Contact' (NU manual prin db.collection)
+    // Asta rezolvă conflictele de conexiune pe care le ai acum
+    const mesajSters = await Contact.findByIdAndDelete(idMesaj);
 
-    if (!sters) {
+    if (!mesajSters) {
       return res.status(404).json({ eroare: "Mesajul nu a fost găsit sau a fost deja șters." });
     }
 
-    console.log(`🗑️ Mesaj eliminat cu succes: ${idMesaj}`);
+    console.log(`🗑️ Mesaj eliminat: ${idMesaj}`);
     res.json({ success: true, mesaj: "Mesaj șters cu succes!" });
 
   } catch (err) {
-    console.error("❌ Eroare la ștergerea mesajului:", err);
+    console.error("❌ Eroare server la ștergere:", err);
     res.status(500).json({ eroare: "Eroare server: " + err.message });
   }
 });
