@@ -986,7 +986,12 @@ app.get('/api/dashboard', verifyAdmin, async (req, res) => {
 // ==========================================
 // 📡 WEBSOCKETS (SOCKET.IO) - VIZITATORI + LIVE CARTS
 // ==========================================
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, {
+  cors: {
+    origin: ["https://merkado.ro", "http://localhost:5173"],
+    methods: ["GET", "POST"]
+  }
+});
 
 const activeUsers = new Map();
 app.use((req, res, next) => {
