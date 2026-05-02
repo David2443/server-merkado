@@ -1,5 +1,5 @@
 /* ==========================================
-   🎨 VARIABILE CULORI MERKADO
+   🎨 VARIABILE PREMIUM MERKADO
    ========================================== */
 :root {
   --navy: #133E70;
@@ -9,30 +9,14 @@
   --bg-light: #f8fafc;
   --nav-height: 85px;
   --nav-mobile-height: 75px;
+  /* Umbre 3D pentru butoane */
+  --shadow-sm: 0 2px 8px rgba(19, 62, 112, 0.08);
+  --shadow-md: 0 8px 24px rgba(19, 62, 112, 0.15);
+  --shadow-orange: 0 8px 24px rgba(240, 90, 40, 0.25);
 }
 
 /* ==========================================
-   🛡️ RESETURI CRITICE (Omoară segmentul alb)
-   ========================================== */
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  overscroll-behavior-y: none !important; /* Rezolvă segmentul alb la scroll up pe mobil */
-}
-
-/* Împingem tot site-ul sub navbar ca să nu se mai suprapună pe bannerul negru */
-body {
-  padding-top: var(--nav-height) !important;
-}
-
-@media (max-width: 900px) {
-  body {
-    padding-top: var(--nav-mobile-height) !important;
-  }
-}
-
-/* ==========================================
-   🛸 NAVBAR-UL PRINCIPAL
+   🛸 NAVBAR-UL PRINCIPAL (Glassmorphism)
    ========================================== */
 .navbar-merkado-pro {
   position: fixed !important;
@@ -40,13 +24,17 @@ body {
   left: 0 !important;
   width: 100% !important;
   height: var(--nav-height) !important;
-  background-color: var(--white) !important;
-  z-index: 9999 !important; /* Stratul de bază al navigației */
+  /* Efectul de sticlă mată (Apple Style) */
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999 !important;
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 25px rgba(19, 62, 112, 0.12);
-  border-bottom: 2px solid rgba(240, 90, 40, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
   margin: 0 !important;
+  transition: all 0.3s ease;
 }
 
 .nav-container-pro {
@@ -59,26 +47,32 @@ body {
   align-items: center;
 }
 
-/* 🔥 LOGO */
+/* 🔥 LOGO (Cu efect de hover) */
 .brand-logo-pro {
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   font-weight: 900;
   color: var(--navy) !important;
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   letter-spacing: -1px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.brand-logo-pro:hover {
+  transform: scale(1.02);
 }
 
 .brand-logo-pro span {
   color: var(--orange) !important;
+  text-shadow: 0 2px 10px rgba(240, 90, 40, 0.2);
 }
 
-/* 💻 LINK-URI DESKTOP */
+/* 💻 LINK-URI DESKTOP (Micro-interacțiuni) */
 .desktop-links-pro {
   display: flex;
-  gap: 35px;
+  gap: 15px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -90,45 +84,58 @@ body {
   font-weight: 800;
   font-size: 0.95rem;
   text-transform: uppercase;
-  transition: 0.3s;
+  padding: 10px 18px;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  overflow: hidden;
 }
 
+/* Hover sub formă de bulă (Pill effect) */
 .desktop-links-pro a:hover {
   color: var(--orange) !important;
+  background: rgba(240, 90, 40, 0.08);
+  transform: translateY(-2px);
 }
 
-/* 🛒 ACȚIUNI (Lupă, Cont, Burger) */
+/* 🛒 ACȚIUNI (Lupă, Cont, Cos, Burger) - Butoane Premium */
 .nav-actions-pro {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .icon-btn-pro, .mobile-toggle-pro {
-  background: var(--bg-light);
-  border: 1px solid #e2e8f0;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  background: var(--white);
+  border: 1px solid #f1f5f9;
+  width: 50px;
+  height: 50px;
+  border-radius: 16px; /* Colțuri moderne */
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--navy) !important;
   font-size: 1.5rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efect de "arc" */
 }
 
+/* Efect de click și hover pe butoane */
 .icon-btn-pro:hover, .mobile-toggle-pro:hover {
   background: var(--navy);
   color: var(--white) !important;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(19, 62, 112, 0.2);
+  border-color: var(--navy);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: var(--shadow-md);
+}
+
+.icon-btn-pro:active, .mobile-toggle-pro:active {
+  transform: scale(0.95); /* Senzație fizică de apăsare */
 }
 
 /* ==========================================
-   🔍 SEARCH OVERLAY (Peste Navbar)
+   🔍 SEARCH OVERLAY (Animație Smooth & Glow)
    ========================================== */
 .search-overlay {
   position: fixed !important;
@@ -136,12 +143,15 @@ body {
   left: 0;
   width: 100%;
   height: 100dvh;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(15px);
-  z-index: 10000 !important; /* Peste navbar */
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(248, 250, 252, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 10000 !important;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  padding-top: 15vh;
 }
 
 .search-overlay.active {
@@ -151,23 +161,32 @@ body {
 .search-content-container {
   width: 100%;
   max-width: 800px;
-  padding: 40px 20px;
-  margin-top: 50px;
+  padding: 0 20px;
+  transform: scale(0.95);
+  opacity: 0;
+  transition: all 0.5s ease 0.1s;
+}
+
+.search-overlay.active .search-content-container {
+  transform: scale(1);
+  opacity: 1;
 }
 
 .search-input-wrapper {
   display: flex;
   align-items: center;
-  background: var(--bg-light);
-  padding: 20px 30px;
+  background: var(--white);
+  padding: 22px 35px;
   border-radius: 100px;
-  border: 2px solid transparent;
+  border: 2px solid #e2e8f0;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.4s ease;
 }
 
 .search-input-wrapper:focus-within {
   border-color: var(--orange);
-  background: var(--white);
-  box-shadow: 0 15px 30px rgba(240, 90, 40, 0.1);
+  box-shadow: 0 0 0 5px rgba(240, 90, 40, 0.15), var(--shadow-orange);
+  transform: translateY(-2px);
 }
 
 .search-input-wrapper input {
@@ -175,14 +194,41 @@ body {
   border: none;
   background: transparent;
   outline: none;
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
   color: var(--navy);
-  margin-left: 15px;
+  margin-left: 20px;
+}
+
+.search-input-wrapper input::placeholder {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.close-search {
+  margin-top: 30px;
+  background: var(--navy);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: var(--shadow-md);
+  transition: 0.3s;
+}
+
+.close-search:hover {
+  background: var(--orange);
+  transform: scale(1.05);
 }
 
 /* ==========================================
-   📱 MOBILE MENU (Stratul Suprem)
+   📱 MOBILE MENU (Drawer Ultra Premium)
    ========================================== */
 .mobile-menu-overlay {
   position: fixed !important;
@@ -190,12 +236,12 @@ body {
   left: 0;
   width: 100%;
   height: 100dvh;
-  background: rgba(19, 62, 112, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
   z-index: 10001 !important;
   opacity: 0;
   visibility: hidden;
-  transition: 0.3s;
+  transition: all 0.4s ease;
 }
 
 .mobile-menu-overlay.active {
@@ -207,16 +253,17 @@ body {
   position: fixed !important;
   top: 0;
   right: -100%;
-  width: 320px;
+  width: 340px;
   max-width: 85vw;
   height: 100dvh;
   background: var(--white);
-  z-index: 10002 !important; /* Cel mai deasupra */
-  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.15);
+  z-index: 10002 !important;
+  transition: right 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  padding: 40px 25px;
+  padding: 40px 30px;
+  border-radius: 30px 0 0 30px; /* Colțuri rotunjite doar pe stânga, stil aplicație */
 }
 
 .mobile-drawer.open {
@@ -227,7 +274,25 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
+}
+
+.close-drawer-btn {
+  background: var(--bg-light);
+  border: 1px solid #e2e8f0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--navy);
+  transition: 0.3s;
+}
+
+.close-drawer-btn:hover {
+  background: #ef4444; /* Roșu la închidere */
+  color: white;
+  transform: rotate(90deg);
 }
 
 .drawer-links {
@@ -238,15 +303,25 @@ body {
 
 .drawer-links a {
   text-decoration: none;
-  font-size: 1.3rem;
-  font-weight: 900;
+  font-size: 1.2rem;
+  font-weight: 800;
   color: var(--navy) !important;
-  padding: 15px;
+  padding: 18px 20px;
   background: var(--bg-light);
-  border-radius: 12px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.drawer-links a:hover {
+  background: var(--white);
+  border-color: var(--orange);
+  color: var(--orange) !important;
+  box-shadow: var(--shadow-sm);
+  transform: translateX(-5px); /* Efect de glisare subtilă */
 }
 
 /* ==========================================
@@ -261,5 +336,13 @@ body {
   }
   .navbar-merkado-pro {
     height: var(--nav-mobile-height) !important;
+  }
+  .brand-logo-pro {
+    font-size: 1.6rem;
+  }
+  .icon-btn-pro, .mobile-toggle-pro {
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
   }
 }

@@ -1,4 +1,9 @@
 /* ==========================================
+   🌟 FONTURI PREMIUM (Import Google Fonts)
+   ========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+/* ==========================================
    🧹 RESET GLOBAL & ANTI-GHOSTING
    ========================================== */
 *, *::before, *::after {
@@ -11,9 +16,16 @@ html, body {
   margin: 0 !important;
   padding: 0 !important;
   width: 100% !important;
+  
+  /* 🔥 FORȚĂM FONTUL PE TOT SITE-UL */
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif !important;
+  -webkit-font-smoothing: antialiased; /* Face textul mai fin pe ecrane Apple */
+  -moz-osx-font-smoothing: grayscale;
+  
   /* Oprește „elasticul” alb de pe mobil la scroll up */
   overscroll-behavior-y: none !important; 
   background-color: #ffffff;
+  color: #1e293b; /* Un text ușor mai blând decât negrul pur, e mai elegant */
 }
 
 /* 🛡️ Împingem TOT conținutul site-ului sub Navbar-ul fix */
@@ -25,4 +37,16 @@ body {
   body {
     padding-top: 75px !important;
   }
+}
+
+/* ==========================================
+   🔧 RESET PENTRU BUTOANE ȘI LINK-URI
+   ========================================== */
+a {
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  /* Forțăm și butoanele/inputurile să moștenească fontul Montserrat */
+  font-family: inherit; 
 }
