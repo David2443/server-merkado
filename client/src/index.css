@@ -1,4 +1,4 @@
-/* ELIMINĂM ORICE GOL ALB DIN RĂDĂCINĂ */
+/* RESET TOTAL - Omoară orice margine fantomă */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -8,26 +8,28 @@
 html, body {
   margin: 0 !important;
   padding: 0 !important;
+  width: 100% !important;
   height: 100%;
+  /* Dacă ai vreo regulă de 'padding-top' aici, ȘTERGE-O! */
   background-color: #ffffff;
 }
 
-/* CONTAINERUL DIN App.jsx */
+#root {
+  margin: 0;
+  padding: 0;
+}
+
+/* Containerul tău din App.jsx */
 .app-container {
-  margin: 0 !important;
-  padding: 0 !important;
   display: flex;
   flex-direction: column;
-}
-
-/* WRAPPER-UL DIN Home.jsx */
-.general-ecom-wrapper {
+  min-height: 100vh;
   margin: 0 !important;
   padding: 0 !important;
 }
 
-/* ELIMINĂM ORICE PADDING DE SUS PE CARE L-AM PUS ANTERIOR */
 .main-content {
+  flex: 1;
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
