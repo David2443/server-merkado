@@ -826,13 +826,14 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
 
 
     // 8. ✉️ TRIMITE EMAIL DE LUX (Cu poză și buton de sunat)
-   if (payloadComanda.email) {
-  const msgEmail = `Comanda ta a fost preluată și urmează să fie pregătită pentru expediere.`;
-  const htmlEmail = genereazaEmailSuperProduse("Confirmare Comandă 🎉", msgEmail, payloadComanda);
-  trimiteEmail(payloadComanda.email, "Comanda ta Super Produse a fost înregistrată! 🚀", htmlEmail);
-}
+  if (nouaComanda.email) {
+      const msgEmail = `Comanda ta a fost preluată și urmează să fie pregătită pentru expediere.`;
+      // 🔥 Aici era buba! Am schimbat 'payloadComanda' cu 'nouaComanda'
+      const htmlEmail = genereazaEmailSuperProduse("Confirmare Comandă 🎉", msgEmail, nouaComanda);
+      trimiteEmail(nouaComanda.email, "Comanda ta Super Produse a fost înregistrată! 🚀", htmlEmail);
+    }
 
-    res.status(201).json({ success: true, mesaj: "Comandă trimisă!" }); 
+    res.status(201).json({ success: true, mesaj: "Comandă trimisă!" });
   } catch (err) { 
     res.status(400).json({ eroare: err.message }); 
   }
@@ -872,10 +873,11 @@ if (statusNou === 'Trimisă' || statusNou === 'Expediată') {
   trimiteEmail(email, "Vești bune! Comanda ta este pe drum 🚚", html);
 }
 
-    // 🏠 CAZ 2: LIVRATĂ
-    if (statusNou === 'Livrată') {
+  // 🏠 CAZ 2: LIVRATĂ (Acoperim și varianta cu diacritice și fără)
+    if (statusNou === 'Livrată' || statusNou === 'Livrata') {
       const msg = `Comanda ta a fost marcată ca livrată. Sperăm să te bucuri de produs! Nu ezita să ne lași o recenzie pe site dacă ești mulțumit de achiziție.`;
-      const html = genereazaEmailSuperProduse("Comandă Livrată cu succes! 📦", msg, comandaActualizata, imagineProdus);
+      // Am scos 'imagineProdus' din apel pentru că funcția ta de generat email nu folosește 4 argumente
+      const html = genereazaEmailSuperProduse("Comandă Livrată cu succes! 📦", msg, comandaActualizata);
       trimiteEmail(email, "Comanda ta a ajuns! 📦", html);
     }
 
