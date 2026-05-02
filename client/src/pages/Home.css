@@ -2,10 +2,11 @@
    🏠 HOME GLOBAL WRAPPER
    ========================================== */
 .general-ecom-wrapper {
+  padding-top: 80px !important; 
   width: 100%;
   overflow-x: hidden;
   background-color: #ffffff;
-  /* Împingem tot conținutul sub Navbar-ul fixed (80px) */
+  
   margin-top: 0;
 }
 

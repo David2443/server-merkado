@@ -1,46 +1,27 @@
 /* ==========================================
-   🧹 RESET GLOBAL & ANTI-GHOSTING
+   🧹 RESET TOTAL - OMOARĂ GOLUL ALB
    ========================================== */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap');
-
 *, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box !important;
+  outline: none; /* Scoatem liniile roșii după ce verifici */
 }
 
 html, body {
-  font-family: 'Montserrat', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   margin: 0 !important;
   padding: 0 !important;
+  width: 100% !important;
+  /* Oprește efectul de "elastic" la scroll up (segmentul alb) */
+  overscroll-behavior-y: none !important; 
   background-color: #ffffff;
-  overflow-x: hidden;
-  width: 100%;
+  /* Fix pentru browserele de mobil (Safari/Chrome) */
+  position: relative;
+  min-height: 100%;
 }
 
 #root {
-  width: 100%;
   margin: 0;
   padding: 0;
-}
-
-/* 🎯 FIX ANIMAȚIE: Doar opacitate, fără mișcare de pixeli */
-.fade-in {
-  animation: fadeInGlobal 0.4s ease-in forwards;
-}
-
-@keyframes fadeInGlobal {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Eliminăm orice spațiu forțat de pagini */
-.main-content {
   width: 100%;
-  margin-top: 0 !important;
-}
-* {
-  outline: 1px solid red !important;
 }
