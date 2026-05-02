@@ -1,41 +1,33 @@
-/* 1. FONTUL TREBUIE SĂ FIE PRIMUL RÂND OBLIGATORIU */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap');
-
-/* 2. RESETUL GLOBAL */
+/* ELIMINĂM ORICE GOL ALB DIN RĂDĂCINĂ */
 *, *::before, *::after {
-  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box !important;
 }
 
-/* 3. SETĂRI GENERALE PENTRU PAGINĂ */
 html, body {
-  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   margin: 0 !important;
   padding: 0 !important;
+  height: 100%;
   background-color: #ffffff;
-  overflow-x: hidden; /* Ține site-ul drept, să nu fugă stânga-dreapta */
 }
 
-/* 4. TĂIEM ORICE MARGINE FANTOMĂ CARE AR PUTEA ACOPERI MENIUL */
-.main-content, 
-.app-container, 
-.general-ecom-wrapper {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-/* 5. FIX PENTRU CONTAINERE */
+/* CONTAINERUL DIN App.jsx */
 .app-container {
+  margin: 0 !important;
+  padding: 0 !important;
   display: flex;
   flex-direction: column;
-  flex: 1; 
-  margin: 0 !important;
-  padding: 0 !important; 
 }
 
-/* 6. PREVENIM POZELE SĂ IASĂ DIN ECRAN PE TELEFOANE */
-img {
-  max-width: 100%;
-  height: auto;
+/* WRAPPER-UL DIN Home.jsx */
+.general-ecom-wrapper {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ELIMINĂM ORICE PADDING DE SUS PE CARE L-AM PUS ANTERIOR */
+.main-content {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
