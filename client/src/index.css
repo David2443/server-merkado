@@ -8,13 +8,13 @@ html, body {
   width: 100%;
   scroll-behavior: smooth !important; /* Am lăsat doar smooth pentru o navigare fină */
   background-color: #ffffff;
-  overflow-x: hidden;
+  
 }
 
 body {
   padding-top: 0 !important; /* Am anulat gaura albă */
   margin: 0;
-  overflow-x: clip !important; /* SECRETUL: Previne scroll-ul stânga-dreapta FĂRĂ să strice meniul pe mobil */
+ 
 }
 
 /* Ne asigurăm că nu mai ai margini fantomă pe nicăieri */
