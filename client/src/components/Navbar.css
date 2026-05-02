@@ -1,43 +1,52 @@
 /* ==========================================
-   🚀 NAVBAR PRINCIPAL (MATCH EXACT PE JSX-ul TĂU)
+   🎨 PALETA DE CULORI MERKADO (Hardcoded)
+   ========================================== */
+/* Navy: #133E70 | Portocaliu: #F05A28 | Blue: #2196F3 */
+
+/* ==========================================
+   🛸 NAVBAR PRINCIPAL
    ========================================== */
 .navbar-merkado-pro {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 80px !important;
+  /* 🛡️ SCHIMBARE CRITICĂ: Folosim relative pentru a nu mai acoperi banner-ul negru */
+  position: relative; 
+  width: 100%;
+  height: 90px;
   background-color: #ffffff !important;
-  z-index: 99999 !important; /* Prioritate maximă */
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  z-index: 1000;
+  box-shadow: 0 10px 30px rgba(19, 62, 112, 0.05);
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .nav-container-pro {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 25px;
+  padding: 0 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+/* 🔥 LOGO MERKADO */
 .brand-logo-pro {
   font-size: 1.8rem;
   font-weight: 900;
   text-decoration: none;
   color: #133E70 !important;
+  letter-spacing: -1px;
   display: flex;
   align-items: center;
   gap: 5px;
+  white-space: nowrap;
 }
-.brand-logo-pro span { color: #F05A28 !important; }
 
-/* ==========================================
-   💻 LINK-URI DESKTOP
-   ========================================== */
+.brand-logo-pro span {
+  color: #F05A28 !important;
+}
+
+/* 💻 LINK-URI DESKTOP */
 .desktop-links-pro {
   display: flex;
   gap: 35px;
@@ -49,8 +58,8 @@
 .desktop-links-pro a {
   text-decoration: none;
   color: #133E70 !important;
-  font-weight: 700;
-  font-size: 1rem;
+  font-weight: 800;
+  font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   position: relative;
@@ -58,6 +67,7 @@
   transition: all 0.3s ease;
 }
 
+/* Linia de hover sub link-uri */
 .desktop-links-pro a::after {
   content: '';
   position: absolute;
@@ -65,22 +75,20 @@
   left: 0;
   width: 0;
   height: 3px;
-  background: #2196F3;
+  background: #F05A28;
   border-radius: 2px;
-  transition: all 0.4s ease;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .desktop-links-pro a:hover {
-  color: #2196F3 !important;
+  color: #F05A28 !important;
 }
 
 .desktop-links-pro a:hover::after {
   width: 100%;
 }
 
-/* ==========================================
-   🛒 ACȚIUNI (Lupă, Cont, Burger)
-   ========================================== */
+/* 🛒 ACȚIUNI (Lupă, Cont, Meniu) */
 .nav-actions-pro {
   display: flex;
   align-items: center;
@@ -88,152 +96,206 @@
 }
 
 .icon-btn-pro, .mobile-toggle-pro {
-  background: none;
-  border: none;
-  font-size: 1.6rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 1.5rem;
   color: #133E70 !important;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 45px;
-  height: 45px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
 }
 
 .icon-btn-pro:hover, .mobile-toggle-pro:hover {
-  background-color: rgba(33, 150, 243, 0.1);
-  color: #2196F3 !important;
-  transform: translateY(-2px);
+  background-color: #133E70;
+  color: #ffffff !important;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(19, 62, 112, 0.2);
 }
 
 .mobile-toggle-pro {
-  display: none; /* Ascuns pe PC, apare doar pe mobil */
+  display: none; /* Ascuns pe desktop */
 }
 
 /* ==========================================
-   🔍 OVERLAY CĂUTARE (Sticlă Mată)
+   🔍 OVERLAY CĂUTARE (Full Screen)
    ========================================== */
 .search-overlay {
   position: fixed;
-  top: -100%;
+  top: -100%; /* Ascuns */
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index: 10000;
-  transition: top 0.4s ease;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(15px);
+  z-index: 20000; /* Peste navbar */
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 40px 20px;
   display: flex;
   justify-content: center;
-  overflow-y: auto;
 }
 
-.search-overlay.active { top: 0; }
-.search-content-container { width: 100%; max-width: 800px; margin-top: 30px; }
-.search-top-row { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+.search-overlay.active {
+  top: 0;
+}
+
+.search-content-container {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 50px;
+}
 
 .search-input-wrapper {
-  flex: 1; display: flex; align-items: center; background: #f8fafc; padding: 15px 25px;
-  border-radius: 50px; border: 2px solid transparent; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  padding: 20px 30px;
+  border-radius: 100px;
+  border: 2px solid transparent;
+  transition: 0.3s;
 }
 
 .search-input-wrapper:focus-within {
-  border-color: #F05A28; background: #ffffff; box-shadow: 0 10px 30px rgba(240, 90, 40, 0.15);
+  border-color: #F05A28;
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(240, 90, 40, 0.1);
 }
 
-.inner-search-icon { font-size: 1.5rem; color: #133E70; margin-right: 15px; }
-
 .search-input-wrapper input {
-  width: 100%; border: none; background: transparent; outline: none;
-  font-size: 1.2rem; font-weight: 600; color: #133E70;
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #133E70;
+  margin-left: 15px;
 }
 
 .close-search {
-  background: #ffffff; border: 2px solid #e2e8f0; display: flex; align-items: center;
-  gap: 10px; cursor: pointer; font-weight: 800; color: #1e293b; padding: 12px 25px;
-  border-radius: 50px; transition: all 0.3s ease;
+  margin-top: 20px;
+  background: #133E70;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: 800;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
-
-.close-search:hover { border-color: #ef4444; color: #ef4444; }
-
-/* -- Rezultate Căutare -- */
-.results-label { font-size: 0.85rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 15px; }
-.search-result-item { display: flex; align-items: center; padding: 12px; background: #ffffff; border-radius: 16px; cursor: pointer; margin-bottom: 10px; border: 1px solid #f1f5f9; transition: all 0.3s ease; }
-.search-result-item:hover { background: #f8fafc; border-color: #2196F3; transform: translateX(8px); }
-.search-result-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 10px; margin-right: 15px; }
-.res-info { flex: 1; display: flex; flex-direction: column; }
-.res-name { font-weight: 800; color: #133E70; font-size: 1rem; }
-.res-price { font-weight: 900; color: #F05A28; font-size: 0.95rem; margin-top: 4px; }
-.res-arrow { color: #2196F3; font-size: 1.4rem; transition: all 0.3s ease; }
-.search-result-item:hover .res-arrow { transform: translateX(5px); }
-.view-all-res { margin-top: 15px; background: #133E70; color: white; padding: 15px; border-radius: 16px; border: none; font-weight: 800; font-size: 1rem; cursor: pointer; width: 100%; transition: all 0.3s ease; }
-.view-all-res:hover { background: #F05A28; }
-.no-res-text { font-weight: bold; color: #133E70; text-align: center; margin-top: 20px;}
 
 /* ==========================================
-   📱 MENIU MOBIL (Sertar lateral iOS Style)
+   📱 MENIU MOBIL (Sertar lateral)
    ========================================== */
 .mobile-menu-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(19, 62, 112, 0.4);
-  backdrop-filter: blur(4px); z-index: 10000; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(19, 62, 112, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 15000;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
 }
 
-.mobile-menu-overlay.active { opacity: 1; visibility: visible; }
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
 
 .mobile-drawer {
-  position: fixed; top: 0; right: -100%; width: 320px; max-width: 85vw; height: 100vh;
-  background: #ffffff; z-index: 10001; transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  box-shadow: -15px 0 40px rgba(19, 62, 112, 0.1); display: flex; flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 320px;
+  max-width: 85vw;
+  height: 100vh;
+  background: #ffffff;
+  z-index: 15001;
+  transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 40px 25px;
+  box-shadow: -15px 0 50px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
 }
 
-.mobile-drawer.open { right: 0; }
+.mobile-drawer.open {
+  right: 0;
+}
 
-.drawer-header { display: flex; justify-content: space-between; align-items: center; padding: 25px 20px; border-bottom: 1px solid #f1f5f9; }
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+}
 
 .close-drawer-btn {
-  background: #f8fafc; border: 1px solid #e2e8f0; font-size: 1.5rem; color: #1e293b;
-  cursor: pointer; width: 45px; height: 45px; border-radius: 50%; display: flex;
-  align-items: center; justify-content: center; transition: all 0.3s ease;
+  background: #f1f5f9;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
-.close-drawer-btn:hover { background: #fee2e2; color: #ef4444; border-color: #ef4444; transform: rotate(90deg); }
-
-.drawer-links { display: flex; flex-direction: column; gap: 15px; padding: 25px 20px; overflow-y: auto; }
+.drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
 .drawer-links a {
-  text-decoration: none; font-size: 1.2rem; font-weight: 800; color: #133E70 !important;
-  background: #f8fafc; padding: 16px 20px; border-radius: 14px; transition: all 0.3s ease;
-  display: flex; align-items: center; justify-content: space-between;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #133E70 !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 15px;
+  transition: 0.3s;
 }
 
 .drawer-links a:hover {
-  background: #ffffff; color: #F05A28 !important; transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(19, 62, 112, 0.05);
+  background: #F05A28;
+  color: #ffffff !important;
 }
-
-.drawer-divider { height: 2px; background: #f1f5f9; margin: 5px 0; border-radius: 2px; }
 
 .drawer-account {
-  background: #133E70 !important; color: #ffffff !important; justify-content: center !important;
-  gap: 10px; margin-top: 10px;
+  margin-top: auto;
+  background: #133E70 !important;
+  color: #ffffff !important;
+  text-align: center;
+  padding: 20px;
+  border-radius: 15px;
+  text-decoration: none;
+  font-weight: 800;
 }
 
-.drawer-account:hover { background: #F05A28 !important; color: #ffffff !important; transform: translateY(-2px) !important; }
-
 /* ==========================================
-   📱 RESPONSIVE (Ajustări pentru telefoane)
+   📱 RESPONSIVE
    ========================================== */
 @media (max-width: 900px) {
-  .desktop-links-pro, .desktop-only-pro { display: none !important; }
-  .mobile-toggle-pro { display: flex; }
-  .nav-container-pro { padding: 0 20px; }
-  .brand-logo-pro { font-size: 1.6rem; }
-  
-  .search-top-row { flex-direction: column; align-items: stretch; gap: 15px; }
-  .close-search { justify-content: center; }
+  .desktop-links-pro, .desktop-only-pro {
+    display: none !important;
+  }
+  .mobile-toggle-pro {
+    display: flex;
+  }
+  .navbar-merkado-pro {
+    height: 75px !important;
+  }
 }

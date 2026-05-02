@@ -1,4 +1,8 @@
-/* RESET TOTAL - Omoară orice margine fantomă */
+/* ==========================================
+   🧹 RESET GLOBAL & ANTI-GHOSTING
+   ========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap');
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -6,30 +10,34 @@
 }
 
 html, body {
+  font-family: 'Montserrat', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   margin: 0 !important;
   padding: 0 !important;
-  width: 100% !important;
-  height: 100%;
-  /* Dacă ai vreo regulă de 'padding-top' aici, ȘTERGE-O! */
   background-color: #ffffff;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 #root {
+  width: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* Containerul tău din App.jsx */
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  margin: 0 !important;
-  padding: 0 !important;
+/* 🎯 FIX ANIMAȚIE: Doar opacitate, fără mișcare de pixeli */
+.fade-in {
+  animation: fadeInGlobal 0.4s ease-in forwards;
 }
 
+@keyframes fadeInGlobal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Eliminăm orice spațiu forțat de pagini */
 .main-content {
-  flex: 1;
+  width: 100%;
   margin-top: 0 !important;
-  padding-top: 0 !important;
 }
