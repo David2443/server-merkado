@@ -61,10 +61,15 @@ const trimiteTelegram = async (mesaj) => {
 
 
 
-// 🎨 CONSTRUCTORUL DE TEMPLATE "SUPER PRODUSE"
-const genereazaEmailSuperProduse = (titlu, statusMesaj, comanda) => {
+// 🎨 CONSTRUCTORUL DE TEMPLATE "SUPER PRODUSE" (REPARAT: Acum suportă parametrul imagineUrl)
+const genereazaEmailSuperProduse = (titlu, statusMesaj, comanda, imagineUrl = null) => {
   const dataComanda = new Date(comanda.createdAt || Date.now()).toLocaleDateString('ro-RO');
   
+  // Dacă există imaginea, o adăugăm în design
+  const htmlImagine = imagineUrl 
+    ? `<div style="text-align: center; margin-bottom: 20px;"><img src="${imagineUrl}" alt="${comanda.numeProdus}" style="max-width: 180px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></div>` 
+    : '';
+
   return `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 550px; margin: 0 auto; border: 1px solid #eee;">
       <div style="background: #1a1a1a; color: #fff; padding: 25px; text-align: center;">
@@ -77,6 +82,8 @@ const genereazaEmailSuperProduse = (titlu, statusMesaj, comanda) => {
         <p style="font-size: 15px; color: #555;">Salut, <strong>${comanda.numeClient}</strong>! ${statusMesaj}</p>
         
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        
+        ${htmlImagine}
         
         <table style="width: 100%; font-size: 14px;">
           <tr>
@@ -238,9 +245,11 @@ const vizitaSchema = new mongoose.Schema({
   data: { type: Date, default: Date.now }
 });
 const VizitaSite = mongoose.model('VizitaSite', vizitaSchema);
+
 // 1. Importă paznicul la începutul fișierului server.js (dacă nu e deja)
 const { protect } = require('./middleware/auth'); 
 const User = require('./models/User'); // Asigură-te că modelul User e importat
+const Contact = require('./models/Contact'); // 🟢 REPARAT: Import pentru modelul Contact care lipsea!
 
 // 2. Adaugă ruta aceasta în server.js
 app.get('/api/comenzi/client', protect, async (req, res) => {
@@ -340,18 +349,6 @@ const verifyAdmin = (req, res, next) => {
   
   return res.status(401).json({ eroare: "Acces interzis! Nu ești autentificat ca admin." });
 };
-
-// 🚀 RUTA EXISTENTĂ REPARATĂ
-app.delete('/api/recenzii/:id', verifyAdmin, async (req, res) => {
-  try {
-    const recenzieStearsa = await Recenzie.findByIdAndDelete(req.params.id);
-    if (!recenzieStearsa) return res.status(404).json({ eroare: "Recenzia nu există." });
-    
-    res.json({ success: true, mesaj: "Recenzie ștearsă!" });
-  } catch (err) { 
-    res.status(500).json({ eroare: err.message });
-  }
-});
 
 // ==========================================
 // 🔒 RUTA DE LOGIN CALIBRATĂ (ADMIN)
@@ -688,7 +685,7 @@ app.get('/api/admin/profit-analytics', verifyAdmin, async (req, res) => {
       pierderiRetur: f.pierderiRetur,
       taxeStripe: f.taxeStripe,
       nrComenziReusite: f.nrComenziReusite,
-      baniPeDrum: f.baniPeDrum,           // Funcția Cashflow
+      baniPeDrum: f.baniPeDrum,          // Funcția Cashflow
       repeatCustomers: repeatCustomers,   // Funcția Clienți Fideli
       topJudeteArray: topJudeteArray,     // Harta Județelor
       fbAdsSpend: fbAdsSpend              // Cost FB Ads + Semafor Profit
@@ -917,8 +914,8 @@ trimiteTelegram(textMesaj);
     // 8. ✉️ TRIMITE EMAIL DE LUX (Cu poză și buton de sunat)
   if (nouaComanda.email) {
       const msgEmail = `Comanda ta a fost preluată și urmează să fie pregătită pentru expediere.`;
-      // 🔥 Aici era buba! Am schimbat 'payloadComanda' cu 'nouaComanda'
-      const htmlEmail = genereazaEmailSuperProduse("Confirmare Comandă 🎉", msgEmail, nouaComanda);
+      // 🟢 REPARAT: Pasăm 'imagineProdus' funcției de email
+      const htmlEmail = genereazaEmailSuperProduse("Confirmare Comandă 🎉", msgEmail, nouaComanda, imagineProdus);
       trimiteEmail(nouaComanda.email, "Comanda ta Super Produse a fost înregistrată! 🚀", htmlEmail);
     }
 
@@ -958,21 +955,23 @@ app.patch('/api/comenzi/:id/status', verifyAdmin, async (req, res) => {
    // Exemplu pentru cazul "Trimisă"
 if (statusNou === 'Trimisă' || statusNou === 'Expediată') {
   const msg = `Pachetul tău a fost predat curierului și este în drum spre tine. Pregătește-te de livrare!`;
-  const html = genereazaEmailSuperProduse("Comandă Expediată! 🚚", msg, comandaActualizata);
+  // 🟢 REPARAT: Adăugat imagineProdus
+  const html = genereazaEmailSuperProduse("Comandă Expediată! 🚚", msg, comandaActualizata, imagineProdus);
   trimiteEmail(email, "Vești bune! Comanda ta este pe drum 🚚", html);
 }
 
   // 🏠 CAZ 2: LIVRATĂ (Acoperim și varianta cu diacritice și fără)
     if (statusNou === 'Livrată' || statusNou === 'Livrata') {
       const msg = `Comanda ta a fost marcată ca livrată. Sperăm să te bucuri de produs! Nu ezita să ne lași o recenzie pe site dacă ești mulțumit de achiziție.`;
-      // Am scos 'imagineProdus' din apel pentru că funcția ta de generat email nu folosește 4 argumente
-      const html = genereazaEmailSuperProduse("Comandă Livrată cu succes! 📦", msg, comandaActualizata);
+      // 🟢 REPARAT: Adăugat imagineProdus și aici pentru coerență
+      const html = genereazaEmailSuperProduse("Comandă Livrată cu succes! 📦", msg, comandaActualizata, imagineProdus);
       trimiteEmail(email, "Comanda ta a ajuns! 📦", html);
     }
 
     // ❌ CAZ 3: ANULATĂ / RETURNATĂ
     if (statusNou === 'Anulată' || statusNou === 'Returnată') {
       const msg = `Acest mesaj este o notificare pentru a te anunța că statusul comenzii tale a fost modificat în <strong>${statusNou}</strong>. Dacă ai întrebări, te rugăm să ne contactezi telefonic.`;
+      // 🟢 REPARAT: Acum genereazaEmailSuperProduse acceptă și cel de-al patrulea parametru!
       const html = genereazaEmailSuperProduse(`Comandă ${statusNou}`, msg, comandaActualizata, imagineProdus);
       trimiteEmail(email, `Actualizare Comandă: ${statusNou}`, html);
     }
@@ -1000,9 +999,15 @@ app.patch('/api/recenzii/:id/status', verifyAdmin, async (req, res) => {
   catch (err) { res.status(500).json({ eroare: err.message }); }
 });
 
+// 🟢 REPARAT: Am lăsat doar o singură rută delete pentru recenzii ca să nu existe cod duplicat
 app.delete('/api/recenzii/:id', verifyAdmin, async (req, res) => {
-  try { await Recenzie.findByIdAndDelete(req.params.id); res.json({ mesaj: "Recenzie ștearsă!" }); } 
-  catch (err) { res.status(500).json({ eroare: err.message }); }
+  try { 
+    const recenzieStearsa = await Recenzie.findByIdAndDelete(req.params.id);
+    if (!recenzieStearsa) return res.status(404).json({ eroare: "Recenzia nu există." });
+    res.json({ success: true, mesaj: "Recenzie ștearsă!" });
+  } catch (err) { 
+    res.status(500).json({ eroare: err.message }); 
+  }
 });
 
 // --- RUTE SECRETE ADMIN (USERS & MESAJE) ---
@@ -1252,4 +1257,4 @@ app.get('/sitemap.xml', async (req, res) => {
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`🚀 Serverul rulează pe portul ${PORT}`);
-}); 
+});
