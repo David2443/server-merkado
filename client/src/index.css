@@ -14,6 +14,8 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
+   padding-top: 80px !important; /* Lăsăm fix 80px pentru meniu, niciun pixel mai mult */
+  margin: 0;
 }
 
 /* ==========================================
