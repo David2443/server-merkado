@@ -66,7 +66,7 @@
 .hero-split-section {
   padding: 60px 0;
   background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-  min-height: 80vh;
+  min-height: 80dvh;
   display: flex;
   align-items: center;
 }

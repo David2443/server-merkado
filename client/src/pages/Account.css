@@ -2,7 +2,7 @@
    1. STILURI GENERALE & ANIMAȚII
    ========================================= */
 .account-auth-page {
-  min-height: 100vh;
+  min-height: 100dvh;
   background-color: #f8fafc;
   display: flex;
   justify-content: center;

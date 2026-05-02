@@ -12,7 +12,6 @@ import Shop from './pages/Shop';
 import ProductPage from './pages/ProductPage';
 import Contact from './pages/Contact';
 import About from './pages/About';
-import Tracking from './pages/Tracking';
 
 // Pagini Cont & Auth
 import Account from './pages/Account';
@@ -50,7 +49,7 @@ function App() {
             <Route path="/produs/:id" element={<ProductPage />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/despre-noi" element={<About />} />
-            <Route path="/tracking" element={<Tracking />} />
+            
 
             {/* --- Rute Autentificare --- */}
             <Route path="/login" element={<Login />} />
