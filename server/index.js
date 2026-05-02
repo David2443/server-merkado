@@ -249,8 +249,17 @@ const VizitaSite = mongoose.model('VizitaSite', vizitaSchema);
 // 1. Importă paznicul la începutul fișierului server.js (dacă nu e deja)
 const { protect } = require('./middleware/auth'); 
 const User = require('./models/User'); // Asigură-te că modelul User e importat
-const Contact = require('./models/Contact'); // 🟢 REPARAT: Import pentru modelul Contact care lipsea!
+// Asta înlocuiește fișierul lipsă și definește structura mesajelor direct aici:
+const contactSchema = new mongoose.Schema({
+  nume: String,
+  email: String,
+  telefon: String,
+  subiect: String,
+  mesaj: String,
+  status: { type: String, default: 'Nou' }
+}, { timestamps: true });
 
+const Contact = mongoose.model('Contact', contactSchema);
 // 2. Adaugă ruta aceasta în server.js
 app.get('/api/comenzi/client', protect, async (req, res) => {
   try {
