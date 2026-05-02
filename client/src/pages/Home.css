@@ -4,6 +4,8 @@
   background-color: #ffffff; /* Alb curat */
   color: #111827;
   overflow-x: hidden;
+  position: relative !important; /* Îl face să stea la locul lui, împingând meniul în jos */
+  z-index: 99999 !important;
 }
 
 .container {
