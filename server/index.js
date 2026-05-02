@@ -61,7 +61,8 @@ const trimiteTelegram = async (mesaj) => {
 
 
 
-// 🎨 CONSTRUCTORUL DE TEMPLATE "SUPER PRODUSE" (REPARAT: Acum suportă parametrul imagineUrl)
+// 🎨 CONSTRUCTORUL DE TEMPLATE "SUPER PRODUSE"
+// (REPARAT: Acum acceptă 4 parametri pentru a include imaginea când anulezi o comandă)
 const genereazaEmailSuperProduse = (titlu, statusMesaj, comanda, imagineUrl = null) => {
   const dataComanda = new Date(comanda.createdAt || Date.now()).toLocaleDateString('ro-RO');
   
@@ -238,6 +239,18 @@ const transportSchema = new mongoose.Schema({
   tip: { type: String, enum: ['curier', 'locker'], default: 'curier' }
 });
 const MetodaTransport = mongoose.model('MetodaTransport', transportSchema);
+
+// 🟢 REPARAT: Plasa de siguranță pentru a nu suprascrie modelul Contact și a nu crăpa aplicația pe Render
+const contactSchema = new mongoose.Schema({
+  nume: String,
+  email: String,
+  telefon: String,
+  subiect: String,
+  mesaj: String,
+  status: { type: String, default: 'Nou' }
+}, { timestamps: true });
+const Contact = mongoose.models.Contact || mongoose.model('Contact', contactSchema);
+
 // ==========================================
 // 📈 MODEL PENTRU CONTORIZARE VIZITE TOTALE
 // ==========================================
@@ -249,17 +262,7 @@ const VizitaSite = mongoose.model('VizitaSite', vizitaSchema);
 // 1. Importă paznicul la începutul fișierului server.js (dacă nu e deja)
 const { protect } = require('./middleware/auth'); 
 const User = require('./models/User'); // Asigură-te că modelul User e importat
-// Asta înlocuiește fișierul lipsă și definește structura mesajelor direct aici:
-const contactSchema = new mongoose.Schema({
-  nume: String,
-  email: String,
-  telefon: String,
-  subiect: String,
-  mesaj: String,
-  status: { type: String, default: 'Nou' }
-}, { timestamps: true });
 
-const Contact = mongoose.model('Contact', contactSchema);
 // 2. Adaugă ruta aceasta în server.js
 app.get('/api/comenzi/client', protect, async (req, res) => {
   try {
@@ -358,6 +361,20 @@ const verifyAdmin = (req, res, next) => {
   
   return res.status(401).json({ eroare: "Acces interzis! Nu ești autentificat ca admin." });
 };
+
+// ==========================================
+// 🚀 RUTA EXISTENTĂ REPARATĂ (Am păstrat doar una pentru delete, curățând codul duplicat)
+// ==========================================
+app.delete('/api/recenzii/:id', verifyAdmin, async (req, res) => {
+  try {
+    const recenzieStearsa = await Recenzie.findByIdAndDelete(req.params.id);
+    if (!recenzieStearsa) return res.status(404).json({ eroare: "Recenzia nu există." });
+    
+    res.json({ success: true, mesaj: "Recenzie ștearsă!" });
+  } catch (err) { 
+    res.status(500).json({ eroare: err.message });
+  }
+});
 
 // ==========================================
 // 🔒 RUTA DE LOGIN CALIBRATĂ (ADMIN)
@@ -1008,16 +1025,6 @@ app.patch('/api/recenzii/:id/status', verifyAdmin, async (req, res) => {
   catch (err) { res.status(500).json({ eroare: err.message }); }
 });
 
-// 🟢 REPARAT: Am lăsat doar o singură rută delete pentru recenzii ca să nu existe cod duplicat
-app.delete('/api/recenzii/:id', verifyAdmin, async (req, res) => {
-  try { 
-    const recenzieStearsa = await Recenzie.findByIdAndDelete(req.params.id);
-    if (!recenzieStearsa) return res.status(404).json({ eroare: "Recenzia nu există." });
-    res.json({ success: true, mesaj: "Recenzie ștearsă!" });
-  } catch (err) { 
-    res.status(500).json({ eroare: err.message }); 
-  }
-});
 
 // --- RUTE SECRETE ADMIN (USERS & MESAJE) ---
 app.get('/api/admin/users', verifyAdmin, async (req, res) => {
