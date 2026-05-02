@@ -273,6 +273,8 @@ app.post('/api/auth/create-payment-intent', async (req, res) => {
 // ==========================================
 // 🛡️ SCUT ANTI BRUTE-FORCE PENTRU LOGIN
 // ==========================================
+const rateLimit = require('express-rate-limit'); // Nu uita să ai asta importat!
+
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, 
   max: 5, 
@@ -283,49 +285,32 @@ const loginLimiter = rateLimit({
 
 const publicLimiter = rateLimit({
   windowMs: 10 * 60 * 1000, 
- max: 1000,
+  max: 1000,
   message: { eroare: "Te rugăm să iei o pauză. Prea multe cereri!" },
   standardHeaders: true, 
   legacyHeaders: false, 
 });
 
 // ==========================================
-// 🔒 SISTEMUL DE SECURITATE JWT (ADMIN)
+// 🔒 RUTA DE LOGIN CALIBRATĂ (ADMIN)
 // ==========================================
-const JWT_SECRET = process.env.JWT_SECRET; 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD; 
-
-const verifyAdmin = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  if (!authHeader) return res.status(403).json({ eroare: "Acces interzis! Token lipsă." });
-
-  const token = authHeader.split(' ')[1]; 
-  try {
-    req.admin = jwt.verify(token, JWT_SECRET); 
-    next(); 
-  } catch (err) {
-    res.status(401).json({ eroare: "Sesiune expirată sau token invalid!" });
-  }
-};
-
 app.post('/api/admin/login', loginLimiter, (req, res) => {
-  if (req.body.parola === ADMIN_PASSWORD) {
-    const token = jwt.sign({ adminLogat: true }, JWT_SECRET, { expiresIn: '12h' });
-    res.json({ success: true, token: token });
+  const { email, parola } = req.body; // Acum preluăm și email-ul trimis de site
+
+  // Verificăm dacă se pupă cu ce ai setat tu în Render (.env)
+  if (email === process.env.ADMIN_EMAIL && parola === process.env.ADMIN_PASSWORD) {
+    const token = jwt.sign({ adminLogat: true }, process.env.JWT_SECRET, { expiresIn: '12h' });
+    
+    // Trimitem înapoi și token-ul, și un obiect user ca să nu dea eroare React-ul
+    res.json({ 
+      success: true, 
+      token: token,
+      user: { email: email, role: 'admin' }
+    });
   } else {
-    res.status(401).json({ eroare: "Parolă incorectă!" });
+    res.status(401).json({ eroare: "Email sau parolă incorectă!" });
   }
 });
-
-app.post('/api/admin/refresh', verifyAdmin, (req, res) => {
-  try {
-    const tokenNou = jwt.sign({ adminLogat: true }, JWT_SECRET, { expiresIn: '12h' });
-    res.json({ success: true, token: tokenNou });
-  } catch (err) {
-    res.status(500).json({ eroare: "Eroare la reîmprospătarea token-ului" });
-  }
-});
-
 // ==========================================
 // 🚚 RUTE PENTRU TRANSPORT 
 // ==========================================

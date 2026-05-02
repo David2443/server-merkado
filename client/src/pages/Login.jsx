@@ -10,49 +10,41 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false); 
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!email || !parola) return; 
+// ✅ FRONTEND CALIBRAT
+const handleLogin = async (e) => {
+  e.preventDefault();
+  if (!email || !parola) return; 
 
-    setEroare('');
-    setIsLoading(true); 
+  setEroare('');
+  setIsLoading(true); 
+  
+  try {
+    // Ne asigurăm că batem la ușa de /api/admin/login
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://merkado-backend.onrender.com';
     
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      
-      // 🔗 Folosim ruta ta oficială de login
-      const res = await fetch(`${apiUrl}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, parola })
-      });
-      
-      const data = await res.json();
-      
-      if (res.ok) {
-        // 🛡️ PROTECȚIE EXTRA: Chiar dacă s-a logat, e admin?
-        if (data.user.role !== 'admin') {
-            setEroare("Acces respins. Acest cont nu are privilegii de administrator.");
-            setParola('');
-            setIsLoading(false);
-            return;
-        }
-
-        // Totul e verde. Salvăm cheile.
-        localStorage.setItem('adminToken', data.token);
-        
-        // 🚀 Navigare "Glont", instantanee, specifică React
-        navigate('/admin'); 
-      } else {
-        setEroare(data.eroare || "Date de autentificare incorecte!");
-        setParola(''); 
-      }
-    } catch (err) {
-      setEroare("Eroare critică de conexiune la server.");
-    } finally {
-      setIsLoading(false); 
+    const res = await fetch(`${apiUrl}/api/admin/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, parola }) // Trimitem ambele date
+    });
+    
+    const data = await res.json();
+    
+    if (res.ok && data.success) {
+      // Salvăm token-ul
+      localStorage.setItem('adminToken', data.token);
+      // Navigăm spre admin
+      navigate('/admin'); 
+    } else {
+      setEroare(data.eroare || "Date de autentificare incorecte!");
+      setParola(''); 
     }
-  };
+  } catch (err) {
+    setEroare("Eroare critică de conexiune la server.");
+  } finally {
+    setIsLoading(false); 
+  }
+};
 
   return (
     <div className="login-screen-wrapper">
