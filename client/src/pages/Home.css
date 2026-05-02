@@ -1,960 +1,33 @@
-/* --- BAZĂ --- */
+/* ==========================================
+   🏠 HOME GLOBAL WRAPPER
+   ========================================== */
 .general-ecom-wrapper {
-  font-family: 'Inter', sans-serif;
-  background-color: #ffffff; /* Alb curat */
-  color: #111827;
+  width: 100%;
   overflow-x: hidden;
+  background-color: #ffffff;
+  /* Împingem tot conținutul sub Navbar-ul fixed (80px) */
+  margin-top: 0;
 }
 
 .container {
-  max-width: 1250px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.section-title-modern {
-  font-size: 2.2rem;
-  font-weight: 800;
-  margin-bottom: 30px;
-  color: #111827;
-}
-
-/* =========================================
-   --- NOU: HERO ULTRA-MODERN (SPLIT) --- 
-   ========================================= */
-.hero-split-section {
-  padding: 80px 0 100px;
-  background: radial-gradient(circle at right top, #f0fdfa, #ffffff);
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.hero-split-grid {
-  display: flex;
-  align-items: center;
-  gap: 60px;
-}
-
-/* STÂNGA: Text */
-.hero-left {
-  flex: 1;
-}
-
-.badge-new-collection {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #ecfdf5;
-  color: #059669;
-  padding: 8px 16px;
-  border-radius: 30px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  margin-bottom: 25px;
-  border: 1px solid #d1fae5;
-}
-
-.hero-mega-title {
-  font-size: 4rem;
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -1.5px;
-  margin-bottom: 25px;
-  color: #111827;
-}
-
-.hero-mega-title span {
-  color: #3b82f6; /* Albastru electric pe a doua linie */
-}
-
-.hero-mega-desc {
-  font-size: 1.25rem;
-  color: #4b5563;
-  line-height: 1.6;
-  margin-bottom: 40px;
-  max-width: 550px;
-}
-
-.hero-actions-row {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-}
-
-.btn-shop-mega {
-  background: #111827;
-  color: #ffffff;
-  padding: 18px 40px;
-  border-radius: 12px;
-  font-size: 1.15rem;
-  font-weight: 800;
-  text-decoration: none;
-  transition: 0.3s ease;
-  box-shadow: 0 10px 25px rgba(17, 24, 39, 0.2);
-}
-
-.btn-shop-mega:hover {
-  background: #3b82f6;
-  transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.3);
-}
-
-.hero-social-proof {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.avatars-group {
-  display: flex;
-}
-
-.avatars-group img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  border: 3px solid #ffffff;
-  margin-left: -15px;
-}
-
-.avatars-group img:first-child { margin-left: 0; }
-
-.proof-text { display: flex; flex-direction: column; }
-.proof-text .stars-ecom { color: #fbbf24; font-size: 0.9rem; margin-bottom: 0; }
-.proof-text span { font-size: 0.9rem; font-weight: 700; color: #4b5563; }
-
-/* DREAPTA: Imagine */
-.hero-right {
-  flex: 1;
-  position: relative;
-}
-
-.hero-image-composition {
-  position: relative;
-  z-index: 1;
-}
-
-.main-hero-img {
-  width: 100%;
-  border-radius: 30px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-  animation: floatSoft 6s ease-in-out infinite;
-}
-
-.floating-glass-card {
-  position: absolute;
-  bottom: -20px;
-  left: -30px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  padding: 20px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-  animation: floatSoft 5s ease-in-out infinite reverse;
-}
-
-.glass-icon { font-size: 2.5rem; }
-.floating-glass-card strong { display: block; font-size: 1.1rem; color: #111827; }
-.floating-glass-card p { margin: 0; font-size: 0.9rem; color: #6b7280; }
-
-@keyframes floatSoft {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0); }
-}
-
-/* =========================================
-   --- RESTUL SECȚIUNILOR (BENTO, PRODUSE, SLIDER) --- 
-   ========================================= */
-
-/* --- SECȚIUNE ÎNCREDERE (BENTO GRID) --- */
-.trust-modern-section { padding: 80px 0; background: #fafafa; }
-.trust-header { text-align: center; margin-bottom: 50px; }
-.trust-header h2 { font-size: 2.5rem; font-weight: 900; }
-.trust-header p { color: #6b7280; font-size: 1.1rem; }
-.bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
-.bento-box { background: #ffffff; padding: 40px 30px; border-radius: 24px; border: 1px solid #f3f4f6; box-shadow: 0 4px 20px rgba(0,0,0,0.02); transition: transform 0.3s ease; }
-.bento-box:hover { transform: translateY(-5px); }
-.bento-large { grid-column: span 3; background: #111827; color: #ffffff; }
-.bento-large p { color: #9ca3af; }
-.bento-icon { font-size: 2.5rem; color: #3b82f6; margin-bottom: 20px; }
-.bento-large .bento-icon { color: #60a5fa; }
-.bento-box h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 12px; }
-
-/* --- CATEGORII --- */
-.categories-section { padding: 40px 0 80px; }
-.categories-grid { display: flex; gap: 20px; flex-wrap: wrap; }
-.category-item { flex: 1; min-width: 150px; background: #ffffff; padding: 30px 20px; border-radius: 20px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid #f3f4f6; box-shadow: 0 4px 15px rgba(0,0,0,0.02); font-weight: 700; }
-.category-item:hover { border-color: #3b82f6; color: #3b82f6; transform: translateY(-3px); }
-.cat-icon { font-size: 2rem; margin-bottom: 15px; color: #9ca3af; transition: 0.3s; }
-.category-item:hover .cat-icon { color: #3b82f6; }
-
-/* --- PRODUSE --- */
-.products-general { padding: 0 0 80px; }
-.ecom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
-.ecom-card { background: #ffffff; border: 1px solid #f3f4f6; border-radius: 20px; overflow: hidden; transition: 0.3s; }
-.ecom-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.05); }
-.card-img-box { height: 260px; position: relative; }
-.card-img-box img { width: 100%; height: 100%; object-fit: cover; }
-.wishlist-btn { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; color: #6b7280; transition: 0.2s; }
-.wishlist-btn:hover { color: #ef4444; transform: scale(1.1); }
-.card-info { padding: 25px; }
-.card-info h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; }
-.stars-ecom { color: #fbbf24; margin-bottom: 15px; display: flex; align-items: center; gap: 2px; }
-.stars-ecom small { color: #9ca3af; margin-left: 8px; font-weight: 600; }
-.price-ecom { font-size: 1.5rem; font-weight: 900; margin-bottom: 20px; }
-.btn-add-cart { display: flex; align-items: center; justify-content: center; gap: 10px; background: #f3f4f6; color: #111827; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 700; transition: 0.2s; }
-.btn-add-cart:hover { background: #111827; color: #ffffff; }
-
-/* --- RECENZII SLIDER --- */
-.reviews-slider-section { padding: 60px 0 100px; background: #ffffff; }
-.slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-.slider-controls { display: flex; gap: 10px; }
-.slider-controls button { background: #f3f4f6; border: none; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: 0.2s; color: #111827; }
-.slider-controls button:hover { background: #111827; color: #ffffff; }
-.slider-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 20px; }
-.slider-track::-webkit-scrollbar { display: none; }
-.review-slide { min-width: calc(33.333% - 14px); background: #fafafa; padding: 35px 25px; border-radius: 20px; border: 1px solid #f3f4f6; scroll-snap-align: start; }
-.review-slide p { font-size: 1.1rem; font-style: italic; margin-bottom: 20px; color: #4b5563; }
-.review-slide strong { color: #111827; }
-
-/* --- RESPONSIVE --- */
-@media (max-width: 992px) {
-  .hero-split-grid { flex-direction: column; text-align: center; gap: 40px; }
-  .hero-mega-title { font-size: 3rem; }
-  .hero-mega-desc { margin: 0 auto 30px; }
-  .hero-actions-row { flex-direction: column; justify-content: center; }
-  .floating-glass-card { left: 50%; transform: translateX(-50%); bottom: -20px; }
-  .bento-large { grid-column: span 1; }
-  .bento-grid { grid-template-columns: 1fr; }
-  .review-slide { min-width: calc(50% - 10px); }
-}
-
-@media (max-width: 600px) {
-  .hero-mega-title { font-size: 2.2rem; }
-  .review-slide { min-width: 100%; }
-  .slider-header { flex-direction: column; align-items: flex-start; gap: 15px; }
-}/* =========================================
-   --- SECȚIUNE DE CE SĂ NE ALEGI (BOMBA) --- 
-   ========================================= */
-.why-bomba-section {
-  padding: 100px 0;
-  background: #ffffff;
-}
-
-.why-bomba-header {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.why-badge {
-  display: inline-block;
-  background: #eff6ff;
-  color: #2563eb;
-  padding: 8px 18px;
-  border-radius: 30px;
-  font-weight: 800;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 20px;
-}
-
-.why-bomba-header h2 {
-  font-size: 3.2rem;
-  font-weight: 900;
-  color: #111827;
-  margin-bottom: 15px;
-  letter-spacing: -1px;
-}
-
-.why-bomba-header h2 span {
-  background: linear-gradient(135deg, #2563eb, #3b82f6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.why-bomba-header p {
-  font-size: 1.2rem;
-  color: #6b7280;
-  max-width: 650px;
-  margin: 0 auto;
-}
-
-.why-bento-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto auto;
-  gap: 30px;
-}
-
-.why-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 32px;
-  padding: 40px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1;
-}
-
-.why-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.06);
-  border-color: #cbd5e1;
-  background: #ffffff;
-}
-
-.why-icon {
-  font-size: 2.8rem;
-  color: #3b82f6;
-  margin-bottom: 25px;
-  background: #eff6ff;
-  padding: 16px;
-  border-radius: 20px;
-  display: inline-block;
-}
-
-.why-card h3 {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 15px;
-}
-
-.why-card p {
-  font-size: 1.1rem;
-  color: #475569;
-  line-height: 1.6;
-}
-
-/* Card Livrare - Impact Vizual Maxim */
-.card-delivery {
-  grid-column: span 1;
-  grid-row: span 2;
-  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-  color: white;
-  border: none;
-}
-
-.card-delivery:hover {
-  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
-  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.3);
-}
-
-.card-delivery h3, .card-delivery p { color: white; }
-.card-delivery p { opacity: 0.8; }
-.card-delivery .why-icon { background: rgba(255,255,255,0.1); color: #60a5fa; }
-
-.why-big-number {
-  font-size: 5.5rem;
-  font-weight: 900;
-  line-height: 1;
-  margin-bottom: 20px;
-  background: linear-gradient(135deg, #60a5fa, #3b82f6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Dimensiuni Carduri */
-.card-quality { grid-column: span 2; }
-.card-support { grid-column: span 1; }
-
-.card-secure { 
-  grid-column: span 1; 
-  background: #eff6ff; 
-  border-color: #bfdbfe;
-}
-
-.card-secure .why-icon { background: white; }
-
-.why-icon-huge {
-  font-size: 8rem;
-  color: #bfdbfe;
-  opacity: 0.4;
-  position: absolute;
-  right: -20px;
-  bottom: -30px;
-  transform: rotate(-15deg);
-  transition: 0.4s;
-}
-
-.card-secure:hover .why-icon-huge {
-  transform: rotate(0deg) scale(1.1);
-  opacity: 0.6;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .why-bento-grid { grid-template-columns: 1fr 1fr; }
-  .card-delivery { grid-column: span 2; grid-row: span 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
-  .card-quality { grid-column: span 2; text-align: center; }
-  .card-support { grid-column: span 1; }
-  .card-secure { grid-column: span 1; }
-}
-
-@media (max-width: 768px) {
-  .why-bento-grid { grid-template-columns: 1fr; }
-  .card-delivery, .card-quality, .card-support, .card-secure { grid-column: span 1; text-align: center; }
-  .why-bomba-header h2 { font-size: 2.2rem; }
-  .why-big-number { font-size: 4rem; }
-  .card-delivery { align-items: center; }
-}/* =========================================
-   --- SECȚIUNE PRODUSE PREMIUM (BOMBA) --- 
-   ========================================= */
-.products-premium-section {
-  padding: 100px 0;
-  background: #f8fafc; /* Un gri extrem de fin pentru a scoate cardurile albe în evidență */
-}
-
-.products-header-modern {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.products-badge {
-  display: inline-block;
-  background: #fee2e2;
-  color: #ef4444;
-  padding: 6px 16px;
-  border-radius: 30px;
-  font-weight: 800;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 15px;
-}
-
-.products-header-modern h2 {
-  font-size: 2.8rem;
-  font-weight: 900;
-  color: #0f172a;
-  margin-bottom: 15px;
-  letter-spacing: -1px;
-}
-
-.products-header-modern h2 span {
-  color: #3b82f6;
-}
-
-.products-header-modern p {
-  font-size: 1.15rem;
-  color: #64748b;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.premium-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
-}
-
-/* --- CARTONAȘUL DE PRODUS --- */
-.premium-card {
-  background: #ffffff;
-  border-radius: 24px;
-  border: 1px solid #e2e8f0;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.premium-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1);
-  border-color: #cbd5e1;
-}
-
-/* Zona de imagine */
-.premium-img-box {
-  height: 280px;
-  position: relative;
-  background: #f1f5f9;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.premium-img-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 16px;
-  transition: transform 0.5s;
-}
-
-.premium-card:hover .premium-img-box img {
-  transform: scale(1.05); /* Zoom fin la hover */
-}
-
-/* Badge și Wishlist pe poză */
-.badge-discount {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: #ef4444;
-  color: #ffffff;
-  font-weight: 900;
-  font-size: 0.9rem;
-  padding: 6px 14px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-  z-index: 2;
-}
-
-.btn-wishlist-blur {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #64748b;
-  font-size: 1.3rem;
-  cursor: pointer;
-  transition: all 0.3s;
-  z-index: 2;
-}
-
-.btn-wishlist-blur:hover {
-  background: #ffffff;
-  color: #ef4444;
-  transform: scale(1.1);
-}
-
-/* Zona de informații */
-.premium-card-body {
-  padding: 25px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.stars-premium {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  margin-bottom: 12px;
-  font-size: 1.1rem;
-}
-
-.star-filled { color: #fbbf24; fill: #fbbf24; }
-
-.stars-premium span {
-  font-size: 0.9rem;
-  color: #94a3b8;
-  font-weight: 600;
-  margin-left: 5px;
-}
-
-.premium-title {
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 20px;
-  line-height: 1.4;
-  /* Pune "..." dacă titlul e prea lung */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.premium-price-row {
-  margin-top: auto;
-  margin-bottom: 25px;
-}
-
-.price-old {
-  display: block;
-  font-size: 1.1rem;
-  color: #94a3b8;
-  text-decoration: line-through;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.price-new {
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: #10b981; /* Verde electric pentru preț */
-  letter-spacing: -0.5px;
-}
-
-/* Butoanele de Acțiune */
-.premium-card-actions {
-  display: flex;
-  gap: 15px;
-}
-
-.btn-premium-details {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: #f1f5f9;
-  color: #0f172a;
-  padding: 14px;
-  border-radius: 14px;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all 0.3s;
-}
-
-.btn-premium-details:hover {
-  background: #e2e8f0;
-  color: #3b82f6;
-}
-
-.btn-premium-cart {
-  width: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #111827;
-  color: #ffffff;
-  border-radius: 14px;
-  font-size: 1.3rem;
-  text-decoration: none;
-  transition: all 0.3s;
-  box-shadow: 0 10px 20px rgba(17, 24, 39, 0.15);
-}
-
-.btn-premium-cart:hover {
-  background: #3b82f6;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .products-header-modern h2 { font-size: 2.2rem; }
-  .premium-img-box { height: 240px; }
-}/* =========================================
-   --- SECȚIUNE RECENZII VIP (DARK MODE) --- 
-   ========================================= */
-.reviews-vip-section {
-  padding: 100px 0;
-  background: #020617; /* Un negru/bleumarin extrem de adânc și premium */
-  color: #ffffff;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Efect de luminiță de fundal pentru un aer "Tech/Premium" */
-.reviews-vip-section::before {
-  content: '';
-  position: absolute;
-  top: -200px;
-  right: -200px;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(2,6,23,0) 70%);
-  border-radius: 50%;
-  z-index: 0;
-}
-
-.vip-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 60px;
-  position: relative;
-  z-index: 1;
-}
-
-.vip-badge {
-  display: inline-block;
-  background: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
-  padding: 6px 16px;
-  border-radius: 30px;
-  font-weight: 800;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(59, 130, 246, 0.3);
-}
-
-.vip-title-box h2 {
-  font-size: 3rem;
-  font-weight: 900;
-  color: #ffffff;
-  margin-bottom: 15px;
-  letter-spacing: -1px;
-}
-
-.vip-title-box h2 span {
-  color: #3b82f6;
-}
-
-.vip-title-box p {
-  font-size: 1.15rem;
-  color: #94a3b8;
-  max-width: 500px;
-}
-
-.vip-slider-controls {
-  display: flex;
-  gap: 15px;
-}
-
-.vip-slider-controls button {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  width: 55px;
-  height: 55px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: #ffffff;
-  backdrop-filter: blur(5px);
-}
-
-.vip-slider-controls button:hover {
-  background: #3b82f6;
-  border-color: #3b82f6;
-  transform: scale(1.1);
-}
-
-.vip-slider-track {
-  display: flex;
-  gap: 30px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  padding-bottom: 40px;
-  position: relative;
-  z-index: 1;
-}
-
-.vip-slider-track::-webkit-scrollbar { display: none; }
-
-/* Cartonașul de Recenzie VIP */
-.vip-review-card {
-  min-width: calc(33.333% - 20px);
-  background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
-  padding: 40px 30px;
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  scroll-snap-align: start;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.vip-review-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(59, 130, 246, 0.4);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(59, 130, 246, 0.1);
-}
-
-.vip-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-}
-
-.stars-vip {
-  color: #fbbf24;
-  display: flex;
-  gap: 2px;
-  font-size: 1.2rem;
-}
-
-.verified-badge {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.85rem;
-  color: #10b981;
-  background: rgba(16, 185, 129, 0.1);
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 700;
-}
-
-.vip-review-text {
-  font-size: 1.15rem;
-  line-height: 1.6;
-  color: #e2e8f0;
-  margin-bottom: 30px;
-  font-style: italic;
-  flex-grow: 1;
-}
-
-.vip-user-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding-top: 20px;
-}
-
-.vip-user-info img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 2px solid #3b82f6;
-  object-fit: cover;
-}
-
-.vip-user-info div {
-  display: flex;
-  flex-direction: column;
-}
-
-.vip-user-info strong {
-  font-size: 1.05rem;
-  color: #ffffff;
-}
-
-.vip-user-info span {
-  font-size: 0.85rem;
-  color: #64748b;
-  margin-top: 2px;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .vip-header { flex-direction: column; align-items: flex-start; gap: 30px; }
-  .vip-review-card { min-width: calc(50% - 15px); }
-}
-
-@media (max-width: 600px) {
-  .vip-review-card { min-width: 100%; }
-  .vip-title-box h2 { font-size: 2.2rem; }
-}/* =========================================
-   --- BANDA DE AUTORITATE (INFINITE TICKER) --- 
-   ========================================= */
-.authority-band-section {
-  background: #ffffff;
-  padding: 35px 0;
-  border-bottom: 1px solid #f3f4f6;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-/* Efectul de umbră albă pe margini ca să pară că dispar în ceață */
-.authority-fade-left, .authority-fade-right {
-  position: absolute;
-  top: 0;
-  width: 150px;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
-}
-.authority-fade-left { left: 0; background: linear-gradient(to right, #ffffff 10%, transparent); }
-.authority-fade-right { right: 0; background: linear-gradient(to left, #ffffff 10%, transparent); }
-
-.authority-ticker {
-  width: 100%;
-  overflow: hidden;
-}
-
-.ticker-track {
-  display: flex;
-  align-items: center;
-  gap: 80px;
-  width: max-content;
-  animation: tickerScroll 25s linear infinite;
-}
-
-/* Se oprește când clientul pune mouse-ul să citească */
-.ticker-track:hover {
-  animation-play-state: paused;
-}
-
-.ticker-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 800;
-  color: #475569;
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  white-space: nowrap;
-}
-
-.ticker-icn {
-  color: #3b82f6;
-  font-size: 1.4rem;
-}
-
-/* Stiluri pentru Logo-uri Text */
-.ticker-logo {
-  font-family: 'Arial', sans-serif; /* Font generic curat pentru sigle */
-  font-weight: 900;
-  font-size: 1.8rem;
-  color: #94a3b8;
-  opacity: 0.5;
-  transition: all 0.3s ease;
-  cursor: default;
-  white-space: nowrap;
-}
-
-/* Culorile originale prind viață la hover */
-.ticker-logo:hover { opacity: 1; transform: scale(1.1); }
-.visa { font-style: italic; }
-.visa:hover { color: #1a1f71; }
-.mastercard:hover { color: #eb001b; }
-.applepay { font-weight: 600; }
-.applepay:hover { color: #000000; }
-.sameday:hover { color: #e30613; }
-.fancourier:hover { color: #004d9e; }
-
-/* Magia de infinite scroll */
-@keyframes tickerScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); } /* Merge exact la jumătate, unde setul 2 îl înlocuiește perfect pe primul */
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .authority-band-section { padding: 20px 0; }
-  .ticker-track { gap: 40px; animation-duration: 15s; }
-  .ticker-logo { font-size: 1.4rem; }
-  .ticker-item { font-size: 0.8rem; }
-  .authority-fade-left, .authority-fade-right { width: 50px; }
-}/* =========================================
-   --- BARA DE URGENȚĂ (PANIC BUY) --- 
-   ========================================= */
+/* ==========================================
+   🚨 TOP PANIC BAR (Flash Sale)
+   ========================================== */
 .top-panic-bar {
-  background: #020617; /* Negru profund */
+  background: #0f172a; /* Aproape negru pentru contrast */
   color: #ffffff;
-  padding: 10px 20px;
+  padding: 12px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 30px;
-  font-size: 0.95rem;
-  z-index: 50;
-  position: relative;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  gap: 20px;
+  text-align: center;
+  font-size: 0.9rem;
 }
 
 .panic-content {
@@ -966,51 +39,417 @@
 .pulse-dot {
   width: 10px;
   height: 10px;
-  background-color: #ef4444; /* Roșu alertă */
+  background-color: #ef4444;
   border-radius: 50%;
-  animation: redPulse 1.5s infinite;
-}
-
-.panic-content p {
-  margin: 0;
-  letter-spacing: 0.5px;
-}
-
-.panic-content strong {
-  color: #ef4444;
-}
-
-.panic-timer {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  box-shadow: 0 0 0 rgba(239, 68, 68, 0.4);
+  animation: pulse 1.5s infinite;
 }
 
 .panic-timer span {
-  color: #ef4444;
+  background: #F05A28; /* Portocaliu Merkado */
+  padding: 4px 8px;
+  border-radius: 6px;
   font-weight: 900;
+  margin-left: 5px;
+  font-family: monospace;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* ==========================================
+   ⚡ HERO SECTION (Split Layout)
+   ========================================== */
+.hero-split-section {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero-split-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.badge-new-collection {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196F3;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+}
+
+.hero-mega-title {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #133E70;
+  line-height: 1.1;
+  margin-bottom: 25px;
+}
+
+.hero-mega-title span {
+  color: #F05A28;
+}
+
+.hero-mega-desc {
+  font-size: 1.2rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+.btn-shop-mega {
+  background: #133E70;
+  color: white;
+  padding: 20px 40px;
+  border-radius: 16px;
+  text-decoration: none;
+  font-weight: 800;
   font-size: 1.1rem;
-  font-variant-numeric: tabular-nums; /* Ține numerele aliniate perfect când curge timpul */
+  display: inline-block;
+  transition: 0.3s;
+  box-shadow: 0 10px 30px rgba(19, 62, 112, 0.2);
 }
 
-@keyframes redPulse {
-  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-  70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+.btn-shop-mega:hover {
+  background: #F05A28;
+  transform: translateY(-5px);
 }
 
-/* =========================================
-   --- BUTON FLOTANT WHATSAPP (BOMBA) --- 
-   ========================================= */
+/* Social Proof în Hero */
+.hero-social-proof {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatars-group {
+  display: flex;
+}
+
+.avatars-group img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid white;
+  margin-left: -15px;
+}
+.avatars-group img:first-child { margin-left: 0; }
+
+.proof-text span {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #133E70;
+}
+
+.stars-ecom { color: #facc15; font-size: 0.8rem; }
+
+/* Imagine Hero Right */
+.hero-image-composition {
+  position: relative;
+}
+
+.main-hero-img {
+  width: 100%;
+  border-radius: 30px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+}
+
+.floating-glass-card {
+  position: absolute;
+  bottom: 30px;
+  left: -20px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 15px 25px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+/* ==========================================
+   🏁 AUTHORITY TICKER (Banda logo-uri)
+   ========================================== */
+.authority-band-section {
+  padding: 30px 0;
+  background: #f8fafc;
+  border-y: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.ticker-track {
+  display: flex;
+  gap: 60px;
+  align-items: center;
+  animation: scrollTicker 30s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  font-weight: 800;
+  color: #133E70;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+}
+
+.ticker-logo {
+  font-weight: 900;
+  color: #cbd5e1;
+  font-size: 1.2rem;
+}
+
+@keyframes scrollTicker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* ==========================================
+   📦 PREMIUM PRODUCTS SCROLL
+   ========================================== */
+.products-premium-section {
+  padding: 80px 0;
+}
+
+.products-header-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+}
+
+.products-header-modern h2 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #133E70;
+}
+
+.products-header-modern h2 span { color: #F05A28; }
+
+.slider-arrows-desktop {
+  display: flex;
+  gap: 10px;
+}
+
+.arrow-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #f1f5f9;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: 0.3s;
+}
+
+.arrow-btn:hover { background: #133E70; color: white; border-color: #133E70; }
+
+.premium-scroll-wrapper {
+  display: flex;
+  gap: 25px;
+  overflow-x: auto;
+  padding: 10px 0 40px 0;
+  scroll-behavior: smooth;
+}
+
+.premium-scroll-wrapper::-webkit-scrollbar { display: none; }
+
+.premium-card-scroll {
+  min-width: 300px;
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.premium-card-scroll:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+
+.premium-img-box {
+  width: 100%;
+  height: 300px;
+  position: relative;
+}
+
+.premium-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge-discount {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: #F05A28;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-weight: 900;
+  font-size: 0.75rem;
+}
+
+.premium-card-body {
+  padding: 20px;
+}
+
+.premium-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #133E70;
+  margin-bottom: 15px;
+  height: 44px;
+  overflow: hidden;
+}
+
+.price-row-mini {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-new { font-size: 1.3rem; font-weight: 900; color: #133E70; }
+
+.add-to-cart-mini {
+  background: #f1f5f9;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #133E70;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.add-to-cart-mini:hover { background: #2196F3; color: white; }
+
+/* ==========================================
+   🧩 WHY US SECTION (Bento Grid)
+   ========================================== */
+.why-bomba-section {
+  padding: 80px 0;
+  background: #f8fafc;
+}
+
+.why-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.why-card {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 30px;
+  border: 1px solid #e2e8f0;
+}
+
+.why-icon { font-size: 2.5rem; color: #F05A28; margin-bottom: 20px; }
+
+.why-card h3 { font-size: 1.3rem; font-weight: 900; color: #133E70; margin-bottom: 15px; }
+
+.why-card p { color: #64748b; line-height: 1.5; font-size: 0.95rem; }
+
+.card-delivery { grid-column: span 2; background: #133E70; color: white; }
+.card-delivery .why-icon { color: #F05A28; }
+.card-delivery h3 { color: white; }
+.card-delivery p { color: #94a3b8; }
+.why-big-number { font-size: 3rem; font-weight: 900; color: #F05A28; margin-bottom: 10px; }
+
+/* ==========================================
+   ⭐ REVIEWS VIP
+   ========================================== */
+.reviews-vip-section {
+  padding: 80px 0;
+}
+
+.vip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+}
+
+.vip-slider-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
+
+.vip-slider-track::-webkit-scrollbar { display: none; }
+
+.vip-review-card {
+  min-width: 350px;
+  background: #f8fafc;
+  padding: 30px;
+  border-radius: 24px;
+}
+
+.vip-card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.verified-badge {
+  color: #10b981;
+  font-weight: 800;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.vip-review-text {
+  font-style: italic;
+  color: #1e293b;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.vip-user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.vip-user-info img { width: 50px; height: 50px; border-radius: 50%; }
+
+/* ==========================================
+   💬 WHATSAPP FLOAT
+   ========================================== */
 .whatsapp-float-btn {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  background-color: #25D366;
+  background: #25d366;
   color: white;
   width: 65px;
   height: 65px;
@@ -1018,379 +457,48 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
+  font-size: 2rem;
   box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
-  z-index: 9999;
-  animation: waPulse 2s infinite;
-  transition: all 0.3s ease;
-}
-
-.wa-icon-bomba {
-  font-size: 2.2rem;
-}
-
-.whatsapp-float-btn:hover {
-  transform: scale(1.1) translateY(-5px);
-  background-color: #1ebe57;
-}
-
-/* Tooltip-ul care te îndeamnă să scrii */
-.wa-tooltip {
-  position: absolute;
-  right: 80px;
-  background: #ffffff;
-  color: #111827;
-  padding: 8px 16px;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  white-space: nowrap;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(20px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #f3f4f6;
-}
-
-/* Triunghiul mic de la tooltip */
-.wa-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: -6px;
-  transform: translateY(-50%);
-  border-width: 6px 0 6px 6px;
-  border-style: solid;
-  border-color: transparent transparent transparent #ffffff;
-}
-
-.whatsapp-float-btn:hover .wa-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(0);
-}
-
-@keyframes waPulse {
-  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
-  70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  
-  .whatsapp-float-btn { bottom: 20px; right: 20px; width: 55px; height: 55px; }
-  .wa-icon-bomba { font-size: 1.8rem; }
-  .wa-tooltip { display: none; /* Ascundem tooltip-ul pe mobil ca să nu încurce */ }
-}
-/* Eliminăm orice spațiu între secțiunile închise la culoare */
-.reviews-vip-section, 
-.newsletter-section, /* Verifică dacă așa ai numit secțiunea VIP */
-footer {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    border: none !important;
-    background-color: #020617; /* Asigurăm același negru peste tot */
-}
-
-/* Dacă secțiunea VIP e într-un div separat, scoatem padding-ul care ar putea lăsa alb */
-.newsletter-section {
-    padding: 60px 0;
-    display: block;
-    position: relative;
-}
-
-/* De cele mai multe ori, titlul h2 are o margine care "împinge" secțiunea */
-.newsletter-section h2, 
-.vip-title-box h2 {
-    margin-top: 0;
-}/* Containerul care permite scroll-ul */
-.premium-scroll-wrapper {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  padding: 20px 5px 40px;
-  scroll-behavior: smooth;
-  /* Activează "magnetul" pentru scroll */
-  scroll-snap-type: x mandatory; 
-  scrollbar-width: none; /* Ascunde scrollbar-ul pe Firefox */
-}
-
-.premium-scroll-wrapper::-webkit-scrollbar {
-  display: none; /* Ascunde scrollbar-ul pe Chrome/Safari */
-}
-
-/* Cardul individual în varianta de scroll */
-.premium-card-scroll {
-  min-width: 280px; /* Lățime fixă ca să forțeze scroll-ul */
-  max-width: 280px;
-  background: white;
-  border-radius: 24px;
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
-  scroll-snap-align: start; /* Unde se oprește magnetul */
-  flex-shrink: 0;
-  cursor: pointer;
-}
-
-.premium-card-scroll:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.05);
-}
-
-.price-row-mini {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 15px;
-}
-
-.add-to-cart-mini {
-  background: #0f172a;
-  color: white;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-/* --- REGLAJE MOBIL --- */
-@media (max-width: 768px) {
-  .premium-card-scroll {
-    min-width: 220px; /* Mai micuțe pe telefon să se vadă că mai urmează unul */
-    max-width: 220px;
-  }
-  
-  .products-header-modern {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .slider-arrows-desktop {
-    display: none; /* Pe mobil nu punem săgeți, dăm cu degetul */
-  }
-}
-
-/* Stil pentru săgeți pe desktop */
-.slider-arrows-desktop {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.arrow-btn {
-  background: #f1f5f9;
-  border: none;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1.2rem;
+  z-index: 1000;
+  text-decoration: none;
   transition: 0.3s;
 }
 
-.arrow-btn:hover {
-  background: #0f172a;
+.whatsapp-float-btn:hover { transform: scale(1.1) rotate(10deg); }
+
+.wa-tooltip {
+  position: absolute;
+  right: 80px;
+  background: #133E70;
   color: white;
-}html {
-  scroll-behavior: smooth;
-}
-/* =============================================
-   SECȚIUNEA PRODUSE PREMIUM (SCROLL & GRID)
-   ============================================= */
-.products-premium-section {
-    padding: 80px 0;
-    background: #f8fafc;
-    overflow: hidden; /* Evităm scroll-ul pe toată pagina */
+  padding: 8px 15px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: 0.3s;
 }
 
-.products-header-modern {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 40px;
-    padding: 0 20px;
-}
+.whatsapp-float-btn:hover .wa-tooltip { opacity: 1; transform: translateX(-10px); }
 
-.products-header-modern h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: #1e293b;
-}
-
-.products-header-modern h2 span {
-    display: block;
-    color: #3b82f6;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-/* --- WRAPPER-UL DE SCROLL (MOTORUL) --- */
-.premium-scroll-wrapper {
-    display: flex;
-    gap: 25px;
-    overflow-x: auto;
-    padding: 20px;
-    scroll-behavior: smooth;
-    scrollbar-width: none; /* Ascundem scrollbar pe Firefox */
-    -webkit-overflow-scrolling: touch;
-    /* 🛡️ SNAP SCROLL - Magia pentru Mobil */
-    scroll-snap-type: x mandatory;
-}
-
-.premium-scroll-wrapper::-webkit-scrollbar {
-    display: none; /* Ascundem scrollbar pe Chrome/Safari */
-}
-
-/* --- CARDUL DE PRODUS --- */
-.premium-card-scroll {
-    min-width: 300px; /* Desktop width */
-    max-width: 300px;
-    background: white;
-    border-radius: 24px;
-    padding: 15px;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    cursor: pointer;
-    position: relative;
-    scroll-snap-align: center; /* Se magnetizează pe centru */
-    border: 1px solid rgba(0,0,0,0.03);
-}
-
-.premium-card-scroll:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    border-color: #3b82f6;
-}
-
-.premium-img-box {
-    width: 100%;
-    height: 250px;
-    border-radius: 18px;
-    overflow: hidden;
-    position: relative;
-    background: #f1f5f9;
-}
-
-.premium-img-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.premium-card-scroll:hover .premium-img-box img {
-    transform: scale(1.1);
-}
-
-.badge-discount {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: #ef4444;
-    color: white;
-    padding: 5px 12px;
-    border-radius: 100px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-}
-
-.premium-card-body {
-    padding: 15px 5px 5px;
-}
-
-.premium-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 12px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    height: 2.6rem; /* Păstrăm înălțimea constantă pentru aliniere */
-}
-
-.price-row-mini {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.price-new {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: #3b82f6;
-}
-
-.add-to-cart-mini {
-    background: #1e293b;
-    color: white;
-    border: none;
-    width: 45px;
-    height: 45px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-}
-
-.add-to-cart-mini:hover {
-    background: #3b82f6;
-    transform: scale(1.1);
-}
-@media (max-width: 768px) {
-    .products-premium-section {
-        padding: 40px 0;
-    }
-
-    /* 1. Facem containerul să permită cardurilor să "iasă" din ecran */
-    .premium-scroll-wrapper {
-        padding: 10px 20px 30px 20px; /* Padding stânga-dreapta egal */
-        gap: 12px;
-        /* Forțăm scroll-ul să fie foarte fluid */
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* 2. MAGIA: Cardul are o lățime calculată ca să lase loc următorului */
-    .premium-card-scroll {
-        /* 80vw înseamnă că ocupă 80% din lățimea ecranului. 
-           Restul de 20% arată începutul următorului card. */
-        min-width: 75vw; 
-        max-width: 75vw;
-        scroll-snap-align: center;
-        padding: 12px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08); /* Umbră mai vizibilă pe mobil */
-    }
-
-    /* 3. Adăugăm un indicator vizual subtil (opțional, dar bun) */
-    .premium-scroll-wrapper::after {
-        content: '';
-        min-width: 20px; /* Spațiu extra la finalul scroll-ului */
-    }
-
-    /* 4. Mărim puțin titlurile pe mobil să fie mai lizibile */
-    .premium-title {
-        font-size: 1rem;
-        height: 2.4rem;
-    }
-
-    /* 5. Prețul mai vizibil */
-    .price-new {
-        font-size: 1.2rem;
-    }
+/* ==========================================
+   📱 RESPONSIVE (Telefoane)
+   ========================================== */
+@media (max-width: 900px) {
+  .hero-split-grid { grid-template-columns: 1fr; text-align: center; }
+  .hero-mega-title { font-size: 2.5rem; }
+  .hero-mega-desc { margin: 0 auto 30px; }
+  .hero-social-proof { justify-content: center; }
+  .floating-glass-card { left: 50%; transform: translateX(-50%); bottom: -20px; width: 80%; }
+  
+  .why-bento-grid { grid-template-columns: 1fr; }
+  .card-delivery { grid-column: span 1; }
+  
+  .top-panic-bar { flex-direction: column; gap: 5px; }
+  .vip-review-card { min-width: 280px; }
+  .premium-card-scroll { min-width: 260px; }
+  
+  .products-header-modern, .vip-header { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
 }
