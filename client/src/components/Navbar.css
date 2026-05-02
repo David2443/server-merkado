@@ -3,6 +3,7 @@
    ========================================== */
 .navbar-merkado-pro {
   position: fixed !important;
+  z-index: 9999999;
   top: 0;
   left: 0;
   width: 100%;

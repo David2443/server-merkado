@@ -1079,7 +1079,7 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .top-panic-bar { flex-direction: column; gap: 10px; text-align: center; padding: 12px 10px; }
+  
   .whatsapp-float-btn { bottom: 20px; right: 20px; width: 55px; height: 55px; }
   .wa-icon-bomba { font-size: 1.8rem; }
   .wa-tooltip { display: none; /* Ascundem tooltip-ul pe mobil ca să nu încurce */ }
