@@ -273,7 +273,6 @@ app.post('/api/auth/create-payment-intent', async (req, res) => {
 // ==========================================
 // 🛡️ SCUT ANTI BRUTE-FORCE PENTRU LOGIN
 // ==========================================
-const rateLimit = require('express-rate-limit'); // Nu uita să ai asta importat!
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, 
