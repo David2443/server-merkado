@@ -162,11 +162,21 @@ const ProductPage = () => {
 
   const [socketClient, setSocketClient] = useState(null);
 
-  // 🛡️ FIX 1: Socket spre URL Dinamic
+  // 🛡️ FIX 1: Conexiune Socket.io pentru VIZITATORI REALI și Coșuri
   useEffect(() => {
     const conexiuneNoua = io(API_URL);
     setSocketClient(conexiuneNoua);
-    return () => conexiuneNoua.disconnect();
+
+    // ASCULTĂM EVENIMENTUL 'vizitatori_live' DAT DE SERVERUL TĂU
+    conexiuneNoua.on('vizitatori_live', (numarReal) => {
+      // Adăugăm +5 pentru a părea mai mult, sau lași fix numarReal dacă vrei să fii 100% transparent
+      setVizitatoriLive(numarReal + 5); 
+    });
+
+    return () => {
+      conexiuneNoua.off('vizitatori_live');
+      conexiuneNoua.disconnect();
+    };
   }, []);
 
   // 🛡️ FIX 3: Reducem spam-ul de emitere Socket.io
@@ -227,7 +237,6 @@ const ProductPage = () => {
       });
     }, 1000);
 
-    const intervalLive = setInterval(() => setVizitatoriLive(p => Math.max(5, p + Math.floor(Math.random() * 5) - 2)), 6000);
     const handleScroll = () => setShowStickyBar(window.scrollY > 800);
     window.addEventListener('scroll', handleScroll);
 
@@ -240,7 +249,7 @@ const ProductPage = () => {
       setTimeout(() => setSalesPopup(prev => ({ ...prev, vizibil: false })), 5000);
     }, 18000);
 
-    return () => { clearInterval(intervalTimp); clearInterval(intervalLive); clearInterval(popupInterval); window.removeEventListener('scroll', handleScroll); };
+   
   }, [id]);
 
   useEffect(() => {
