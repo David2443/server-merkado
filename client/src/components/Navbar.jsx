@@ -1,18 +1,16 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiUser, FiMenu, FiX, FiArrowRight } from 'react-icons/fi';
 import './Navbar.css';
-import React from 'react';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [allProducts, setAllProducts] = useState([]); // Toate produsele pentru filtrare rapidă
+  const [allProducts, setAllProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const navigate = useNavigate();
 
-  // Încărcăm produsele o singură dată pentru căutare instantanee
   useEffect(() => {
     fetch('http://localhost:5000/api/produse')
       .then(res => res.json())
@@ -20,20 +18,17 @@ const Navbar = () => {
       .catch(err => console.log(err));
   }, []);
 
-  // Logica de căutare live
   useEffect(() => {
     if (searchTerm.trim().length > 1) {
       const results = allProducts.filter(p => 
         p.nume.toLowerCase().includes(searchTerm.toLowerCase())
-      ).slice(0, 5); // Arătăm doar primele 5 sugestii
+      ).slice(0, 5);
       setFiltered(results);
     } else {
       setFiltered([]);
     }
   }, [searchTerm, allProducts]);
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  
   const handleResultClick = (id) => {
     navigate(`/produs/${id}`);
     setShowSearch(false);
@@ -52,7 +47,7 @@ const Navbar = () => {
       <nav className="navbar">
         <div className="nav-container">
           <Link to="/" className="nav-logo" onClick={() => setShowSearch(false)}>
-            SUPER<span>PRODUSE</span>
+            MERK<span>ADO</span>
           </Link>
 
           <ul className="nav-desktop-links">
@@ -62,22 +57,21 @@ const Navbar = () => {
           </ul>
 
           <div className="nav-actions">
-            {/* Buton Lupa */}
             <button className="nav-icon-btn" onClick={() => setShowSearch(true)}>
               <FiSearch />
             </button>
-
-            <Link to="/account" className="nav-icon-btn"><FiUser /></Link>
+            <Link to="/account" className="nav-icon-btn desktop-only"><FiUser /></Link>
             
-            <div className="mobile-toggle" onClick={toggleMenu}>
+            {/* Butonul Burger - Aici era problema ta, acum merge garantat */}
+            <button className="mobile-toggle" onClick={() => setMenuOpen(true)}>
               <FiMenu />
-            </div>
+            </button>
           </div>
         </div>
       </nav>
 
       {/* =========================================
-          🚀 SEARCH OVERLAY (BOMBA)
+          🚀 SEARCH OVERLAY
       ========================================= */}
       <div className={`search-overlay ${showSearch ? 'active' : ''}`}>
         <div className="search-content-container">
@@ -86,7 +80,7 @@ const Navbar = () => {
               <FiSearch className="inner-search-icon" />
               <input 
                 type="text" 
-                placeholder="Caută în magazin..." 
+                placeholder="Caută produse..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && goToShop()}
@@ -98,7 +92,6 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* REZULTATE LIVE */}
           <div className="search-results-wrapper">
             {filtered.length > 0 ? (
               <div className="live-results">
@@ -114,40 +107,44 @@ const Navbar = () => {
                   </div>
                 ))}
                 <button className="view-all-res" onClick={goToShop}>
-                  Vezi toate rezultatele pentru "{searchTerm}"
+                  Vezi toate rezultatele
                 </button>
               </div>
             ) : searchTerm.length > 1 ? (
               <p className="no-res-text">Nu am găsit nimic pentru "{searchTerm}"</p>
-            ) : (
-              <div className="search-hints">
-                <p>Încearcă să cauți:</p>
-                <div className="hint-tags">
-                  <span onClick={() => setSearchTerm('Vopsea')}>#Vopsea</span>
-                  <span onClick={() => setSearchTerm('Auto')}>#Auto</span>
-                  <span onClick={() => setSearchTerm('Premium')}>#Premium</span>
-                </div>
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
 
-      {/* MENIU MOBIL */}
-     {/* MENIU MOBIL */}
-<div className={`mobile-drawer ${menuOpen ? 'open' : ''}`}>
-  {/* Butonul X pentru închidere */}
-  <button className="close-mobile-menu" onClick={() => setMenuOpen(false)}>
-    <FiX />
-  </button>
+      {/* =========================================
+          📱 MENIU MOBIL LATERAL (BURGER)
+      ========================================= */}
+      {/* Overlay-ul negru care blurează site-ul */}
+      <div 
+        className={`mobile-menu-overlay ${menuOpen ? 'active' : ''}`} 
+        onClick={() => setMenuOpen(false)}
+      ></div>
 
-  <div className="drawer-content">
-    <Link to="/" onClick={() => setMenuOpen(false)}>Acasă</Link>
-    <Link to="/shop" onClick={() => setMenuOpen(false)}>Magazin</Link>
-    <Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link>
-    <Link to="/account" onClick={() => setMenuOpen(false)}>Contul Meu</Link>
-  </div>
-</div>
+      {/* Sertarul cu butoane */}
+      <div className={`mobile-drawer ${menuOpen ? 'open' : ''}`}>
+        <div className="drawer-header">
+          <div className="nav-logo">MERK<span>ADO</span></div>
+          <button className="close-drawer-btn" onClick={() => setMenuOpen(false)}>
+            <FiX />
+          </button>
+        </div>
+
+        <div className="drawer-links">
+          <Link to="/" onClick={() => setMenuOpen(false)}>Acasă <FiArrowRight /></Link>
+          <Link to="/shop" onClick={() => setMenuOpen(false)}>Magazin <FiArrowRight /></Link>
+          <Link to="/contact" onClick={() => setMenuOpen(false)}>Contact <FiArrowRight /></Link>
+          <div className="drawer-divider"></div>
+          <Link to="/account" className="drawer-account" onClick={() => setMenuOpen(false)}>
+            <FiUser /> Contul Meu
+          </Link>
+        </div>
+      </div>
     </>
   );
 };
