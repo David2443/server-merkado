@@ -188,7 +188,13 @@ const Home = () => {
 
           <div className="premium-scroll-wrapper" ref={productsRef}>
             {produse.length === 0 ? (
-              <p className="loading-text">Se încarcă catalogul...</p>
+              [1, 2, 3, 4].map((n) => (
+                <div key={n} className="skeleton-card">
+                  <div className="skeleton-img"></div>
+                  <div className="skeleton-line title"></div>
+                  <div className="skeleton-line price"></div>
+                </div>
+              ))
             ) : (
               produse.slice(0, 6).map(produs => (
                 <div key={produs._id} className="premium-card-scroll" onClick={() => navigate(`/produs/${produs._id}`)}>
