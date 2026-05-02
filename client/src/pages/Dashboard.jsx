@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fi';
 import './Dashboard.css'
 import React from 'react';
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [liveVisitors, setLiveVisitors] = useState(0);
@@ -35,23 +36,49 @@ const Dashboard = () => {
   // 🛡️ FIX 1: URL Dinamic global
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-  // 🛡️ FIX 2: RADARUL LIVE (Se conectează o singură dată la montare)
+  // ==========================================
+  // 📡 RADARUL LIVE (Socket.io)
+  // ==========================================
   useEffect(() => {
-    const socket = io(API_URL); 
-    socket.on('vizitatori_live', (numar) => setLiveVisitors(numar));
-    socket.on('admin_update_carts', (cosuri) => setCosuriLive(cosuri));
+    // 🛡️ FIX 2: Forțăm 'websocket' pentru a evita erorile de CORS/Polling pe platforme cloud
+    const socket = io(API_URL, {
+      transports: ['websocket'],
+      upgrade: false
+    }); 
 
-    return () => socket.disconnect();
-  }, [API_URL]); // Array gol de dependențe practic, rulează o singură dată
+    socket.on('connect', () => {
+      console.log('✅ Dashboard conectat la Socket.io!');
+    });
 
+    socket.on('vizitatori_live', (numar) => {
+      setLiveVisitors(numar);
+    });
+
+    socket.on('admin_update_carts', (cosuri) => {
+      console.log('🛒 Actualizare coșuri live:', cosuri);
+      setCosuriLive(cosuri);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('❌ Dashboard deconectat de la Socket.io.');
+    });
+
+    return () => {
+      socket.off('vizitatori_live');
+      socket.off('admin_update_carts');
+      socket.disconnect();
+    };
+  }, [API_URL]); 
+
+  // ==========================================
   // 📊 FETCH DATE GRAFIC (Rulează doar când schimbi perioada de timp)
+  // ==========================================
   useEffect(() => {
     const fetchDashboardData = async () => {
       setIsLoading(true); setEroare(null);
       const adminToken = localStorage.getItem('adminToken') || localStorage.getItem('token');
       
       if (!adminToken) { 
-        // 🛡️ FIX 3: Navigare curată în loc de reload forțat
         navigate('/login'); 
         return; 
       }
@@ -96,12 +123,6 @@ const Dashboard = () => {
 
     fetchDashboardData();
   }, [range, API_URL, navigate]);
-
-  const renderStatusBadge = (status, tip) => {
-    if (!status) return null;
-    const statusClass = status.toLowerCase().replace('ă', 'a').replace('ț', 't').replace(/\s+/g, '-');
-    return <span className={`status-badge badge-${tip} badge-${statusClass}`}>{status}</span>;
-  };
 
   if (isLoading) return <div className="shopify-dashboard-loader"><div className="spinner"></div></div>;
   if (eroare) return <div style={{ padding: '50px', textAlign: 'center', color: '#ef4444' }}><h2>🚨 Eroare!</h2><p>{eroare}</p></div>;
@@ -257,8 +278,6 @@ const Dashboard = () => {
                  <tr key={idx} 
                       onClick={() => {
                         localStorage.setItem('autoOpenOrder', cmd._id);
-                        // ⚠️ Notă de arhitectură: Căutarea după ID în DOM este considerată "anti-pattern" în React, 
-                        // dar merge pentru a declanșa meniul tău lateral dacă așa a fost conceput sistemul principal.
                         const btnComenzi = document.getElementById('buton-meniu-comenzi');
                         if (btnComenzi) btnComenzi.click();
                       }} 

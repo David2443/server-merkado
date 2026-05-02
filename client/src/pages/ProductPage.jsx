@@ -162,14 +162,14 @@ const ProductPage = () => {
 
   const [socketClient, setSocketClient] = useState(null);
 
-  // 🛡️ FIX 1: Conexiune Socket.io pentru VIZITATORI REALI și Coșuri
+  // 🛡️ FIX
   useEffect(() => {
-    const conexiuneNoua = io(API_URL);
+    const conexiuneNoua = io(API_URL, {
+      transports: ['websocket', 'polling'] // 👈 Linia asta e vitală!
+    });
     setSocketClient(conexiuneNoua);
 
-    // ASCULTĂM EVENIMENTUL 'vizitatori_live' DAT DE SERVERUL TĂU
     conexiuneNoua.on('vizitatori_live', (numarReal) => {
-      // Adăugăm +5 pentru a părea mai mult, sau lași fix numarReal dacă vrei să fii 100% transparent
       setVizitatoriLive(numarReal + 5); 
     });
 

@@ -973,7 +973,7 @@ app.get('/api/dashboard', verifyAdmin, async (req, res) => {
 // ==========================================
 const io = new Server(server, {
   cors: {
-    origin: ["https://merkado.ro", "http://localhost:5173"],
+    origin: "*", // 🛡️ FIX: Lăsăm ușa deschisă pentru Vercel, localhost:3000, etc.
     methods: ["GET", "POST"]
   }
 });
