@@ -208,6 +208,13 @@ const transportSchema = new mongoose.Schema({
   tip: { type: String, enum: ['curier', 'locker'], default: 'curier' }
 });
 const MetodaTransport = mongoose.model('MetodaTransport', transportSchema);
+// ==========================================
+// 📈 MODEL PENTRU CONTORIZARE VIZITE TOTALE
+// ==========================================
+const vizitaSchema = new mongoose.Schema({
+  data: { type: Date, default: Date.now }
+});
+const VizitaSite = mongoose.model('VizitaSite', vizitaSchema);
 // 1. Importă paznicul la începutul fișierului server.js (dacă nu e deja)
 const { protect } = require('./middleware/auth'); 
 const User = require('./models/User'); // Asigură-te că modelul User e importat
@@ -928,6 +935,9 @@ app.get('/api/admin/mesaje', verifyAdmin, async (req, res) => {
 // ==========================================
 // 📊 DASHBOARD ADMIN (DATE REALE + GRAFICE)
 // ==========================================
+// ==========================================
+// 📊 DASHBOARD ADMIN (DATE REALE + GRAFICE)
+// ==========================================
 app.get('/api/dashboard', verifyAdmin, async (req, res) => {
   try {
     const { range } = req.query;
@@ -959,6 +969,9 @@ app.get('/api/dashboard', verifyAdmin, async (req, res) => {
 
     const cosuriAbandonate = await CosAbandonat.find({ updatedAt: queryData }).sort({ updatedAt: -1 });
 
+    // 🟢 AICI SE ÎNTÂMPLĂ MAGIA: Numărăm vizitele REALE din baza de date
+    const viziteReale = await VizitaSite.countDocuments({ data: queryData });
+
     const vanzariPeZile = await Comanda.aggregate([
       { $match: { createdAt: queryData, status: { $ne: 'Anulată' } } },
       { $group: { _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } }, total: { $sum: "$total" } } },
@@ -978,7 +991,10 @@ app.get('/api/dashboard', verifyAdmin, async (req, res) => {
         comenzi: comenziValide.length, 
         cosuriDeschise: cosuriAbandonate.length,
         cosuriDeschiseProcent: 0,
-        platiInAsteptare: platiAsteptare 
+        platiInAsteptare: platiAsteptare,
+        
+        // 🟢 AICI TRIMITEM CĂTRE FRONTEND:
+        viziteTotale: viziteReale 
       },
       comenziRecente: comenziPerioada.slice(0, 15), 
       cosuriAbandonate: cosuriAbandonate,
@@ -987,13 +1003,12 @@ app.get('/api/dashboard', verifyAdmin, async (req, res) => {
     });
   } catch (err) { res.status(500).json({ eroare: err.message }); }
 });
-
 // ==========================================
-// 📡 WEBSOCKETS (SOCKET.IO) - VIZITATORI + LIVE CARTS
+// 📡 WEBSOCKETS (SOCKET.IO) - VIZITATORI REALI + LIVE CARTS
 // ==========================================
 const io = new Server(server, {
   cors: {
-    origin: "*", // 🛡️ FIX: Lăsăm ușa deschisă pentru Vercel, localhost:3000, etc.
+    origin: "*", // 🛡️ Ușa deschisă complet pentru Vercel/Render/Localhost
     methods: ["GET", "POST"]
   }
 });
@@ -1008,19 +1023,32 @@ app.use((req, res, next) => {
 let vizitatoriActivi = 0;
 let cosuriLive = {}; 
 
-io.on('connection', (socket) => {
+// 🟢 Funcția a devenit `async` pentru a putea salva în baza de date
+io.on('connection', async (socket) => {
+  
+  // 1. Un client nou a deschis site-ul -> Creștem contorul LIVE pe radar
   vizitatoriActivi++;
   io.emit('vizitatori_live', vizitatoriActivi); 
 
+  // 2. 🛡️ SALVĂM VIZITA ÎN BAZA DE DATE (Pentru istoric / Vizite Totale în Dashboard)
+  try {
+    await VizitaSite.create({});
+  } catch (err) { 
+    console.log("Eroare la salvare vizită în DB:", err.message); 
+  }
+
+  // 3. Ascultăm ce scrie clientul în formular (Live Checkout)
   socket.on('client_typing', (dateCos) => {
     cosuriLive[socket.id] = { ...dateCos, ultimaActualizare: Date.now() };
     io.emit('admin_update_carts', Object.values(cosuriLive));
   });
 
+  // 4. Când clientul închide tab-ul sau iese de pe site
   socket.on('disconnect', () => {
     vizitatoriActivi = Math.max(0, vizitatoriActivi - 1);
-    io.emit('vizitatori_live', vizitatoriActivi);
+    io.emit('vizitatori_live', vizitatoriActivi); // Trimitem noul număr scăzut
 
+    // Dacă avea un coș live, îl ștergem din memorie și actualizăm dashboard-ul Admin
     if (cosuriLive[socket.id]) {
       delete cosuriLive[socket.id]; 
       io.emit('admin_update_carts', Object.values(cosuriLive)); 
