@@ -961,7 +961,7 @@ app.get('/api/recenzii/produs/:id', async (req, res) => {
   catch (err) { res.status(500).json({ eroare: err.message }); }
 });
 
-// 🚀 RUTA ADMIN: ACTUALIZARE STATUS (FĂRĂ SMS)
+// 🚀 RUTA ADMIN: ACTUALIZARE STATUS (Acum trimite email și pentru Confirmată)
 app.patch('/api/comenzi/:id/status', verifyAdmin, async (req, res) => {
   try { 
     // Folosim .populate('produsId') pentru a avea acces la imaginea produsului în email
@@ -977,29 +977,32 @@ app.patch('/api/comenzi/:id/status', verifyAdmin, async (req, res) => {
 
     if (!email) return res.json(comandaActualizata); // Dacă n-are email, doar actualizăm în DB și gata
 
-    // 📦 CAZ 1: EXPEDIATĂ / TRIMISĂ
-   // Exemplu pentru cazul "Trimisă"
-if (statusNou === 'Trimisă' || statusNou === 'Expediată') {
-  const msg = `Pachetul tău a fost predat curierului și este în drum spre tine. Pregătește-te de livrare!`;
-  // 🟢 REPARAT: Adăugat imagineProdus
-  const html = genereazaEmailSuperProduse("Comandă Expediată! 🚚", msg, comandaActualizata, imagineProdus);
-  trimiteEmail(email, "Vești bune! Comanda ta este pe drum 🚚", html);
-}
+    // ✅ CAZ NOU: CONFIRMATĂ (Acesta lipsea!)
+    if (statusNou === 'Confirmată' || statusNou === 'Confirmata') {
+      const msg = `Comanda ta a fost confirmată și este în curs de procesare. Te vom anunța imediat ce este predată curierului!`;
+      const html = genereazaEmailSuperProduse("Comandă Confirmată ✅", msg, comandaActualizata, imagineProdus);
+      await trimiteEmail(email, "Comanda ta a fost confirmată! ✅", html);
+    }
 
-  // 🏠 CAZ 2: LIVRATĂ (Acoperim și varianta cu diacritice și fără)
+    // 📦 CAZ 1: EXPEDIATĂ / TRIMISĂ
+    if (statusNou === 'Trimisă' || statusNou === 'Expediată' || statusNou === 'Trimisa' || statusNou === 'Expediata') {
+      const msg = `Pachetul tău a fost predat curierului și este în drum spre tine. Pregătește-te de livrare!`;
+      const html = genereazaEmailSuperProduse("Comandă Expediată! 🚚", msg, comandaActualizata, imagineProdus);
+      await trimiteEmail(email, "Vești bune! Comanda ta este pe drum 🚚", html);
+    }
+
+    // 🏠 CAZ 2: LIVRATĂ
     if (statusNou === 'Livrată' || statusNou === 'Livrata') {
       const msg = `Comanda ta a fost marcată ca livrată. Sperăm să te bucuri de produs! Nu ezita să ne lași o recenzie pe site dacă ești mulțumit de achiziție.`;
-      // 🟢 REPARAT: Adăugat imagineProdus și aici pentru coerență
       const html = genereazaEmailSuperProduse("Comandă Livrată cu succes! 📦", msg, comandaActualizata, imagineProdus);
-      trimiteEmail(email, "Comanda ta a ajuns! 📦", html);
+      await trimiteEmail(email, "Comanda ta a ajuns! 📦", html);
     }
 
     // ❌ CAZ 3: ANULATĂ / RETURNATĂ
-    if (statusNou === 'Anulată' || statusNou === 'Returnată') {
+    if (statusNou === 'Anulată' || statusNou === 'Returnată' || statusNou === 'Anulata' || statusNou === 'Returnata') {
       const msg = `Acest mesaj este o notificare pentru a te anunța că statusul comenzii tale a fost modificat în <strong>${statusNou}</strong>. Dacă ai întrebări, te rugăm să ne contactezi telefonic.`;
-      // 🟢 REPARAT: Acum genereazaEmailSuperProduse acceptă și cel de-al patrulea parametru!
       const html = genereazaEmailSuperProduse(`Comandă ${statusNou}`, msg, comandaActualizata, imagineProdus);
-      trimiteEmail(email, `Actualizare Comandă: ${statusNou}`, html);
+      await trimiteEmail(email, `Actualizare Comandă: ${statusNou}`, html);
     }
 
     res.json(comandaActualizata); 
