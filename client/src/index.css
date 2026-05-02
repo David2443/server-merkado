@@ -30,18 +30,6 @@ body {
   padding-top: 0 !important;
 }
 
-/* ==========================================
-   FIX PENTRU NAVBAR (SUPRAPUNERE MOBIL)
-   ========================================== */
-/* IMPORTANT: Dacă meniul tău are altă clasă (ex: .top-bar), adaug-o aici */
-nav, header, .navbar {
-  position: sticky !important; /* Stă sus, dar nu strică spațiile de dedesubt */
-  top: 0;
-  z-index: 9999 !important; /* Scut anti-suprapunere. Nimic nu trece peste el! */
-  background-color: #ffffff;
-  width: 100%;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* O umbră fină ca să se despartă de restul site-ului */
-}
 
 /* ==========================================
    FIX PENTRU SPAȚIUL GOL URIAȘ DE SUS
