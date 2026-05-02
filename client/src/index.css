@@ -16,6 +16,7 @@ body {
   flex-direction: column;
    padding-top: 80px !important; /* Lăsăm fix 80px pentru meniu, niciun pixel mai mult */
   margin: 0;
+  
 }
 
 /* ==========================================
@@ -52,3 +53,9 @@ img {
   max-width: 100%;
   height: auto;
 }
+.main-content, 
+  .app-container, 
+  .general-ecom-wrapper {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
