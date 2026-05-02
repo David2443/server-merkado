@@ -393,48 +393,91 @@
 }
 .add-to-cart-mini:hover { background: #F05A28; color: #fff; transform: scale(1.1); }
 
-/* --- 6. PRODUSUL EROU (Spotlight) --- */
+/* --- 6. PRODUSUL EROU (Spotlight) - FIX OVERFLOW --- */
 .product-spotlight-section {
-  padding: 120px 0;
+  padding: 100px 0;
   background: #1e293b;
   color: #fff;
+  /* 🛡️ FIX: Forțăm secțiunea să nu mai depășească ecranul */
+  width: 100%;
+  overflow: hidden; 
+  box-sizing: border-box;
 }
 
 .spotlight-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 60px; /* Am mai redus puțin gap-ul ca să încapă perfect */
   align-items: center;
   max-width: 1400px;
+  width: 100%; /* 🛡️ FIX */
   margin: 0 auto;
   padding: 0 25px;
+  box-sizing: border-box;
 }
 
-.spotlight-badge { background: rgba(240, 90, 40, 0.2); color: #F05A28; padding: 8px 16px; border-radius: 50px; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
-.spotlight-content h2 { font-size: 3.5rem; font-weight: 900; margin: 25px 0; line-height: 1.1; }
-.spotlight-content h2 span { color: #F05A28; }
-.spotlight-content p { font-size: 1.2rem; color: #cbd5e1; margin-bottom: 30px; line-height: 1.6; }
+.spotlight-badge { 
+  background: rgba(240, 90, 40, 0.2); 
+  color: #F05A28; 
+  padding: 8px 16px; 
+  border-radius: 50px; 
+  font-weight: 800; 
+  font-size: 0.9rem; 
+  text-transform: uppercase; 
+  display: inline-block;
+}
 
-.spotlight-features { list-style: none; margin-bottom: 40px; }
-.spotlight-features li { display: flex; align-items: center; gap: 15px; font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: #f8fafc; }
-.feat-icon { color: #10b981; font-size: 1.5rem; }
+.spotlight-content h2 { 
+  font-size: 3.2rem; /* Am redus o idee ca să nu mai spargă rândurile aiurea */
+  font-weight: 900; 
+  margin: 20px 0; 
+  line-height: 1.1; 
+  word-wrap: break-word; /* 🛡️ FIX text lung */
+}
+.spotlight-content h2 span { color: #F05A28; }
+.spotlight-content p { font-size: 1.1rem; color: #cbd5e1; margin-bottom: 30px; line-height: 1.6; }
+
+.spotlight-features { list-style: none; margin-bottom: 40px; padding: 0; }
+.spotlight-features li { display: flex; align-items: center; gap: 15px; font-size: 1.05rem; font-weight: 600; margin-bottom: 15px; color: #f8fafc; }
+.feat-icon { color: #10b981; font-size: 1.5rem; flex-shrink: 0; } /* flex-shrink îl împiedică să se turtească */
 
 .btn-spotlight {
-  background: #F05A28; color: #fff; padding: 20px 40px; border-radius: 16px; border: none; font-size: 1.2rem; font-weight: 900; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(240, 90, 40, 0.4);
+  background: #F05A28; color: #fff; padding: 18px 35px; border-radius: 16px; border: none; font-size: 1.1rem; font-weight: 900; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(240, 90, 40, 0.4); display: inline-block;
 }
 .btn-spotlight:hover { transform: translateY(-5px); background: #ea580c; }
 
-.video-mockup-wrapper {
-  position: relative; border-radius: 30px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.5); border: 4px solid #334155;
+.spotlight-visual {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
-.spotlight-img { width: 100%; display: block; transition: 0.5s; }
+
+.video-mockup-wrapper {
+  position: relative; 
+  border-radius: 20px; 
+  overflow: hidden; 
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
+  border: 4px solid #334155;
+  width: 100%;
+  max-width: 600px; /* 🛡️ FIX: Îi punem o limită clară */
+  aspect-ratio: 4/3; /* Păstrăm proporțiile corecte */
+  background: #000;
+}
+
+.spotlight-img { 
+  width: 100%; 
+  height: 100%;
+  object-fit: cover; /* 🛡️ FIX: Acoperă spațiul fără să-l deformeze */
+  display: block; 
+  transition: 0.5s; 
+}
+
 .video-mockup-wrapper:hover .spotlight-img { transform: scale(1.05); filter: brightness(0.7); }
 
 .play-button-overlay {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 5rem; color: #fff; opacity: 0.8; transition: 0.3s; pointer-events: none;
 }
 .video-mockup-wrapper:hover .play-button-overlay { opacity: 1; transform: scale(1.1); color: #F05A28; }
-
 /* --- 7. BENTO GRID (Why Us) --- */
 .why-bomba-section { padding: 100px 0; background: #ffffff; }
 .why-badge { color: #2196F3; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 15px; }
@@ -552,12 +595,14 @@
 .wa-tooltip::after { content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%); border-left: 6px solid #fff; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
 .whatsapp-float-btn:hover .wa-tooltip { opacity: 1; transform: translateX(0); }
 
-/* --- RESPONSIVE MOBIL --- */
+/* ==========================================
+   📱 RESPONSIVE MOBIL - CHIRURGIE LA MILIMETRU
+   ========================================== */
+
 @media (max-width: 1000px) {
+  /* 1. Layout General */
   .top-panic-bar { flex-direction: column; gap: 10px; text-align: center; }
   .hero-split-grid { grid-template-columns: 1fr; text-align: center; gap: 40px; }
-  .hero-mega-title { font-size: 3rem; }
-  .hero-mega-desc { margin: 0 auto 30px; }
   .hero-actions-row { flex-direction: column; gap: 25px; justify-content: center; }
   .floating-glass-card { left: 50%; transform: translateX(-50%); bottom: -30px; width: 90%; justify-content: center; }
   
@@ -569,11 +614,89 @@
   .card-delivery, .card-quality, .card-support, .card-secure { grid-column: span 1; grid-row: auto; }
   
   .impulse-grid { grid-template-columns: 1fr 1fr; }
-  
   .faq-container { grid-template-columns: 1fr; text-align: center; }
-  .vip-review-card { min-width: 300px; padding: 25px; }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
+  /* 2. TEXTE MAI MICI ȘI MAI ELEGANTE PE MOBIL */
+  .hero-mega-title { font-size: 2.4rem !important; letter-spacing: -1px; }
+  .hero-mega-desc { font-size: 1rem !important; margin: 0 auto 30px; width: 100%; }
+  
+  .section-header-center h2, 
+  .products-header-modern h2, 
+  .vip-title-box h2, 
+  .spotlight-content h2, 
+  .faq-text-side h2 {
+    font-size: 2.1rem !important;
+    line-height: 1.2;
+  }
+  
+  .section-header-center p, .spotlight-content p, .faq-text-side p {
+    font-size: 1rem !important;
+  }
+  
+  .why-big-number { font-size: 3rem !important; }
+  .cat-overlay h3 { font-size: 1.5rem !important; }
+
+  /* 3. SĂGEȚILE REPARATE ȘI ALINIATE (Sliders) */
+  .products-header-modern, .vip-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .slider-arrows-desktop, .vip-slider-controls {
+    display: flex;
+    gap: 10px;
+    align-self: flex-end; /* Le ducem frumos în dreapta, sub titlu */
+  }
+
+  .slider-arrows-desktop button, .vip-slider-controls button {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 1.2rem !important;
+    margin-left: 0 !important;
+  }
+
+  /* 4. CARTONAȘELE DE PRODUS MAI MICI (Să se vadă că se face swipe) */
+  .premium-scroll-wrapper {
+    gap: 15px; /* Spațiu mai mic între carduri pe mobil */
+    padding: 10px 20px 30px 20px;
+  }
+
+  .premium-card-scroll {
+    min-width: 240px !important; /* 🔥 Aici era buba! Erau 320px. Acum se vede și următorul produs */
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .premium-title { font-size: 1.05rem !important; margin-bottom: 10px; }
+  .price-new { font-size: 1.2rem !important; }
+  
+  .add-to-cart-mini {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 1.2rem !important;
+  }
+
+  /* 5. RECENZII VIP MAI COMPACTE */
+  .vip-slider-track {
+    gap: 15px;
+    padding: 10px 20px 30px 20px;
+  }
+
+  .vip-review-card {
+    min-width: 280px !important;
+    padding: 25px;
+  }
+  
+  .vip-review-text { font-size: 1.05rem !important; margin-bottom: 20px; }
+}
+
+@media (max-width: 500px) {
+  /* Pe telefoane foarte mici (iPhone SE, etc) */
   .impulse-grid { grid-template-columns: 1fr; }
+  .hero-mega-title { font-size: 2.1rem !important; }
+  .btn-shop-mega { width: 100%; text-align: center; } /* Buton full-width pe mobil */
 }
