@@ -317,6 +317,19 @@ const verifyAdmin = (req, res, next) => {
   
   return res.status(401).json({ eroare: "Acces interzis! Nu ești autentificat ca admin." });
 };
+
+// 🚀 RUTA EXISTENTĂ REPARATĂ
+app.delete('/api/recenzii/:id', verifyAdmin, async (req, res) => {
+  try {
+    const recenzieStearsa = await Recenzie.findByIdAndDelete(req.params.id);
+    if (!recenzieStearsa) return res.status(404).json({ eroare: "Recenzia nu există." });
+    
+    res.json({ success: true, mesaj: "Recenzie ștearsă!" });
+  } catch (err) { 
+    res.status(500).json({ eroare: err.message });
+  }
+});
+
 // ==========================================
 // 🔒 RUTA DE LOGIN CALIBRATĂ (ADMIN)
 // ==========================================
@@ -361,6 +374,19 @@ app.put('/api/transport/:id', verifyAdmin, async (req, res) => {
     const metodaActualizata = await MetodaTransport.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     res.json(metodaActualizata);
   } catch (err) { res.status(500).json({ eroare: err.message }); }
+});
+
+// 🗑️ RUTA PENTRU ȘTERGERE PRODUS
+app.delete('/api/produse/:id', verifyAdmin, async (req, res) => {
+  try {
+    const produsSters = await Produs.findByIdAndDelete(req.params.id);
+    if (!produsSters) return res.status(404).json({ eroare: "Produsul nu a fost găsit." });
+    
+    console.log(`🗑️ Produs șters: ${produsSters.nume}`);
+    res.json({ success: true, mesaj: "Produsul a fost eliminat definitiv!" });
+  } catch (err) {
+    res.status(500).json({ eroare: "Eroare la ștergere: " + err.message });
+  }
 });
 
 // ==========================================
@@ -959,9 +985,7 @@ app.get('/api/admin/mesaje', verifyAdmin, async (req, res) => {
   } catch (err) { res.status(500).json({ eroare: err.message }); }
 });
 
-// ==========================================
-// 📊 DASHBOARD ADMIN (DATE REALE + GRAFICE)
-// ==========================================
+
 // ==========================================
 // 📊 DASHBOARD ADMIN (DATE REALE + GRAFICE)
 // ==========================================
