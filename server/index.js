@@ -459,6 +459,31 @@ app.get('/api/produse/:idOrSlug', async (req, res) => {
   } catch (err) { res.status(500).json({ eroare: err.message }); }
 });
 
+// 🚀 RUTA PENTRU PUBLICARE PRODUS NOU
+app.post('/api/produse', verifyAdmin, async (req, res) => {
+  try {
+    const dateProdus = req.body;
+
+    // Generăm slug-ul automat din nume pentru link-uri curate
+    if (dateProdus.nume) {
+      dateProdus.slug = dateProdus.nume
+        .toLowerCase()
+        .replace(/ă/g, 'a').replace(/â/g, 'a').replace(/î/g, 'i').replace(/ș/g, 's').replace(/ț/g, 't')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+    }
+
+    const produsNou = new Produs(dateProdus);
+    await produsNou.save();
+    
+    console.log(`✅ Produs publicat cu succes: ${produsNou.nume}`);
+    res.status(201).json(produsNou);
+  } catch (err) {
+    console.error("❌ Eroare la publicare produs:", err.message);
+    res.status(500).json({ eroare: "Nu am putut publica produsul: " + err.message });
+  }
+});
+
 // 🛠️ RUTA REPARATĂ PENTRU EDITARE PRODUSE
 app.put('/api/produse/:id', verifyAdmin, async (req, res) => {  
   try {
