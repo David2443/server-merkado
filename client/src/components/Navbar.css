@@ -1,19 +1,5 @@
 /* ==========================================
-   🎨 PALETA DE CULORI MERKADO (Din Logo)
-   ========================================== */
-:root {
-  --merkado-navy: #133E70;      /* Albastrul închis de la text */
-  --merkado-orange: #F05A28;    /* Portocaliul de la cărucior */
-  --merkado-blue: #2196F3;      /* Albastrul deschis de la săgeată */
-  --text-dark: #1e293b;
-  --bg-white: #ffffff;
-  --nav-shadow: 0 4px 25px rgba(19, 62, 112, 0.08);
-  --transition-fast: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* ==========================================
-   🚀 NAVBAR PRINCIPAL
+   🚀 NAVBAR PRINCIPAL (Culori Hardcodate)
    ========================================== */
 .navbar {
   position: sticky !important;
@@ -21,12 +7,14 @@
   left: 0;
   width: 100%;
   height: 85px;
-  background-color: var(--bg-white);
+  background-color: #ffffff !important;
   z-index: 9999 !important;
   display: flex;
   align-items: center;
-  box-shadow: var(--nav-shadow);
-  border-bottom: 2px solid rgba(240, 90, 40, 0.05); /* O dungă foarte fină portocalie */
+  box-shadow: 0 4px 25px rgba(19, 62, 112, 0.08);
+  border-bottom: 2px solid rgba(240, 90, 40, 0.05);
+  margin: 0;
+  padding: 0;
 }
 
 .nav-container {
@@ -46,14 +34,14 @@
   font-size: 1.8rem;
   font-weight: 900;
   text-decoration: none;
-  color: var(--merkado-navy);
+  color: #133E70 !important;
   letter-spacing: -0.5px;
   display: flex;
   align-items: center;
   gap: 5px;
 }
 .nav-logo span {
-  color: var(--merkado-orange);
+  color: #F05A28 !important;
 }
 
 /* ==========================================
@@ -69,17 +57,16 @@
 
 .nav-desktop-links a {
   text-decoration: none;
-  color: var(--merkado-navy);
+  color: #133E70 !important;
   font-weight: 700;
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   position: relative;
   padding: 10px 0;
-  transition: var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Linia șmecheră care apare sub link la hover */
 .nav-desktop-links a::after {
   content: '';
   position: absolute;
@@ -87,13 +74,13 @@
   left: 0;
   width: 0;
   height: 3px;
-  background: var(--merkado-blue);
+  background: #2196F3;
   border-radius: 2px;
-  transition: var(--transition-bounce);
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .nav-desktop-links a:hover {
-  color: var(--merkado-blue);
+  color: #2196F3 !important;
 }
 
 .nav-desktop-links a:hover::after {
@@ -113,9 +100,9 @@
   background: none;
   border: none;
   font-size: 1.6rem;
-  color: var(--merkado-navy);
+  color: #133E70 !important;
   cursor: pointer;
-  transition: var(--transition-bounce);
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -124,15 +111,14 @@
   border-radius: 50%;
 }
 
-/* Efect de fundal subtil la hover pe butoane */
 .nav-icon-btn:hover, .mobile-toggle:hover {
   background-color: rgba(33, 150, 243, 0.1);
-  color: var(--merkado-blue);
+  color: #2196F3 !important;
   transform: translateY(-3px);
 }
 
 .mobile-toggle {
-  display: none; /* Ascuns pe desktop */
+  display: none;
 }
 
 /* ==========================================
@@ -140,7 +126,7 @@
    ========================================== */
 .search-overlay {
   position: fixed;
-  top: -100%; /* Ascuns sus */
+  top: -100%;
   left: 0;
   width: 100%;
   height: 100vh;
@@ -148,7 +134,7 @@
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   z-index: 10000;
-  transition: var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   padding: 40px 20px;
   display: flex;
   justify-content: center;
@@ -181,19 +167,18 @@
   border-radius: 50px;
   border: 2px solid transparent;
   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  transition: var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Focus pe bara de căutare - se face portocalie */
 .search-input-wrapper:focus-within {
-  border-color: var(--merkado-orange);
-  background: var(--bg-white);
+  border-color: #F05A28;
+  background: #ffffff;
   box-shadow: 0 10px 30px rgba(240, 90, 40, 0.15);
 }
 
 .inner-search-icon { 
   font-size: 1.6rem; 
-  color: var(--merkado-navy); 
+  color: #133E70; 
   margin-right: 15px; 
 }
 
@@ -204,21 +189,21 @@
   outline: none;
   font-size: 1.3rem;
   font-weight: 600;
-  color: var(--merkado-navy);
+  color: #133E70;
 }
 
 .close-search {
-  background: var(--bg-white);
+  background: #ffffff;
   border: 2px solid #e2e8f0;
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
   font-weight: 800;
-  color: var(--text-dark);
+  color: #1e293b;
   padding: 12px 25px;
   border-radius: 50px;
-  transition: var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .close-search:hover { 
@@ -240,17 +225,17 @@
   display: flex;
   align-items: center;
   padding: 15px;
-  background: var(--bg-white);
+  background: #ffffff;
   border-radius: 16px;
   cursor: pointer;
   margin-bottom: 12px;
   border: 1px solid #f1f5f9;
-  transition: var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .search-result-item:hover {
   background: #f8fafc;
-  border-color: var(--merkado-blue);
+  border-color: #2196F3;
   transform: translateX(10px);
   box-shadow: 0 5px 15px rgba(33, 150, 243, 0.1);
 }
@@ -264,9 +249,9 @@
 }
 
 .res-info { flex: 1; display: flex; flex-direction: column; }
-.res-name { font-weight: 800; color: var(--merkado-navy); font-size: 1.1rem; }
-.res-price { font-weight: 900; color: var(--merkado-orange); font-size: 1rem; margin-top: 5px; }
-.res-arrow { color: var(--merkado-blue); font-size: 1.5rem; transition: var(--transition-fast); }
+.res-name { font-weight: 800; color: #133E70; font-size: 1.1rem; }
+.res-price { font-weight: 900; color: #F05A28; font-size: 1rem; margin-top: 5px; }
+.res-arrow { color: #2196F3; font-size: 1.5rem; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
 
 .search-result-item:hover .res-arrow {
   transform: translateX(5px);
@@ -274,7 +259,7 @@
 
 .view-all-res {
   margin-top: 20px;
-  background: var(--merkado-navy);
+  background: #133E70;
   color: white;
   padding: 18px;
   border-radius: 16px;
@@ -282,12 +267,12 @@
   font-weight: 800;
   font-size: 1rem;
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   width: 100%;
 }
 
 .view-all-res:hover { 
-  background: var(--merkado-orange); 
+  background: #F05A28; 
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(240, 90, 40, 0.2);
 }
@@ -302,9 +287,9 @@
   width: 350px;
   max-width: 100vw;
   height: 100vh;
-  background: var(--bg-white);
+  background: #ffffff;
   z-index: 10001;
-  transition: var(--transition-bounce);
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   padding: 100px 40px;
   box-shadow: -15px 0 50px rgba(19, 62, 112, 0.1);
 }
@@ -318,7 +303,7 @@
   background: #f1f5f9;
   border: none;
   font-size: 1.8rem;
-  color: var(--text-dark);
+  color: #1e293b;
   cursor: pointer;
   width: 50px;
   height: 50px;
@@ -326,7 +311,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .close-mobile-menu:hover {
@@ -341,15 +326,15 @@
   text-decoration: none;
   font-size: 1.6rem;
   font-weight: 900;
-  color: var(--merkado-navy);
-  transition: var(--transition-fast);
+  color: #133E70 !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
 .drawer-content a:hover {
-  color: var(--merkado-orange);
+  color: #F05A28 !important;
   transform: translateX(10px);
 }
 
@@ -367,4 +352,3 @@
   .search-top-row { flex-direction: column; align-items: stretch; gap: 15px; }
   .close-search { justify-content: center; }
 }
-  
