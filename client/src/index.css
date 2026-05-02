@@ -1,36 +1,52 @@
-/* client/src/index.css */
-
+/* ==========================================
+   GLOBAL & RESET
+   ========================================== */
 html, body {
   margin: 0;
   padding: 0;
-  /* 🚩 IMPORTANT: Fără height: 100% aici, altfel scroll-ul se blochează! */
   min-height: 100vh;
   width: 100%;
-  /* Forțăm scroll-ul să fie controlat de JS, nu de browser */
-  scroll-behavior: auto !important; 
-}
-
-/* 🧼 Scăpăm de bara albă prin prevenirea "Margin Collapse" */
-body {
-  display: flex;
-  flex-direction: column;
+  scroll-behavior: smooth !important; /* Am lăsat doar smooth pentru o navigare fină */
+  background-color: #ffffff;
   overflow-x: hidden;
 }
 
-/* Dacă ai pus un div "app-container" în App.jsx, asigură-te că nu are spații */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================
+   FIX PENTRU NAVBAR (SUPRAPUNERE MOBIL)
+   ========================================== */
+/* IMPORTANT: Dacă meniul tău are altă clasă (ex: .top-bar), adaug-o aici */
+nav, header, .navbar {
+  position: sticky !important; /* Stă sus, dar nu strică spațiile de dedesubt */
+  top: 0;
+  z-index: 9999 !important; /* Scut anti-suprapunere. Nimic nu trece peste el! */
+  background-color: #ffffff;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* O umbră fină ca să se despartă de restul site-ului */
+}
+
+/* ==========================================
+   FIX PENTRU SPAȚIUL GOL URIAȘ DE SUS
+   ========================================== */
 .app-container {
   display: flex;
   flex-direction: column;
-  margin: 0;
-  padding: 0;
-}/* Lipește Navbar-ul de restul paginii */
-.general-ecom-wrapper {
-    margin-top: 0 !important;
-    padding-top: 1px; /* Truc: forțează containerul să nu lase margini să "scape" deasupra */
+  flex: 1; /* Forțează containerul să ocupe tot spațiul rămas, fără să lase goluri */
+  margin: 0 !important;
+  padding: 0 !important; /* Am tăiat orice padding fantomă */
 }
 
-body {
-    background-color: #ffffff; /* Să nu se vadă gri-ul de fundal prin bară */
-}html {
-  scroll-behavior: smooth !important;
+.general-ecom-wrapper {
+  margin-top: 0 !important;
+  padding-top: 0 !important; 
+}
+
+/* Previne pozele să iasă din ecran pe telefoane */
+img {
+  max-width: 100%;
+  height: auto;
 }
