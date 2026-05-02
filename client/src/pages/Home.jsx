@@ -43,11 +43,12 @@ const Home = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch('https://merkado-backend.onrender.com/api/produse')
+    fetch(`${import.meta.env.VITE_API_URL}/api/produse`)
       .then(res => res.json())
       .then(data => setProduse(data))
       .catch(err => console.error("Eroare la încărcare produse:", err));
   }, []);
+
   const scrollSlider = (ref, direction) => {
     if (ref.current) {
       const scrollAmount = direction === 'left' ? -350 : 350;
