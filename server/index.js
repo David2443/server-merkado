@@ -289,7 +289,27 @@ const publicLimiter = rateLimit({
   standardHeaders: true, 
   legacyHeaders: false, 
 });
-
+// ==========================================
+// 🛡️ PAZNICUL RUTELOR (MIDDLEWARE VERIFY ADMIN)
+// ==========================================
+const verifyAdmin = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (decoded.adminLogat) {
+        req.user = decoded;
+        return next();
+      }
+    } catch (err) {
+      return res.status(403).json({ eroare: "Token invalid sau expirat. Te rog să te reloghezi!" });
+    }
+  }
+  
+  return res.status(401).json({ eroare: "Acces interzis! Nu ești autentificat ca admin." });
+};
 // ==========================================
 // 🔒 RUTA DE LOGIN CALIBRATĂ (ADMIN)
 // ==========================================
@@ -310,6 +330,7 @@ app.post('/api/admin/login', loginLimiter, (req, res) => {
     res.status(401).json({ eroare: "Email sau parolă incorectă!" });
   }
 });
+
 // ==========================================
 // 🚚 RUTE PENTRU TRANSPORT 
 // ==========================================
