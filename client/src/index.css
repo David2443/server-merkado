@@ -28,10 +28,7 @@ html, body {
   color: #1e293b; /* Un text ușor mai blând decât negrul pur, e mai elegant */
 }
 
-/* 🛡️ Împingem TOT conținutul site-ului sub Navbar-ul fix */
-body {
-  padding-top: 85px !important;
-}
+
 
 @media (max-width: 900px) {
   body {
