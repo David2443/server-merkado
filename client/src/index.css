@@ -1,27 +1,28 @@
 /* ==========================================
-   🧹 RESET TOTAL - OMOARĂ GOLUL ALB
+   🧹 RESET GLOBAL & ANTI-GHOSTING
    ========================================== */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box !important;
-  outline: none; /* Scoatem liniile roșii după ce verifici */
 }
 
 html, body {
   margin: 0 !important;
   padding: 0 !important;
   width: 100% !important;
-  /* Oprește efectul de "elastic" la scroll up (segmentul alb) */
+  /* Oprește „elasticul” alb de pe mobil la scroll up */
   overscroll-behavior-y: none !important; 
   background-color: #ffffff;
-  /* Fix pentru browserele de mobil (Safari/Chrome) */
-  position: relative;
-  min-height: 100%;
 }
 
-#root {
-  margin: 0;
-  padding: 0;
-  width: 100%;
+/* 🛡️ Împingem TOT conținutul site-ului sub Navbar-ul fix */
+body {
+  padding-top: 85px !important;
+}
+
+@media (max-width: 900px) {
+  body {
+    padding-top: 75px !important;
+  }
 }

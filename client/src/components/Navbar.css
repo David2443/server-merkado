@@ -1,50 +1,78 @@
 /* ==========================================
-   🎨 PALETA DE CULORI MERKADO (Hardcoded)
+   🎨 VARIABILE CULORI MERKADO
    ========================================== */
-/* Navy: #133E70 | Portocaliu: #F05A28 | Blue: #2196F3 */
+:root {
+  --navy: #133E70;
+  --orange: #F05A28;
+  --blue: #2196F3;
+  --white: #ffffff;
+  --bg-light: #f8fafc;
+  --nav-height: 85px;
+  --nav-mobile-height: 75px;
+}
 
 /* ==========================================
-   🛸 NAVBAR PRINCIPAL
+   🛡️ RESETURI CRITICE (Omoară segmentul alb)
+   ========================================== */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  overscroll-behavior-y: none !important; /* Rezolvă segmentul alb la scroll up pe mobil */
+}
+
+/* Împingem tot site-ul sub navbar ca să nu se mai suprapună pe bannerul negru */
+body {
+  padding-top: var(--nav-height) !important;
+}
+
+@media (max-width: 900px) {
+  body {
+    padding-top: var(--nav-mobile-height) !important;
+  }
+}
+
+/* ==========================================
+   🛸 NAVBAR-UL PRINCIPAL
    ========================================== */
 .navbar-merkado-pro {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   width: 100% !important;
-  height: 80px !important;
-  background-color: #ffffff !important;
-  z-index: 100000 !important; /* Peste orice altceva */
+  height: var(--nav-height) !important;
+  background-color: var(--white) !important;
+  z-index: 9999 !important; /* Stratul de bază al navigației */
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 20px rgba(19, 62, 112, 0.1);
-  border-bottom: 2px solid #F05A28; /* O dungă subțire portocalie Merkado */
+  box-shadow: 0 4px 25px rgba(19, 62, 112, 0.12);
+  border-bottom: 2px solid rgba(240, 90, 40, 0.1);
+  margin: 0 !important;
 }
 
 .nav-container-pro {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 30px;
+  padding: 0 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* 🔥 LOGO MERKADO */
+/* 🔥 LOGO */
 .brand-logo-pro {
   font-size: 1.8rem;
   font-weight: 900;
+  color: var(--navy) !important;
   text-decoration: none;
-  color: #133E70 !important;
-  letter-spacing: -1px;
   display: flex;
   align-items: center;
   gap: 5px;
-  white-space: nowrap;
+  letter-spacing: -1px;
 }
 
 .brand-logo-pro span {
-  color: #F05A28 !important;
+  color: var(--orange) !important;
 }
 
 /* 💻 LINK-URI DESKTOP */
@@ -58,38 +86,19 @@
 
 .desktop-links-pro a {
   text-decoration: none;
-  color: #133E70 !important;
+  color: var(--navy) !important;
   font-weight: 800;
   font-size: 0.95rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  transition: 0.3s;
   position: relative;
-  padding: 10px 0;
-  transition: all 0.3s ease;
-}
-
-/* Linia de hover sub link-uri */
-.desktop-links-pro a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 3px;
-  background: #F05A28;
-  border-radius: 2px;
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .desktop-links-pro a:hover {
-  color: #F05A28 !important;
+  color: var(--orange) !important;
 }
 
-.desktop-links-pro a:hover::after {
-  width: 100%;
-}
-
-/* 🛒 ACȚIUNI (Lupă, Cont, Meniu) */
+/* 🛒 ACȚIUNI (Lupă, Cont, Burger) */
 .nav-actions-pro {
   display: flex;
   align-items: center;
@@ -97,73 +106,68 @@
 }
 
 .icon-btn-pro, .mobile-toggle-pro {
-  background: #f8fafc;
+  background: var(--bg-light);
   border: 1px solid #e2e8f0;
-  font-size: 1.5rem;
-  color: #133E70 !important;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  color: var(--navy) !important;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .icon-btn-pro:hover, .mobile-toggle-pro:hover {
-  background-color: #133E70;
-  color: #ffffff !important;
+  background: var(--navy);
+  color: var(--white) !important;
   transform: translateY(-3px);
   box-shadow: 0 8px 15px rgba(19, 62, 112, 0.2);
 }
 
-.mobile-toggle-pro {
-  display: none; /* Ascuns pe desktop */
-}
-
 /* ==========================================
-   🔍 OVERLAY CĂUTARE (Full Screen)
+   🔍 SEARCH OVERLAY (Peste Navbar)
    ========================================== */
 .search-overlay {
-  position: fixed;
-  top: -100%; /* Ascuns */
+  position: fixed !important;
+  top: -100%;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(15px);
-  z-index: 20000; /* Peste navbar */
+  z-index: 10000 !important; /* Peste navbar */
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 40px 20px;
   display: flex;
   justify-content: center;
 }
 
 .search-overlay.active {
-  top: 0;
+  top: 0 !important;
 }
 
 .search-content-container {
   width: 100%;
   max-width: 800px;
+  padding: 40px 20px;
   margin-top: 50px;
 }
 
 .search-input-wrapper {
   display: flex;
   align-items: center;
-  background: #f1f5f9;
+  background: var(--bg-light);
   padding: 20px 30px;
   border-radius: 100px;
   border: 2px solid transparent;
-  transition: 0.3s;
 }
 
 .search-input-wrapper:focus-within {
-  border-color: #F05A28;
-  background: #ffffff;
-  box-shadow: 0 20px 40px rgba(240, 90, 40, 0.1);
+  border-color: var(--orange);
+  background: var(--white);
+  box-shadow: 0 15px 30px rgba(240, 90, 40, 0.1);
 }
 
 .search-input-wrapper input {
@@ -171,38 +175,24 @@
   border: none;
   background: transparent;
   outline: none;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  color: #133E70;
+  color: var(--navy);
   margin-left: 15px;
 }
 
-.close-search {
-  margin-top: 20px;
-  background: #133E70;
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 50px;
-  font-weight: 800;
-  cursor: pointer;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 /* ==========================================
-   📱 MENIU MOBIL (Sertar lateral)
+   📱 MOBILE MENU (Stratul Suprem)
    ========================================== */
 .mobile-menu-overlay {
-  position: fixed;
+  position: fixed !important;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   background: rgba(19, 62, 112, 0.5);
-  backdrop-filter: blur(5px);
-  z-index: 15000;
+  backdrop-filter: blur(4px);
+  z-index: 10001 !important;
   opacity: 0;
   visibility: hidden;
   transition: 0.3s;
@@ -214,80 +204,53 @@
 }
 
 .mobile-drawer {
-  position: fixed;
+  position: fixed !important;
   top: 0;
   right: -100%;
   width: 320px;
   max-width: 85vw;
-  height: 100vh;
-  background: #ffffff;
-  z-index: 15001;
-  transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 40px 25px;
-  box-shadow: -15px 0 50px rgba(0,0,0,0.1);
+  height: 100dvh;
+  background: var(--white);
+  z-index: 10002 !important; /* Cel mai deasupra */
+  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
+  padding: 40px 25px;
 }
 
 .mobile-drawer.open {
-  right: 0;
+  right: 0 !important;
 }
 
 .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 50px;
-}
-
-.close-drawer-btn {
-  background: #f1f5f9;
-  border: none;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  font-size: 1.5rem;
-  cursor: pointer;
+  margin-bottom: 40px;
 }
 
 .drawer-links {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .drawer-links a {
   text-decoration: none;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 900;
-  color: #133E70 !important;
+  color: var(--navy) !important;
+  padding: 15px;
+  background: var(--bg-light);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px;
-  background: #f8fafc;
-  border-radius: 15px;
-  transition: 0.3s;
-}
-
-.drawer-links a:hover {
-  background: #F05A28;
-  color: #ffffff !important;
-}
-
-.drawer-account {
-  margin-top: auto;
-  background: #133E70 !important;
-  color: #ffffff !important;
-  text-align: center;
-  padding: 20px;
-  border-radius: 15px;
-  text-decoration: none;
-  font-weight: 800;
 }
 
 /* ==========================================
-   📱 RESPONSIVE
+   📱 AJUSTĂRI MOBIL
    ========================================== */
 @media (max-width: 900px) {
   .desktop-links-pro, .desktop-only-pro {
@@ -297,6 +260,6 @@
     display: flex;
   }
   .navbar-merkado-pro {
-    height: 75px !important;
+    height: var(--nav-mobile-height) !important;
   }
 }
