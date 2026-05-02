@@ -1,7 +1,7 @@
 /* ==========================================
-   🚀 NAVBAR PRINCIPAL (Culori Hardcodate)
+   🚀 NAVBAR PRINCIPAL (CLASE NOI FORȚATE)
    ========================================== */
-.navbar {
+.navbar-merkado-pro {
   position: sticky !important;
   top: 0;
   left: 0;
@@ -17,7 +17,7 @@
   padding: 0;
 }
 
-.nav-container {
+.nav-container-pro {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
@@ -27,27 +27,23 @@
   align-items: center;
 }
 
-/* ==========================================
-   🔥 LOGO TEXT (Adaptat la Merkado)
-   ========================================== */
-.nav-logo {
+/* 🔥 LOGO NOU */
+.brand-logo-pro {
   font-size: 1.8rem;
   font-weight: 900;
   text-decoration: none;
-  color: #133E70 !important;
+  color: #133E70 !important; /* Navy */
   letter-spacing: -0.5px;
   display: flex;
   align-items: center;
   gap: 5px;
 }
-.nav-logo span {
-  color: #F05A28 !important;
+.brand-logo-pro span {
+  color: #F05A28 !important; /* Portocaliu */
 }
 
-/* ==========================================
-   💻 LINK-URI DESKTOP
-   ========================================== */
-.nav-desktop-links {
+/* 💻 LINK-URI DESKTOP NOI */
+.desktop-links-pro {
   display: flex;
   gap: 35px;
   list-style: none;
@@ -55,7 +51,7 @@
   padding: 0;
 }
 
-.nav-desktop-links a {
+.desktop-links-pro a {
   text-decoration: none;
   color: #133E70 !important;
   font-weight: 700;
@@ -64,10 +60,10 @@
   letter-spacing: 0.5px;
   position: relative;
   padding: 10px 0;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.3s ease;
 }
 
-.nav-desktop-links a::after {
+.desktop-links-pro a::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -76,33 +72,31 @@
   height: 3px;
   background: #2196F3;
   border-radius: 2px;
-  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition: all 0.3s ease;
 }
 
-.nav-desktop-links a:hover {
+.desktop-links-pro a:hover {
   color: #2196F3 !important;
 }
 
-.nav-desktop-links a:hover::after {
+.desktop-links-pro a:hover::after {
   width: 100%;
 }
 
-/* ==========================================
-   🛒 ACȚIUNI (Lupă, Cont, Meniu)
-   ========================================== */
-.nav-actions {
+/* 🛒 ACȚIUNI NOI */
+.nav-actions-pro {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.nav-icon-btn, .mobile-toggle {
+.icon-btn-pro, .mobile-toggle-pro {
   background: none;
   border: none;
   font-size: 1.6rem;
   color: #133E70 !important;
   cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,16 +105,24 @@
   border-radius: 50%;
 }
 
-.nav-icon-btn:hover, .mobile-toggle:hover {
+.icon-btn-pro:hover, .mobile-toggle-pro:hover {
   background-color: rgba(33, 150, 243, 0.1);
   color: #2196F3 !important;
   transform: translateY(-3px);
 }
 
-.mobile-toggle {
+.mobile-toggle-pro {
   display: none;
 }
 
+@media (max-width: 900px) {
+  .desktop-links-pro, .desktop-only-pro { display: none !important; }
+  .mobile-toggle-pro { display: flex; }
+  .nav-container-pro { padding: 0 20px; }
+  .brand-logo-pro { font-size: 1.5rem; }
+}
+
+/* Restul claselor pentru Search Overlay și Mobile Drawer rămân aceleași... */
 /* ==========================================
    🔍 OVERLAY CĂUTARE (Efect de sticlă mată)
    ========================================== */

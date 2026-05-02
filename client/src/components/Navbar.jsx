@@ -44,26 +44,26 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar">
-        <div className="nav-container">
-          <Link to="/" className="nav-logo" onClick={() => setShowSearch(false)}>
+     <nav className="navbar-merkado-pro"> {/* Nume nou! */}
+        <div className="nav-container-pro"> {/* Nume nou! */}
+          
+          <Link to="/" className="brand-logo-pro" onClick={() => setShowSearch(false)}> {/* Nume nou! */}
             MERK<span>ADO</span>
           </Link>
 
-          <ul className="nav-desktop-links">
+          <ul className="desktop-links-pro"> {/* Nume nou! */}
             <li><Link to="/">Acasă</Link></li>
             <li><Link to="/shop">Magazin</Link></li>
             <li><Link to="/contact">Contact</Link></li>
           </ul>
 
-          <div className="nav-actions">
-            <button className="nav-icon-btn" onClick={() => setShowSearch(true)}>
+          <div className="nav-actions-pro"> {/* Nume nou! */}
+            <button className="icon-btn-pro" onClick={() => setShowSearch(true)}>
               <FiSearch />
             </button>
-            <Link to="/account" className="nav-icon-btn desktop-only"><FiUser /></Link>
+            <Link to="/account" className="icon-btn-pro desktop-only-pro"><FiUser /></Link>
             
-            {/* Butonul Burger - Aici era problema ta, acum merge garantat */}
-            <button className="mobile-toggle" onClick={() => setMenuOpen(true)}>
+            <button className="mobile-toggle-pro" onClick={() => setMenuOpen(true)}>
               <FiMenu />
             </button>
           </div>
