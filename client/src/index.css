@@ -1,16 +1,24 @@
 /* ==========================================
    GLOBAL & RESET
    ========================================== */
+/* ==========================================
+   🔤 FONT PREMIUM MERKADO (Google Fonts)
+   ========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap');
+
 html, body {
+  /* Setăm fontul pe tot site-ul */
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  
+  /* Face textul să se vadă "crisp" și clar pe ecrane HD/Retina */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Restul setărilor pe care le aveai deja pentru a opri elastic scroll-ul etc... */
   margin: 0;
   padding: 0;
-  min-height: 100vh;
-  width: 100%;
-  scroll-behavior: smooth !important; /* Am lăsat doar smooth pentru o navigare fină */
   background-color: #ffffff;
-  
 }
-
 body {
   padding-top: 0 !important; /* Am anulat gaura albă */
   margin: 0;
