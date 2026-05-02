@@ -1,28 +1,23 @@
+/* 1. FONTUL TREBUIE SĂ FIE PRIMUL RÂND OBLIGATORIU */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap');
+
+/* 2. RESETUL GLOBAL */
 *, *::before, *::after {
   box-sizing: border-box;
 }
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap');
 
+/* 3. SETĂRI GENERALE PENTRU PAGINĂ */
 html, body {
-  /* Setăm fontul pe tot site-ul */
   font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
-  
-  /* Face textul să se vadă "crisp" și clar pe ecrane HD/Retina */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
-  /* Restul setărilor pe care le aveai deja pentru a opri elastic scroll-ul etc... */
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   background-color: #ffffff;
-}
-body {
-  padding-top: 0 !important; /* Am anulat gaura albă */
-  margin: 0;
- 
+  overflow-x: hidden; /* Ține site-ul drept, să nu fugă stânga-dreapta */
 }
 
-/* Ne asigurăm că nu mai ai margini fantomă pe nicăieri */
+/* 4. TĂIEM ORICE MARGINE FANTOMĂ CARE AR PUTEA ACOPERI MENIUL */
 .main-content, 
 .app-container, 
 .general-ecom-wrapper {
@@ -30,24 +25,16 @@ body {
   padding-top: 0 !important;
 }
 
-
-/* ==========================================
-   FIX PENTRU SPAȚIUL GOL URIAȘ DE SUS
-   ========================================== */
+/* 5. FIX PENTRU CONTAINERE */
 .app-container {
   display: flex;
   flex-direction: column;
-  flex: 1; /* Forțează containerul să ocupe tot spațiul rămas, fără să lase goluri */
+  flex: 1; 
   margin: 0 !important;
-  padding: 0 !important; /* Am tăiat orice padding fantomă */
+  padding: 0 !important; 
 }
 
-.general-ecom-wrapper {
-  margin-top: 0 !important;
-  padding-top: 0 !important; 
-}
-
-/* Previne pozele să iasă din ecran pe telefoane */
+/* 6. PREVENIM POZELE SĂ IASĂ DIN ECRAN PE TELEFOANE */
 img {
   max-width: 100%;
   height: auto;
