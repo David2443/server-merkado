@@ -44,10 +44,11 @@ const Clienti = ({ token }) => {
     fetchData();
   }, [subTab, token, API_URL]);
 
-  const stergeMesaj = async (id) => {
+const stergeMesaj = async (id) => {
     if (!window.confirm("Ștergi definitiv acest mesaj?")) return;
     try {
-      const res = await fetch(`${API_URL}/api/contact/${id}`, {
+      // ✅ REPARAT: Am schimbat /api/contact/ cu /api/admin/mesaje/
+      const res = await fetch(`${API_URL}/api/admin/mesaje/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
