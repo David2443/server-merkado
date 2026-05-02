@@ -985,6 +985,28 @@ app.get('/api/admin/mesaje', verifyAdmin, async (req, res) => {
   } catch (err) { res.status(500).json({ eroare: err.message }); }
 });
 
+// 🗑️ RUTA PENTRU ȘTERGERE MESAJE CONTACT
+app.delete('/api/admin/mesaje/:id', verifyAdmin, async (req, res) => {
+  try {
+    const { ObjectId } = require('mongodb'); // Ne asigurăm că avem acces la convertorul de ID-uri
+    
+    // Deoarece mesajele tale nu au un model Mongoose fixat (le tragi direct din DB),
+    // folosim accesul direct la colecția 'contacts'
+    const rezultat = await mongoose.connection.db.collection('contacts').deleteOne({
+      _id: new ObjectId(req.params.id)
+    });
+
+    if (rezultat.deletedCount === 0) {
+      return res.status(404).json({ eroare: "Mesajul nu a fost găsit sau a fost deja șters." });
+    }
+
+    console.log(`🗑️ Mesaj contact șters cu succes: ${req.params.id}`);
+    res.json({ success: true, mesaj: "Mesaj eliminat definitiv!" });
+  } catch (err) {
+    console.error("❌ Eroare la ștergere mesaj:", err.message);
+    res.status(500).json({ eroare: "Eroare server la ștergere: " + err.message });
+  }
+});
 
 // ==========================================
 // 📊 DASHBOARD ADMIN (DATE REALE + GRAFICE)
