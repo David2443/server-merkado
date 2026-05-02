@@ -30,11 +30,7 @@ html, body {
 
 
 
-@media (max-width: 900px) {
-  body {
-    padding-top: 75px !important;
-  }
-}
+
 
 /* ==========================================
    🔧 RESET PENTRU BUTOANE ȘI LINK-URI
