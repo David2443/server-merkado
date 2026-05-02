@@ -196,51 +196,41 @@
   to { transform: rotate(360deg); }
 }
 
-/* Stil pentru ecrane sub 768px (Tablete și Telefoane) */
 @media (max-width: 768px) {
-  .container {
-    padding-left: 15px;
-    padding-right: 15px;
-    width: 100%;
-  }
-
-  /* Titlurile trebuie să fie mai mici pe mobil ca să nu ocupe 3 rânduri */
-  h1 {
-    font-size: 1.8rem !important;
-    line-height: 1.2;
-  }
-}
-
-@media (max-width: 768px) {
-  .card-plutitor {
-    position: relative !important; /* Nu mai plutește peste hartă */
+  /* Resetează orice container care ține elementele „la cutie” */
+  .container, .main-wrapper, .App, #root {
     width: 100% !important;
-    left: 0 !important;
-    top: 0 !important;
-    margin-top: -20px; /* Îl ridicăm puțin peste marginea hărții pentru efect de design */
-    border-radius: 15px 15px 0 0; /* Rotunjim doar colțurile de sus */
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+    max-width: 100% !important;
+    padding-left: 10px !important;  /* Doar un mic spațiu să nu se lipească textul de sticlă */
+    padding-right: 10px !important;
+    margin: 0 !important;
+  }
+
+  /* Dacă ai carduri, le facem să ocupe aproape tot ecranul */
+  .card, .product-section, .review-card {
+    width: 96% !important; 
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 }
 
-/* Buton de comandă care stă mereu jos pe mobil */
+@media (max-width: 480px) {
+  section {
+    padding: 20px 5px !important; /* Sus-jos lăsăm, dar stânga-dreapta minimizăm */
+  }
+
+  /* Imaginile produselor trebuie să fie mari, nu iconițe */
+  .product-image {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+
 @media (max-width: 768px) {
-  .btn-comand-sticky {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 999;
-    padding: 15px;
-    border-radius: 0;
-    font-weight: bold;
-    text-transform: uppercase;
+  button, .cta-button, .input-field {
+    width: 100% !important;
+    display: block !important;
+    font-size: 18px !important; /* Să se vadă clar ce scrie */
+    padding: 15px !important;
   }
-  .card-modern {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
 }
-}
-
