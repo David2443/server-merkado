@@ -12,11 +12,17 @@ html, body {
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-   padding-top: 80px !important; /* Lăsăm fix 80px pentru meniu, niciun pixel mai mult */
+  padding-top: 0 !important; /* Am anulat gaura albă */
   margin: 0;
-  
+  overflow-x: clip !important; /* SECRETUL: Previne scroll-ul stânga-dreapta FĂRĂ să strice meniul pe mobil */
+}
+
+/* Ne asigurăm că nu mai ai margini fantomă pe nicăieri */
+.main-content, 
+.app-container, 
+.general-ecom-wrapper {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 /* ==========================================
@@ -53,9 +59,3 @@ img {
   max-width: 100%;
   height: auto;
 }
-.main-content, 
-  .app-container, 
-  .general-ecom-wrapper {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
