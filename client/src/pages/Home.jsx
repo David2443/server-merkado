@@ -3,28 +3,22 @@ import { useNavigate, Link } from 'react-router-dom';
 import { 
   FiShoppingCart, FiStar, FiHeart, FiShield, FiAward, 
   FiHeadphones, FiChevronLeft, FiChevronRight, FiTrendingUp, 
-  FiTruck, FiEye, FiCheckCircle, FiCreditCard 
+  FiTruck, FiCheckCircle, FiPlayCircle, FiPlus, FiMinus
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import './Home.css';
 import React from 'react';
-const handleScrollToProducts = (e) => {
-  e.preventDefault(); 
-  const section = document.querySelector('#produse-noi');
-  if (section) {
-    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-};
 
 const Home = () => {
   const navigate = useNavigate();
   const [produse, setProduse] = useState([]);
   const [timeLeft, setTimeLeft] = useState(13500); 
+  const [activeFaq, setActiveFaq] = useState(null);
 
   const productsRef = useRef(null);
   const reviewsRef = useRef(null);
+  const categoriesRef = useRef(null);
 
-  // Folosește numărul de telefon dintr-o variabilă de mediu sau măcar o constantă
   const numarTelefonSuport = import.meta.env.VITE_PHONE_NUMBER || "40723717438"; 
 
   useEffect(() => {
@@ -43,7 +37,7 @@ const Home = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-   fetch('https://merkado-backend.onrender.com/api/produse')
+    fetch('https://merkado-backend.onrender.com/api/produse')
       .then(res => res.json())
       .then(data => setProduse(data))
       .catch(err => console.error("Eroare la încărcare produse:", err));
@@ -57,20 +51,19 @@ const Home = () => {
   };
 
   const handleAddToCart = (e, produsId) => {
-    e.preventDefault(); // 🛡️ Protecție dublă
+    e.preventDefault();
     e.stopPropagation(); 
     console.log("Produs adăugat în coș:", produsId);
   };
 
-  const handleWishlist = (e) => {
-    e.preventDefault();
-    e.stopPropagation(); 
-    console.log("Adăugat la favorite");
+  const toggleFaq = (index) => {
+    setActiveFaq(activeFaq === index ? null : index);
   };
 
   return (
     <div className="general-ecom-wrapper">
       
+      {/* 🚨 1. BARA DE PANICĂ */}
       <div className="top-panic-bar">
         <div className="panic-content">
           <span className="pulse-dot"></span>
@@ -81,6 +74,7 @@ const Home = () => {
         </div>
       </div>
 
+      {/* 🚀 2. HERO SECTION (Split Layout) */}
       <section className="hero-split-section">
         <div className="container hero-split-grid">
           <div className="hero-left">
@@ -94,7 +88,7 @@ const Home = () => {
               Am adus la un loc cele mai dorite produse. De la electronice de top până la accesorii auto, toate cu livrare rapidă.
             </p>
             <div className="hero-actions-row">
-              <a href="#produse-noi" onClick={handleScrollToProducts} className="btn-shop-mega">Explorează Oferta</a>
+              <a href="#produse-noi" className="btn-shop-mega">Explorează Oferta</a>
               <div className="hero-social-proof">
                 <div className="avatars-group">
                   <img src="https://i.pravatar.cc/100?img=1" alt="user" />
@@ -103,7 +97,7 @@ const Home = () => {
                 </div>
                 <div className="proof-text">
                   <div className="stars-ecom"><FiStar/><FiStar/><FiStar/><FiStar/><FiStar/></div>
-                  <span>10.000+ clienți mulțumiți</span>
+                  <span>10.000+ clienți</span>
                 </div>
               </div>
             </div>
@@ -127,6 +121,7 @@ const Home = () => {
         </div>
       </section>
 
+      {/* 🏁 3. BANDA DE AUTORITATE */}
       <div className="authority-band-section">
         <div className="authority-ticker">
           <div className="ticker-track">
@@ -144,12 +139,47 @@ const Home = () => {
         </div>
       </div>
 
+      {/* 🏷️ NOU: 4. GRILA VIZUALĂ DE CATEGORII */}
+      <section className="categories-visual-section">
+        <div className="container">
+          <div className="section-header-center">
+            <h2>Explorează pe <span>Categorii</span></h2>
+            <p>Alege direct ceea ce te interesează.</p>
+          </div>
+          <div className="categories-grid" ref={categoriesRef}>
+            <div className="category-card" onClick={() => navigate('/shop?cat=Auto')}>
+              <img src="https://images.unsplash.com/photo-1600705722908-bab1e6190b05?w=500" alt="Auto" />
+              <div className="cat-overlay">
+                <h3>Auto & Moto</h3>
+                <span className="cat-link">Vezi Produsele &rarr;</span>
+              </div>
+            </div>
+            <div className="category-card" onClick={() => navigate('/shop?cat=Casa')}>
+              <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500" alt="Casa" />
+              <div className="cat-overlay">
+                <h3>Casă & Grădină</h3>
+                <span className="cat-link">Vezi Produsele &rarr;</span>
+              </div>
+            </div>
+            <div className="category-card" onClick={() => navigate('/shop?cat=Electronice')}>
+              <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500" alt="Electronice" />
+              <div className="cat-overlay">
+                <h3>Electronice</h3>
+                <span className="cat-link">Vezi Produsele &rarr;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 📦 5. TOP VÂNZĂRI (Slider) */}
       <section id="produse-noi" className="products-premium-section">
         <div className="container">
           <div className="products-header-modern">
-            <span className="products-badge">Oferta Zilei</span>
-            <h2>Top Vânzări <span>Săptămâna Asta</span></h2>
-            
+            <div>
+               <span className="products-badge">Oferta Zilei</span>
+               <h2>Top Vânzări <span>Săptămâna Asta</span></h2>
+            </div>
             <div className="slider-arrows-desktop">
               <button onClick={() => scrollSlider(productsRef, 'left')} className="arrow-btn"><FiChevronLeft /></button>
               <button onClick={() => scrollSlider(productsRef, 'right')} className="arrow-btn"><FiChevronRight /></button>
@@ -160,31 +190,20 @@ const Home = () => {
             {produse.length === 0 ? (
               <p className="loading-text">Se încarcă catalogul...</p>
             ) : (
-              produse.map(produs => (
-                <div 
-                  key={produs._id} 
-                  className="premium-card-scroll" 
-                  onClick={() => navigate(`/produs/${produs._id}`)}
-                >
+              produse.slice(0, 6).map(produs => (
+                <div key={produs._id} className="premium-card-scroll" onClick={() => navigate(`/produs/${produs._id}`)}>
                   <div className="premium-img-box">
-                    <img 
-                      src={produs.imaginePrincipala || 'https://via.placeholder.com/300x300?text=Fara+Imagine'} 
-                      alt={produs.nume} 
-                      loading="lazy" 
-                    />
+                    <img src={produs.imaginePrincipala || 'https://via.placeholder.com/300x300'} alt={produs.nume} loading="lazy" />
                     <div className="badge-discount">🔥 TOP</div>
                   </div>
-                  
                   <div className="premium-card-body">
                     <h3 className="premium-title">{produs.nume}</h3>
                     <div className="price-row-mini">
-                      <span className="price-new">{produs.pret} Lei</span>
-                      {produs.pretVechi && <span className="price-old">{produs.pretVechi} Lei</span>}
-                      <button 
-                        type="button" // 🛡️ Evităm form submit ciudate
-                        className="add-to-cart-mini" 
-                        onClick={(e) => handleAddToCart(e, produs._id)}
-                      >
+                      <div>
+                        <span className="price-new">{produs.pret} Lei</span>
+                        {produs.pretVechi && <span className="price-old">{produs.pretVechi} Lei</span>}
+                      </div>
+                      <button type="button" className="add-to-cart-mini" onClick={(e) => handleAddToCart(e, produs._id)}>
                         <FiShoppingCart />
                       </button>
                     </div>
@@ -196,9 +215,37 @@ const Home = () => {
         </div>
       </section>
 
+      {/* 🌟 NOU: 6. PRODUSUL EROU (Spotlight) */}
+      <section className="product-spotlight-section">
+        <div className="container spotlight-grid">
+          <div className="spotlight-content">
+            <span className="spotlight-badge">Alegerea Editorului</span>
+            <h2>Performanță dusă la <span>extrem.</span></h2>
+            <p>Descoperă produsul care a revoluționat piața luna aceasta. Stocul este extrem de limitat datorită cererii masive pe TikTok.</p>
+            <ul className="spotlight-features">
+              <li><FiCheckCircle className="feat-icon"/> Materiale Premium Ultra-Rezistente</li>
+              <li><FiCheckCircle className="feat-icon"/> Design Ergonomic Inovator</li>
+              <li><FiCheckCircle className="feat-icon"/> Garanție Extinsă 24 Luni</li>
+            </ul>
+            <button className="btn-spotlight" onClick={() => navigate('/shop')}>
+              Prinde Oferta Acum
+            </button>
+          </div>
+          <div className="spotlight-visual">
+             <div className="video-mockup-wrapper">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800" alt="Spotlight" className="spotlight-img"/>
+                <div className="play-button-overlay">
+                   <FiPlayCircle />
+                </div>
+             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 🧩 7. AVANTAJE (Bento Grid) */}
       <section className="why-bomba-section">
         <div className="container">
-          <div className="why-bomba-header">
+          <div className="section-header-center">
             <span className="why-badge">Avantajele Tale</span>
             <h2>De ce suntem <span>alegerea numărul 1?</span></h2>
           </div>
@@ -207,7 +254,7 @@ const Home = () => {
               <FiTruck className="why-icon" />
               <div className="why-big-number">24/48h</div>
               <h3>Livrare Fulger</h3>
-              <p>Comenzile plasate până în ora 15:00 pleacă în aceeași zi, direct la ușa ta.</p>
+              <p>Comenzile plasate până în ora 15:00 pleacă în aceeași zi.</p>
             </div>
             <div className="why-card card-quality">
               <FiAward className="why-icon" />
@@ -228,6 +275,8 @@ const Home = () => {
         </div>
       </section>
 
+
+      {/* ⭐ 9. WALL OF LOVE (VIP REVIEWS) */}
       <section className="reviews-vip-section">
         <div className="container">
           <div className="vip-header">
@@ -235,7 +284,6 @@ const Home = () => {
               <span className="vip-badge">Social Proof</span>
               <h2>Peste 10.000 de <span>Clienți Fericiți</span></h2>
             </div>
-            
             <div className="vip-slider-controls">
               <button onClick={() => scrollSlider(reviewsRef, 'left')}><FiChevronLeft /></button>
               <button onClick={() => scrollSlider(reviewsRef, 'right')}><FiChevronRight /></button>
@@ -268,7 +316,37 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 🛡️ WhatsApp dinamic */}
+      {/* ❓ NOU: 10. FAQ SECTION */}
+      <section className="faq-section">
+         <div className="container faq-container">
+            <div className="faq-text-side">
+               <h2>Ai întrebări?<br/><span>Avem răspunsuri.</span></h2>
+               <p>Nu găsești ce cauți? Scrie-ne direct pe WhatsApp și rezolvăm instant.</p>
+               <a href={`https://wa.me/${numarTelefonSuport}`} target="_blank" rel="noreferrer" className="btn-faq-wa">
+                 <FaWhatsapp /> Contactează-ne
+               </a>
+            </div>
+            <div className="faq-accordion-side">
+               {[
+                 { q: "Cât durează livrarea?", a: "Toate comenzile confirmate până în ora 15:00 sunt expediate în aceeași zi și ajung la tine în 24-48 de ore lucrătoare." },
+                 { q: "Pot returna produsul dacă nu îmi place?", a: "Absolut! Ai 14 zile la dispoziție să returnezi orice produs, fără întrebări suplimentare." },
+                 { q: "Oferiți garanție?", a: "Da, toate produsele noastre electronice beneficiază de 24 de luni garanție comercială." }
+               ].map((item, idx) => (
+                  <div key={idx} className={`faq-item ${activeFaq === idx ? 'active' : ''}`} onClick={() => toggleFaq(idx)}>
+                     <div className="faq-question">
+                        <h4>{item.q}</h4>
+                        {activeFaq === idx ? <FiMinus className="faq-icon" /> : <FiPlus className="faq-icon" />}
+                     </div>
+                     <div className="faq-answer">
+                        <p>{item.a}</p>
+                     </div>
+                  </div>
+               ))}
+            </div>
+         </div>
+      </section>
+
+      {/* 🛡️ 11. WhatsApp FLOAT */}
       <a href={`https://wa.me/${numarTelefonSuport}`} target="_blank" rel="noreferrer" className="whatsapp-float-btn">
         <div className="wa-tooltip">Ai o întrebare? Scrie-ne!</div>
         <FaWhatsapp className="wa-icon-bomba" />
