@@ -1105,3 +1105,104 @@
 .checkout-input::placeholder {
   color: #94A3B8;
 }
+/* ==========================================
+   👁️ 14. VIZITATORI LIVE & SOCIAL PROOF (FACEBOOK)
+   ========================================== */
+
+/* --- Indicatorul de Vizitatori Live --- */
+.live-viewers {
+  background: #EFF6FF; /* Un albastru foarte deschis, liniștitor */
+  border: 1px solid #BAE6FD;
+  padding: 14px 20px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: var(--mk-navy);
+  margin-top: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 12px rgba(0, 163, 255, 0.05);
+  font-weight: 500;
+}
+
+.live-viewers strong {
+  color: var(--mk-blue);
+  font-weight: 900;
+  font-size: 1.05rem;
+}
+
+/* Punctul Roșu de tip "În Direct / LIVE" */
+.live-viewers .dot {
+  width: 12px;
+  height: 12px;
+  background: var(--mk-red);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse-live-red 1.5s infinite;
+}
+
+@keyframes pulse-live-red {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* --- Secțiunea de Dovezi (Facebook Proof) --- */
+.facebook-proof-section {
+  background: white;
+  border: 2px solid #F1F5F9;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.facebook-proof-section:hover {
+  border-color: #E2E8F0;
+  box-shadow: var(--shadow-md);
+}
+
+.fb-proof-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--mk-navy);
+  display: flex;
+  align-items: center;
+  margin: 0 0 15px 0;
+  letter-spacing: 0.2px;
+}
+
+/* Iconița de Like de la Facebook */
+.fb-proof-title svg {
+  font-size: 1.3rem;
+  filter: drop-shadow(0 2px 4px rgba(24, 119, 242, 0.3));
+}
+
+.fb-image-placeholder {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #E2E8F0;
+  position: relative;
+}
+
+/* Facem poza cu comentariile să arate bine, cu un mic efect la hover */
+.fb-image-placeholder img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.facebook-proof-section:hover .fb-image-placeholder img {
+  transform: scale(1.03); /* Se mărește extrem de fin când pui mouse-ul pe zona de comentarii */
+}
+
+/* Un mic gradient peste poza de Facebook ca să arate integrată în site */
+.fb-image-placeholder::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 80%, rgba(255,255,255,0.05) 100%);
+  pointer-events: none;
+}
