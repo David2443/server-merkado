@@ -24,19 +24,19 @@ const AdminComenzi = () => {
 
 // Funcția de apelare
 // Funcția de apelare REPARATĂ
+// Funcția de apelare REPARATĂ
 const genereazaAWB = async (idComanda) => {
   const confirmare = window.confirm("Ești sigur că vrei să generezi AWB-ul pentru această comandă?");
   if (!confirmare) return;
 
-  // 1. REPARAT: Extragem token-ul aici, ca să știe cine e adminul!
   const token = localStorage.getItem('adminToken');
 
-  // 2. Pentru a folosi API_URL curat, trebuie definit (sau refolosit cel de jos)
-  const API_URL = import.meta.env.VITE_API_URL || 'https://numele-backendului-tau.onrender.com'; // Pune linkul real de render aici dacă nu ai .env
+  // 1. Definim API_URL corect folosind import.meta.env (Așa citește Vite variabilele)
+  const API_URL = import.meta.env.VITE_API_URL || 'https://merkado-backend.onrender.com'; 
 
   try {
-    // 3. REPARAT: Folosim API_URL în loc de localhost
-    const response = await fetch(`${VITE_API_URL}/api/admin/comenzi/${idComanda}/awb`, {
+    // 2. Aici folosim API_URL, NU VITE_API_URL
+    const response = await fetch(`${API_URL}/api/admin/comenzi/${idComanda}/awb`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,8 +48,7 @@ const genereazaAWB = async (idComanda) => {
 
     if (response.ok && data.success) {
       alert(`✅ SUCCES! AWB-ul a fost generat: ${data.awb}`);
-      
-      // 4. REPARAT: Așa dai refresh instant la tabel ca să apară pastila verde cu AWB!
+      // Reîncărcăm tabelul ca să apară pastila verde!
       fetchData(); 
     } else {
       alert(`❌ EROARE: ${data.eroare}`);
