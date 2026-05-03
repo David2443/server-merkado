@@ -7,20 +7,7 @@ import React from 'react';
 const Footer = () => {
   return (
     <footer className="footer-merkado">
-      {/* --- 1. PARTEA DE SUS: NEWSLETTER VIP --- */}
-      <div className="footer-newsletter">
-        <div className="container newsletter-grid">
-          <div className="newsletter-text">
-            <h3>Alătură-te comunității MERKADO 👑</h3>
-            <p>Abonează-te la newsletter și primești instant un cod de <strong>-10% reducere</strong> pentru prima ta comandă.</p>
-          </div>
-          <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="Introdu adresa ta de email..." required />
-            <button type="submit">Vreau Reducerea <FiArrowRight /></button>
-          </form>
-        </div>
-      </div>
-
+     
       {/* --- 2. PARTEA DE MIJLOC: LINK-URI & DATE FIRMĂ --- */}
       <div className="footer-main">
         <div className="container footer-grid">
