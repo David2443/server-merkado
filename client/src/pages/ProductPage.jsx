@@ -10,7 +10,7 @@ import {
 } from '@stripe/react-stripe-js';
 import {
   FiStar, FiTruck, FiShield, FiRotateCcw, FiChevronDown, FiChevronUp,
-  FiCheck, FiShoppingBag, FiX, FiThumbsUp, FiLock, FiCheckCircle, FiChevronRight, FiCreditCard, FiBox
+  FiCheck, FiArrowRight, FiShoppingBag, FiX, FiThumbsUp, FiLock, FiCheckCircle, FiChevronRight, FiCreditCard, FiBox
 } from 'react-icons/fi';
 import './ProductPage.css';
 
