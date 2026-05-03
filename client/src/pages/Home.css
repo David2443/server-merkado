@@ -165,18 +165,8 @@
   padding: 20px;
 }
 
-.main-hero-img {
-  width: 100%;
-  border-radius: 24px; /* Curbură mai elegantă */
-  object-fit: cover;
-  box-shadow: 0 30px 60px -15px rgba(0, 163, 255, 0.2);
-  transform: rotateY(-3deg) rotateX(2deg);
-  transition: all 0.5s ease;
-}
 
-.hero-image-composition:hover .main-hero-img {
-  transform: rotateY(0deg) rotateX(0deg) scale(1.01);
-}
+
 
 /* Cardul Plutitor făcut mai finuț */
 .floating-benefit-card {
@@ -331,15 +321,7 @@
     font-size: 1rem;
   }
 
-  /* Imaginea e strânsă și aerisită */
-  .hero-image-composition {
-    padding: 10px;
-  }
-
-  .main-hero-img {
-    border-radius: 20px;
-    transform: none; /* Anulăm efectul 3D pe mobil */
-  }
+  
 
   /* Cardul plutitor e centrat frumos, nu mai taie marginile */
   .floating-benefit-card {
@@ -1182,4 +1164,54 @@
   .impulse-grid { grid-template-columns: 1fr; }
   .hero-mega-title { font-size: 2.1rem !important; }
   .btn-shop-mega { width: 100%; text-align: center; } /* Buton full-width pe mobil */
+}/* Cutia care ține videoul, aplică umbrele și efectul de plutire */
+.hero-video-wrapper {
+  width: 100%;
+  max-width: 460px;
+  aspect-ratio: 1 / 1; /* Păstrăm forma perfect pătrată */
+  margin: 0 auto;
+  border-radius: 24px;
+  overflow: hidden; /* SECRETUL: Orice iese din cutie (marginile negre) devine invizibil */
+  
+  /* Efectele tale frumoase 3D și plutirea */
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3), 0 0 30px rgba(35, 171, 132, 0.15);
+  animation: floatEffect 6s ease-in-out infinite;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+
+.hero-video-wrapper:hover {
+  transform: perspective(1000px) translateY(-10px) rotateX(2deg) rotateY(-2deg) scale(1.05);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4), 0 0 50px rgba(35, 171, 132, 0.3);
+  animation-play-state: paused;
+}
+
+/* Videoul în sine: îi dăm ZOOM ca să iasă dungile afară */
+.main-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.35); /* Asta e magia: mărește videoul cu 35% pe interior ca să ascundă negrul */
+}
+
+@keyframes floatEffect {
+  0% { transform: perspective(1000px) translateY(0px); }
+  50% { transform: perspective(1000px) translateY(-15px); }
+  100% { transform: perspective(1000px) translateY(0px); }
+}
+
+@media (max-width: 768px) {
+  .hero-video-wrapper {
+    max-width: 95%; /* Mărit de la 90% - acum ocupă aproape tot ecranul */
+    aspect-ratio: 4 / 5; /* Formă verticală ideală pentru telefon, îl face mai înalt! */
+    border-radius: 16px;
+    margin: 0 auto;
+    
+    /* Păstrăm și umbra pe mobil ca să iasă în evidență */
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(35, 171, 132, 0.15);
+  }
+  
+  .main-hero-img {
+    /* Păstrăm zoom-ul pe interior și pe mobil ca să fim siguri că nu reapar dungile negre */
+    transform: scale(1.35); 
+  }
 }

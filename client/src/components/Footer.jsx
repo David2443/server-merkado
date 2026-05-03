@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { FiMail, FiPhone, FiArrowRight, FiClock } from 'react-icons/fi';
 import { FaFacebookF, FaInstagram, FaTiktok, FaCcVisa, FaCcMastercard, FaCcApplePay } from 'react-icons/fa';
 import './Footer.css';
+import About from '../pages/About';
 import React from 'react';
 
 const Footer = () => {
@@ -20,10 +21,9 @@ const Footer = () => {
             </p>
             {/* Aici îți vei pune datele reale ale firmei tale (SRL/PFA) */}
             <div className="company-details">
-              <strong>SC MERKADO ONLINE SRL</strong>
-              <span>CUI: RO12345678</span>
-              <span>Reg. Com: Jxx/xxxx/xxxx</span>
-              <span>Sediu: Str. Exemplu Nr. 10, București</span>
+              <strong>DS RETAIL NETWORK SRL</strong>
+              <span>CUI: 54193458</span>
+              <span>Sediu: Str. Otelesti nr 140A, Stefanesti. Arges</span>
             </div>
           </div>
 
@@ -34,7 +34,7 @@ const Footer = () => {
               <li><Link to="/">Acasă</Link></li>
               <li><Link to="/shop">Toate Produsele</Link></li>
               <li><Link to="/oferte">Oferte Speciale 🔥</Link></li>
-              <li><Link to="/track-order">Urmărește Comanda</Link></li>
+              <li><Link to="/About">Despre noi</Link></li>
             </ul>
           </div>
 
@@ -58,7 +58,7 @@ const Footer = () => {
               <li><FiClock className="c-icon" /> <span>Luni - Vineri: 09:00 - 18:00</span></li>
             </ul>
             <div className="social-links">
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" className="social-icon"><FaFacebookF /></a>
+              <a href="https://www.facebook.com/profile.php?id=61589093280182" target="_blank" rel="noreferrer" aria-label="Facebook" className="social-icon"><FaFacebookF /></a>
               <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram" className="social-icon"><FaInstagram /></a>
               <a href="https://tiktok.com" target="_blank" rel="noreferrer" aria-label="TikTok" className="social-icon"><FaTiktok /></a>
             </div>
@@ -96,7 +96,6 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} MERKADO. Toate drepturile rezervate.
           </p>
           <div className="anpc-links">
-            {/* Aceste link-uri te protejează legal */}
             <a href="https://anpc.ro/" target="_blank" rel="noreferrer">ANPC</a>
             <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noreferrer">SOL</a>
             <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noreferrer">SAL</a>

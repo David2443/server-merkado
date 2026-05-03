@@ -125,12 +125,15 @@ const Home = () => {
     <div className="hero-right">
       <div className="hero-image-composition">
         {/* Imagine noua: Setup modern, curat, care sugerează calitate */}
-        <img 
-          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop" 
-          alt="Premium Gadget Merkado" 
-          className="main-hero-img"
-        />
         
+           <div className="hero-video-wrapper">
+  <video 
+    src="https://res.cloudinary.com/dfc83yl1q/video/upload/v1777818851/f_c_c_f_f_f_mp__u44zyo.mp4" 
+    className="main-hero-img"
+    autoPlay loop muted playsInline
+  >
+  </video>
+</div>
         {/* Card plutitor nou: LIVRARE FULGER */}
         <div className="floating-benefit-card">
           <div className="benefit-icon-circle">
@@ -280,7 +283,16 @@ const Home = () => {
           </div>
           <div className="spotlight-visual">
              <div className="video-mockup-wrapper">
-                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800" alt="Spotlight" className="spotlight-img"/>
+                
+
+                  <video 
+  src="https://res.cloudinary.com/dfc83yl1q/video/upload/v1777818851/f_c_c_f_f_f_mp__u44zyo.mp4" 
+ lt="Spotlight" className="spotlight-img"
+  autoPlay 
+  loop 
+  muted 
+  playsInline
+></video>
                 <div className="play-button-overlay">
                    <FiPlayCircle />
                 </div>
