@@ -22,7 +22,8 @@ const transporter = nodemailer.createTransport({
   },
   tls: {
     rejectUnauthorized: false
-  }
+  },
+  family: 4 // 🛡️ MAGIA AICI: Interzice complet folosirea rețelei IPv6!
 });
 
 // 💌 ROBOTUL DE EMAIL
