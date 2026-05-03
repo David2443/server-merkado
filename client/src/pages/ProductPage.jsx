@@ -125,6 +125,7 @@ const ProductPage = () => {
   const [loadingComanda, setLoadingComanda] = useState(false);
   const [loadingReview, setLoadingReview] = useState(false);
   const [produs, setProdus] = useState(null);
+  const [produseSimilare, setProduseSimilare] = useState([]);
   const [recenzii, setRecenzii] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [transportDeschis, setTransportDeschis] = useState(false);
@@ -212,14 +213,16 @@ const ProductPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 4.d) Data Fetching & Timers
+ // 4.d) Data Fetching & Timers
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // 1. Aducem produsul curent
         const resProd = await fetch(`${API_URL}/api/produse/${id}`);
         const dataProd = await resProd.json();
         setProdus(dataProd);
 
+        // 2. Setăm ofertele / pachetele
         if (dataProd.oferte && dataProd.oferte.length > 0) {
           setPachet({
             qty: Number(dataProd.oferte[0].cantitate),
@@ -230,23 +233,37 @@ const ProductPage = () => {
           setPachet({ qty: 1, pret: dataProd.pret || 69, text: 'Pachet Standard' });
         }
 
+        // 3. Aducem recenziile produsului
         const resRec = await fetch(`${API_URL}/api/recenzii/produs/${id}`);
         if (resRec.ok) setRecenzii(await resRec.json());
 
+        // 4. Aducem opțiunile de transport active
         const resTrans = await fetch(`${API_URL}/api/transport`);
         if (resTrans.ok) {
           const dataTrans = await resTrans.json();
           setOptiuniTransport(dataTrans.filter(m => m.activ));
         }
 
+        // 🚀 5. NOU: Aducem "Produse Similare" pentru rețeaua SEO internă
+        const resToate = await fetch(`${API_URL}/api/produse`);
+        if (resToate.ok) {
+          const toate = await resToate.json();
+          // Excludem produsul pe care suntem acum și luăm doar 4 produse
+          const similare = toate.filter(p => p._id !== id).slice(0, 4);
+          setProduseSimilare(similare);
+        }
+
+        // Am terminat de încărcat tot
         setIsLoading(false);
       } catch (err) {
-        console.error(err);
+        console.error("Eroare la aducerea datelor paginii:", err);
         setIsLoading(false);
       }
     };
+    
     fetchData();
 
+    // --- TIMERS PENTRU MARKETING ---
     const intervalTimp = setInterval(() => {
       setTimp(prev => {
         if (prev.secunde > 0) return { ...prev, secunde: prev.secunde - 1 };
@@ -268,7 +285,7 @@ const ProductPage = () => {
       clearInterval(intervalTimp);
       clearInterval(popupInterval);
     };
-  }, [id]);
+  }, [id, API_URL]);
 
   // 4.e) Abandoned Cart Silently Update
   useEffect(() => {
@@ -713,6 +730,37 @@ const ProductPage = () => {
         </div>
 
       </div>
+
+{/* 🕸️ SECȚIUNEA SEO INTERN: PRODUSE SIMILARE */}
+      {produseSimilare.length > 0 && (
+        <section className="related-products-section" style={{ padding: '40px 20px', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
+          <div className="container">
+            <h2 style={{ textAlign: 'center', marginBottom: '30px', fontSize: '1.8rem', color: '#0f172a' }}>
+              Clienții au mai cumpărat
+            </h2>
+            <div className="shop-products-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+              {produseSimilare.map(sim => (
+                <div 
+                  key={sim._id} 
+                  className="shop-card"
+                  onClick={() => {
+                    window.scrollTo(0,0);
+                    navigate(`/produs/${sim.slug || sim._id}`);
+                  }}
+                  style={{ cursor: 'pointer', background: 'white', borderRadius: '12px', padding: '15px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                >
+                  <img src={sim.imaginePrincipala} alt={sim.nume} style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px' }} loading="lazy" />
+                  <h3 style={{ fontSize: '1rem', marginTop: '15px', color: '#1e293b' }}>{sim.nume}</h3>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+                    <span style={{ fontWeight: 'bold', color: '#0f172a' }}>{sim.pret} Lei</span>
+                    <FiArrowRight style={{ color: '#3b82f6' }}/>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <div className={`sales-popup ${salesPopup.vizibil ? 'show' : ''} ${showStickyBar ? 'lifted' : ''}`}>
         <img src={produs.imaginePrincipala} alt={`Alertă comandă ${produs.nume}`} className="sales-popup-img" />
