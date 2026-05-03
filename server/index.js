@@ -150,6 +150,33 @@ const server = http.createServer(app);
 
 // --- 2. MIDDLEWARES (Configurare obligatorie înainte de rute!) ---
 
+
+
+// 🛡️ BUNCĂRUL ANTI-HACKERI (Securitate Globală)
+app.use(helmet()); 
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); 
+
+app.use(cors({
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:5173', 
+    'https://merkado.ro',     
+    'https://www.merkado.ro'
+  ],
+  credentials: true
+}));
+
+app.use(express.json({ limit: '5mb' })); 
+app.use(express.urlencoded({ limit: '5mb', extended: true }));
+app.use(hpp());
+
+// 🧼 FILTRELE DE CURĂȚENIE PENTRU FORMULARE
+app.use((req, res, next) => {
+  if (req.body) req.body = mongoSanitize.sanitize(req.body);
+  if (req.params) req.params = mongoSanitize.sanitize(req.params);
+  next();
+});
+
 // ==========================================
 // 🔐 RUTA REPARATĂ: RECUPERARE PAROLĂ (RESEND)
 // ==========================================
@@ -197,31 +224,6 @@ app.post('/api/auth/forgot-password', publicLimiter, async (req, res) => {
     console.error("❌ Eroare la recuperare parolă:", err);
     res.status(500).json({ eroare: "A apărut o problemă la server. Încearcă din nou mai târziu." });
   }
-});
-
-// 🛡️ BUNCĂRUL ANTI-HACKERI (Securitate Globală)
-app.use(helmet()); 
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); 
-
-app.use(cors({
-  origin: [
-    'http://localhost:3000', 
-    'http://localhost:5173', 
-    'https://merkado.ro',     
-    'https://www.merkado.ro'
-  ],
-  credentials: true
-}));
-
-app.use(express.json({ limit: '5mb' })); 
-app.use(express.urlencoded({ limit: '5mb', extended: true }));
-app.use(hpp());
-
-// 🧼 FILTRELE DE CURĂȚENIE PENTRU FORMULARE
-app.use((req, res, next) => {
-  if (req.body) req.body = mongoSanitize.sanitize(req.body);
-  if (req.params) req.params = mongoSanitize.sanitize(req.params);
-  next();
 });
 
 // --- 3. CONECTARE RUTE ---
