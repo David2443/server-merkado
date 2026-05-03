@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiTarget, FiHeart, FiCheckCircle, FiTruck, FiUsers, FiShoppingBag } from 'react-icons/fi';
 import './About.css';
-
+import React from 'react';
 const About = () => {
   useEffect(() => {
     window.scrollTo(0, 0);

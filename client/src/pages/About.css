@@ -1,143 +1,290 @@
+/* ==========================================
+   FUNDAL ȘI SETĂRI GLOBALE
+   ========================================== */
 .about-wrapper {
-  background-color: #ffffff;
-  overflow: hidden;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #374151;
+  overflow-x: hidden;
 }
 
-/* --- HERO --- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ==========================================
+   HERO SECTION (Partea de sus, cinematică)
+   ========================================== */
 .about-hero {
-  padding: 100px 0 80px;
-  background: radial-gradient(circle at top right, #f0f9ff, #ffffff);
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  color: white;
+  padding: 120px 20px 80px;
   text-align: center;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.8s ease-out forwards;
 }
 
 .about-badge {
   display: inline-block;
-  background: #eff6ff;
-  color: #3b82f6;
-  padding: 8px 20px;
-  border-radius: 30px;
-  font-weight: 800;
-  font-size: 0.9rem;
+  background: rgba(255, 107, 0, 0.2);
+  color: #ff6b00;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   margin-bottom: 20px;
 }
 
 .about-hero h1 {
   font-size: 3.5rem;
-  font-weight: 900;
-  letter-spacing: -1.5px;
-  color: #0f172a;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 25px;
+  letter-spacing: -1px;
 }
 
 .about-hero h1 span {
-  color: #3b82f6;
+  background: linear-gradient(to right, #ff6b00, #ff9b44);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .about-hero p {
-  font-size: 1.25rem;
-  color: #64748b;
-  max-width: 700px;
-  margin: 20px auto 0;
+  font-size: 1.2rem;
+  color: #9ca3af;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
-/* --- VALORI --- */
+/* ==========================================
+   SECȚIUNEA VALORI (Cele 3 carduri)
+   ========================================== */
 .about-values {
   padding: 80px 0;
+  margin-top: -40px; /* Trage cardurile puțin peste hero section */
+  position: relative;
+  z-index: 20;
 }
 
 .values-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
 }
 
 .value-card {
-  background: #f8fafc;
-  padding: 40px;
-  border-radius: 24px;
-  transition: 0.3s;
-  border: 1px solid #f1f5f9;
+  background: white;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .value-card:hover {
-  background: #ffffff;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-  transform: translateY(-5px);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
 .v-icon {
   font-size: 2.5rem;
-  color: #3b82f6;
+  color: #ff6b00;
   margin-bottom: 20px;
+  background: #fff3eb;
+  padding: 15px;
+  border-radius: 50%;
 }
 
 .value-card h3 {
   font-size: 1.4rem;
-  font-weight: 800;
+  color: #111827;
   margin-bottom: 15px;
+  font-weight: 700;
 }
 
 .value-card p {
-  color: #64748b;
+  color: #6b7280;
   line-height: 1.6;
+  font-size: 1rem;
 }
 
-/* --- STORY SPLIT --- */
+/* ==========================================
+   POVESTEA DETALIATĂ (Imagine Stânga / Text Dreapta)
+   ========================================== */
 .about-story-split {
-  padding: 100px 0;
-  background: #fdfdfd;
+  padding: 60px 0 100px;
 }
 
 .story-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 60px;
   align-items: center;
-  gap: 80px;
 }
 
 .story-image {
   position: relative;
+  border-radius: 24px;
 }
 
 .story-image img {
   width: 100%;
-  border-radius: 30px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+  height: auto;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  display: block;
 }
 
 .experience-badge {
   position: absolute;
-  bottom: -30px;
-  right: -30px;
-  background: #111827;
+  bottom: -20px;
+  right: -20px;
+  background: #ff6b00;
   color: white;
-  padding: 30px;
-  border-radius: 25px;
+  padding: 25px;
+  border-radius: 20px;
   text-align: center;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 15px 30px rgba(255, 107, 0, 0.3);
+  display: flex;
+  flex-direction: column;
 }
 
-.experience-badge strong { font-size: 2.5rem; display: block; line-height: 1; color: #3b82f6; }
-.experience-badge span { font-size: 0.9rem; font-weight: 600; opacity: 0.8; }
+.experience-badge strong {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
 
-.story-content h2 { font-size: 2.8rem; font-weight: 900; margin-bottom: 25px; }
-.story-content p { font-size: 1.1rem; color: #475569; line-height: 1.7; margin-bottom: 20px; }
+.experience-badge span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
 
+.story-content h2 {
+  font-size: 2.5rem;
+  color: #111827;
+  margin-bottom: 25px;
+  font-weight: 800;
+}
+
+.story-content p {
+  font-size: 1.1rem;
+  color: #4b5563;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+/* ==========================================
+   STATISTICI
+   ========================================== */
 .about-stats {
   display: flex;
   gap: 40px;
-  margin-top: 40px;
-  padding-top: 40px;
-  border-top: 1px solid #e2e8f0;
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid #e5e7eb;
 }
 
-.stat-item { display: flex; flex-direction: column; gap: 5px; }
-.stat-item strong { font-size: 1.8rem; font-weight: 900; color: #0f172a; }
-.stat-item span { color: #94a3b8; font-weight: 600; font-size: 0.9rem; }
-.stat-item svg { color: #3b82f6; font-size: 1.5rem; }
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
-/* RESPONSIVE */
+.stat-item svg {
+  font-size: 1.8rem;
+  color: #ff6b00;
+  margin-bottom: 10px;
+}
+
+.stat-item strong {
+  font-size: 1.8rem;
+  color: #111827;
+  font-weight: 800;
+}
+
+.stat-item span {
+  color: #6b7280;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* ==========================================
+   BUTON (Call To Action)
+   ========================================== */
+.btn-shop-mega {
+  background: linear-gradient(135deg, #ff6b00 0%, #e65c00 100%);
+  color: white;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 10px 20px rgba(255, 107, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-shop-mega:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(255, 107, 0, 0.3);
+  color: white;
+}
+
+/* ==========================================
+   ANIMATIONS & RESPONSIVE
+   ========================================== */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @media (max-width: 992px) {
-  .story-grid { grid-template-columns: 1fr; gap: 60px; }
-  .values-grid { grid-template-columns: 1fr; }
-  .about-hero h1 { font-size: 2.5rem; }
+  .story-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .experience-badge {
+    bottom: -15px;
+    right: 10px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-hero {
+    padding: 100px 20px 60px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  
+  .about-hero h1 {
+    font-size: 2.2rem;
+  }
+  
+  .about-values {
+    padding: 50px 0;
+    margin-top: -20px;
+  }
+  
+  .story-content h2 {
+    font-size: 2rem;
+  }
+  
+  .about-stats {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
 }

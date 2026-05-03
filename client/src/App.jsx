@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
+
 // Componente Globale
 import Navbar from './components/Navbar';
 import Footer from './components/Footer'; 
@@ -13,6 +14,13 @@ import ProductPage from './pages/ProductPage';
 import Contact from './pages/Contact';
 import About from './pages/About';
 
+// 📄 Pagini Legale (Astea lipseau!)
+import Livrare from './pages/Livrare';
+import Retur from './pages/Retur';
+import Termeni from './pages/Termeni';
+import Confidentialitate from './pages/Confidentialitate';
+import Cookies from './pages/Cookies';
+
 // Pagini Cont & Auth
 import Account from './pages/Account';
 import Login from './pages/Login';
@@ -22,22 +30,19 @@ import ResetPassword from './pages/ResetPassword';
 // Pagini Admin
 import Admin from './pages/Admin';
 
-// Pagina 404 (Opțional, dar recomandat)
-// import NotFound from './pages/NotFound'; 
-
 function App() {
   const location = useLocation();
 
-  // Verificăm dacă suntem pe Admin (Folosim o logică mai sigură)
+  // Verificăm dacă suntem pe Admin
   const isAdminPage = location.pathname.startsWith('/admin');
 
   return (
     <HelmetProvider>
       <div className="app-container">
-        {/* 🛡️ SCROLL TO TOP - Acum e activ și va face scroll lent la fiecare schimbare de pagină */}
+        {/* 🛡️ SCROLL TO TOP */}
         <ScrollToTop />
 
-        {/* 🧭 NAVIGATION - Apare doar pe paginile de shop */}
+        {/* 🧭 NAVIGATION */}
         {!isAdminPage && <Navbar />}
 
         {/* 🎯 MAIN CONTENT AREA */}
@@ -48,8 +53,16 @@ function App() {
             <Route path="/shop" element={<Shop />} />
             <Route path="/produs/:id" element={<ProductPage />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/despre-noi" element={<About />} />
             
+            {/* ✅ REPARAT: Am modificat din /despre-noi în /about ca să se pupe cu Footer-ul */}
+            <Route path="/about" element={<About />} />
+            
+            {/* --- 📄 Rute Legale Noi --- */}
+            <Route path="/livrare" element={<Livrare />} />
+            <Route path="/retur" element={<Retur />} />
+            <Route path="/termeni" element={<Termeni />} />
+            <Route path="/confidentialitate" element={<Confidentialitate />} />
+            <Route path="/cookies" element={<Cookies />} />
 
             {/* --- Rute Autentificare --- */}
             <Route path="/login" element={<Login />} />
@@ -59,15 +72,11 @@ function App() {
 
             {/* --- Rute Admin --- */}
             <Route path="/admin" element={<Admin />} />
-            {/* Aici poți adăuga și /admin/comenzi, /admin/produse etc. */}
             <Route path="/admin/login" element={<Login />} />
-
-            {/* --- 404 CATCH ALL --- */}
-            {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         </main>
 
-        {/* <footer> - Apare doar dacă nu ești pe Admin */}
+        {/* <footer> */}
         {!isAdminPage && <Footer />}
       </div>
     </HelmetProvider>

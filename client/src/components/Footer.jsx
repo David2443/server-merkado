@@ -1,29 +1,28 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiMail, FiPhone, FiArrowRight, FiClock } from 'react-icons/fi';
+import { FiMail, FiPhone, FiClock } from 'react-icons/fi';
 import { FaFacebookF, FaInstagram, FaTiktok, FaCcVisa, FaCcMastercard, FaCcApplePay } from 'react-icons/fa';
 import './Footer.css';
-import About from '../pages/About';
-import React from 'react';
+// ⛔ AM ȘTERS IMPORTUL About AICI. Nu e nevoie de el în Footer!
 
 const Footer = () => {
   return (
     <footer className="footer-merkado">
-     
-      {/* --- 2. PARTEA DE MIJLOC: LINK-URI & DATE FIRMĂ --- */}
+      
+      {/* --- PARTEA DE MIJLOC: LINK-URI & DATE FIRMĂ --- */}
       <div className="footer-main">
         <div className="container footer-grid">
           
-          {/* Coloana 1: Brand & Date Fiscale (Obligatoriu RO) */}
+          {/* Coloana 1: Brand & Date Fiscale */}
           <div className="footer-col brand-col">
             <Link to="/" className="footer-logo">MERK<span>ADO</span></Link>
             <p className="brand-desc">
               Magazinul tău online de încredere. Calitate premium, livrare rapidă și o experiență de shopping creată special pentru tine.
             </p>
-            {/* Aici îți vei pune datele reale ale firmei tale (SRL/PFA) */}
             <div className="company-details">
               <strong>DS RETAIL NETWORK SRL</strong>
               <span>CUI: 54193458</span>
-              <span>Sediu: Str. Otelesti nr 140A, Stefanesti. Arges</span>
+              <span>Sediu: Str. Otelesti nr 140A, Stefanesti, Arges</span>
             </div>
           </div>
 
@@ -33,8 +32,8 @@ const Footer = () => {
             <ul>
               <li><Link to="/">Acasă</Link></li>
               <li><Link to="/shop">Toate Produsele</Link></li>
-              <li><Link to="/oferte">Oferte Speciale 🔥</Link></li>
-              <li><Link to="/About">Despre noi</Link></li>
+              {/* Corectat cu literă mică! */}
+              <li><Link to="/about">Despre noi</Link></li> 
             </ul>
           </div>
 
@@ -45,7 +44,6 @@ const Footer = () => {
               <li><Link to="/contact">Contactează-ne</Link></li>
               <li><Link to="/livrare">Politică de Livrare</Link></li>
               <li><Link to="/retur">Politică de Retur / Garanții</Link></li>
-              <li><Link to="/faq">Întrebări Frecvente (FAQ)</Link></li>
             </ul>
           </div>
 
@@ -54,7 +52,7 @@ const Footer = () => {
             <h4>Informații Contact</h4>
             <ul>
               <li><FiPhone className="c-icon" /> <span>+40 723 717 438</span></li>
-              <li><FiMail className="c-icon" /> <span>contact@merkado.ro</span></li>
+              <li><FiMail className="c-icon" /> <span>babnun211@gmail.com</span></li>
               <li><FiClock className="c-icon" /> <span>Luni - Vineri: 09:00 - 18:00</span></li>
             </ul>
             <div className="social-links">
@@ -67,7 +65,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* --- 3. PARTEA DE JOS: DOCUMENTE LEGALE & PLĂȚI --- */}
+      {/* --- PARTEA DE JOS: DOCUMENTE LEGALE & PLĂȚI --- */}
       <div className="footer-bottom">
         <div className="container bottom-grid">
           
@@ -89,7 +87,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* --- 4. BANDA FINALĂ: COPYRIGHT & ANPC (Obligatoriu RO) --- */}
+      {/* --- BANDA FINALĂ: COPYRIGHT & ANPC --- */}
       <div className="footer-compliance">
         <div className="container compliance-flex">
           <p className="copyright">

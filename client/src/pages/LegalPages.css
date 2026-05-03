@@ -1,0 +1,146 @@
+
+.legal-wrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  padding-top: 80px; /* 👉 ADAUGĂ LINIA ASTA (Egală cu înălțimea Navbar-ului) */
+  padding-bottom: 100px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* --- HEADER-UL CINEMATIC (Hero Section pt Pagini Legale) --- */
+.legal-hero {
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  color: white;
+  padding: 80px 20px 140px; /* Padding generos jos pentru a lăsa cardul să urce */
+  text-align: center;
+}
+
+.legal-hero h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin-bottom: 15px;
+  background: linear-gradient(to right, #ffffff, #9ca3af);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.legal-hero .last-updated {
+  font-size: 0.95rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 600;
+}
+
+/* --- CARDUL PRINCIPAL CU TEXT --- */
+.legal-page-container {
+  max-width: 860px;
+  margin: -80px auto 0; /* Aici e magia: trage cardul peste header */
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0,0,0,0.03);
+  padding: 70px 80px;
+  color: #374151;
+  line-height: 1.8;
+  position: relative;
+  z-index: 10;
+}
+
+/* Responsive pentru Telefoane */
+@media (max-width: 768px) {
+  .legal-page-container {
+    margin: -50px 15px 0;
+    padding: 40px 25px;
+    border-radius: 12px;
+  }
+  .legal-hero { padding: 60px 20px 100px; }
+  .legal-hero h1 { font-size: 2.2rem; }
+}
+
+/* --- STILIZAREA SECȚIUNILOR --- */
+.legal-page-container section {
+  margin-bottom: 50px;
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Titlurile H2 cu accent Portocaliu MERKADO */
+.legal-page-container h2 {
+  font-size: 1.6rem;
+  color: #111827;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.legal-page-container h2::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 4px;
+  background: #ff6b00; /* Culoarea portocalie de brand */
+  border-radius: 4px;
+}
+
+/* Tipografie finisată */
+.legal-page-container p {
+  margin-bottom: 1.2rem;
+  font-size: 1.05rem;
+}
+
+.legal-page-container strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+/* --- LISTE MODERNE CA LA APPLE --- */
+.legal-page-container ul, 
+.legal-page-container ol {
+  margin: 25px 0 35px 0;
+  background: #f9fafb;
+  padding: 30px 30px 30px 50px;
+  border-radius: 12px;
+  border-left: 4px solid #e5e7eb;
+}
+
+.legal-page-container li {
+  margin-bottom: 12px;
+  font-size: 1.05rem;
+}
+
+.legal-page-container li::marker {
+  color: #ff6b00;
+  font-weight: bold;
+}
+
+/* --- LINK-URI SUBTILE --- */
+.legal-page-container a {
+  color: #ff6b00;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border-bottom: 1px dashed rgba(255, 107, 0, 0.5);
+}
+
+.legal-page-container a:hover {
+  color: #cc5600;
+  border-bottom-style: solid;
+}
+
+/* Animație subtilă la încărcare */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* --- HEADER-UL CINEMATIC --- */
+.legal-hero {
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  color: white;
+  /* AM MĂRIT AICI PRIMUL NUMĂR LA 160px (sau 180px dacă vrei mai jos) */
+  padding: 160px 20px 140px; 
+  text-align: center;
+}

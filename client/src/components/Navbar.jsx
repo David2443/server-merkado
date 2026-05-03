@@ -11,15 +11,12 @@ const Navbar = () => {
   const [filtered, setFiltered] = useState([]);
   const navigate = useNavigate();
 
-  // 🛡️ FIX 1: URL dinamic, exact cum am făcut și la Dashboard / Clienți
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    // 🛡️ FIX 2: Folosim API_URL în loc de localhost hardcodat
     fetch(`${API_URL}/api/produse`)
       .then(res => res.json())
       .then(data => {
-        // Ne asigurăm că primim un array înainte să setăm state-ul
         if (Array.isArray(data)) {
           setAllProducts(data);
         } else {
@@ -32,7 +29,6 @@ const Navbar = () => {
   useEffect(() => {
     if (searchTerm.trim().length > 1) {
       const results = allProducts.filter(p => 
-        // 🛡️ FIX 3: Verificăm dacă p.nume există înainte de a apela .toLowerCase()
         p.nume && p.nume.toLowerCase().includes(searchTerm.toLowerCase())
       ).slice(0, 5);
       setFiltered(results);
@@ -66,6 +62,8 @@ const Navbar = () => {
           <ul className="desktop-links-pro">
             <li><Link to="/">Acasă</Link></li>
             <li><Link to="/shop">Magazin</Link></li>
+            {/* 👉 Butonul Adăugat */}
+            <li><Link to="/about">Despre Noi</Link></li>
             <li><Link to="/contact">Contact</Link></li>
           </ul>
 
@@ -132,13 +130,11 @@ const Navbar = () => {
       {/* =========================================
           📱 MENIU MOBIL LATERAL (BURGER)
       ========================================= */}
-      {/* Overlay-ul negru care blurează site-ul */}
       <div 
         className={`mobile-menu-overlay ${menuOpen ? 'active' : ''}`} 
         onClick={() => setMenuOpen(false)}
       ></div>
 
-      {/* Sertarul cu butoane */}
       <div className={`mobile-drawer ${menuOpen ? 'open' : ''}`}>
         <div className="drawer-header">
           <div className="nav-logo">MERK<span>ADO</span></div>
@@ -150,6 +146,8 @@ const Navbar = () => {
         <div className="drawer-links">
           <Link to="/" onClick={() => setMenuOpen(false)}>Acasă <FiArrowRight /></Link>
           <Link to="/shop" onClick={() => setMenuOpen(false)}>Magazin <FiArrowRight /></Link>
+          {/* 👉 Butonul Adăugat și aici */}
+          <Link to="/about" onClick={() => setMenuOpen(false)}>Despre Noi <FiArrowRight /></Link>
           <Link to="/contact" onClick={() => setMenuOpen(false)}>Contact <FiArrowRight /></Link>
           <div className="drawer-divider"></div>
           <Link to="/account" className="drawer-account" onClick={() => setMenuOpen(false)}>
