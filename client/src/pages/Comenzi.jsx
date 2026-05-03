@@ -331,8 +331,8 @@ const actualizeazaStatus = async (id, statusNou) => {
                 <th className="text-right">Acțiuni</th>
               </tr>
             </thead>
-            <tbody>
-             {listaFiltrata.map((comanda) => (
+       <tbody>
+             {listaFiltrata.map((item) => (
                 <tr key={item._id} className={item.status === 'Anulată' ? 'ac-row-cancelled' : ''}>
                   <td data-label="Dată">
                     {new Date(item.createdAt || item.updatedAt).toLocaleDateString('ro-RO')}
@@ -352,10 +352,10 @@ const actualizeazaStatus = async (id, statusNou) => {
                   </td>
 
                   <td>
-        <span className="badge-sursa">
-          {comanda.sursa ? comanda.sursa : 'Organic / Direct'}
-        </span>
-      </td>
+                    <span className="badge-sursa">
+                      {item.sursa ? item.sursa : 'Organic / Direct'}
+                    </span>
+                  </td>
 
                   <td data-label="Plată & Livrare">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.9rem', color: '#0f172a', fontWeight: '500' }}>
@@ -389,20 +389,20 @@ const actualizeazaStatus = async (id, statusNou) => {
                     </td>
                   )}
 
-                 <td>
-  {!item.awb ? (
-    <button 
-      onClick={() => genereazaAWB(item._id)} 
-      className="btn-awb-bomba"
-    >
-      📦 Generează AWB
-    </button>
-  ) : (
-    <span className="badge-awb-bomba">
-      ✅ AWB: {item.awb}
-    </span>
-  )}
-</td>
+                  <td>
+                    {!item.awb ? (
+                      <button 
+                        onClick={() => genereazaAWB(item._id)} 
+                        className="btn-awb-bomba"
+                      >
+                        📦 Generează AWB
+                      </button>
+                    ) : (
+                      <span className="badge-awb-bomba">
+                        ✅ AWB: {item.awb}
+                      </span>
+                    )}
+                  </td>
                   
                   <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938' }}>
                     {item.total || item.totalComanda} Lei
@@ -416,7 +416,7 @@ const actualizeazaStatus = async (id, statusNou) => {
                 </tr>
               ))}
               {listaFiltrata.length === 0 && (
-                <tr><td colSpan="7" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>Nicio comandă găsită.</td></tr>
+                <tr><td colSpan="9" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>Nicio comandă găsită.</td></tr>
               )}
             </tbody>
           </table>
