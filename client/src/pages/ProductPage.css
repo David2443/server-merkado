@@ -1846,3 +1846,31 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
   }
 }
+/* ==========================================
+   🎯 19. LOGICA DE SCROLL (Sticky Buy & Sales Popup)
+   ========================================== */
+
+/* Pe mobil, ascundem butonul sticky sub ecran default */
+@media (max-width: 768px) {
+  .sticky-buy-wrapper {
+    display: block; /* Trebuie să fie bloc ca să îl putem anima */
+    transform: translateY(150%); /* Îl ținem ascuns sub ecran */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  /* Când dăm scroll peste secțiunea Facebook, React adaugă clasa .show */
+  .sticky-buy-wrapper.show {
+    transform: translateY(0); /* Glisează elegant în sus */
+  }
+
+  /* Când butonul sticky este pe ecran, ridicăm popup-ul de vânzări mai sus ca să nu se calce pe picioare */
+  .sales-popup.lifted {
+    bottom: 95px !important;
+  }
+  
+  /* Dacă nu e sticky-ul pe ecran, popup-ul stă jos normal */
+  .sales-popup {
+    bottom: 20px;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), bottom 0.4s ease;
+  }
+}

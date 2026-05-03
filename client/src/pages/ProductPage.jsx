@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef} from 'react';
+
 import { useParams, useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { io } from 'socket.io-client'; 
@@ -128,7 +129,7 @@ const ProductPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [transportDeschis, setTransportDeschis] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
-
+  const fbSectionRef = useRef(null);
   const [formRecenzie, setFormRecenzie] = useState({ numeClient: '', text: '', rating: 5 });
   const [mesajForm, setMesajForm] = useState('');
 
@@ -237,8 +238,19 @@ const ProductPage = () => {
       });
     }, 1000);
 
-    const handleScroll = () => setShowStickyBar(window.scrollY > 800);
+useEffect(() => {
+    const handleScroll = () => {
+      // Dacă există secțiunea de Facebook pe pagină, măsurăm distanța ei
+      if (fbSectionRef.current) {
+        // Butonul apare doar după ce am dat scroll dincolo de marginea de sus a secțiunii Facebook
+        setShowStickyBar(window.scrollY > (fbSectionRef.current.offsetTop - window.innerHeight / 2));
+      } else {
+        setShowStickyBar(window.scrollY > 800);
+      }
+    };
     window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
     const popupInterval = setInterval(() => {
       setSalesPopup({ 
@@ -517,7 +529,7 @@ const ProductPage = () => {
               <span className="dot"></span> Chiar acum se uită <strong>{vizitatoriLive} oameni</strong> la acest produs
             </div>
 
-            <div className="facebook-proof-section">
+            <div className="facebook-proof-section" ref={fbSectionRef}>
               <p className="fb-proof-title"><FiThumbsUp style={{color: '#1877F2', marginRight: '5px'}}/> Ce spun clienții pe Facebook:</p>
               <div className="fb-image-placeholder">
                  <img src="https://via.placeholder.com/600x250/f0f2f5/1c1e21?text=Aici+vine+poza+ta+cu+comentariile+de+pe+Facebook" alt="Facebook Comments" />
@@ -621,7 +633,7 @@ const ProductPage = () => {
 
       </div>
 
-      <div className={`sales-popup ${salesPopup.vizibil ? 'show' : ''}`}>
+   <div className={`sales-popup ${salesPopup.vizibil ? 'show' : ''} ${showStickyBar ? 'lifted' : ''}`}>
         <img src={produs.imaginePrincipala} alt="Thumb" className="sales-popup-img" />
         <div className="sales-popup-info">
           <p><strong>{salesPopup.nume}</strong> a comandat recent</p>
@@ -850,7 +862,7 @@ const ProductPage = () => {
         </div>
       )}
 
-      <div className="sticky-buy-wrapper">
+     <div className={`sticky-buy-wrapper ${showStickyBar ? 'show' : ''}`}>
         <div className="sticky-buy-content">
           <button className="btn-sticky-buy" onClick={() => setIsCheckoutOpen(true)}>
             CUMPĂRĂ ACUM
