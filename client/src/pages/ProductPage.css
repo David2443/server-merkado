@@ -1,587 +1,1652 @@
-/* ==========================================
-   💎 MERKADO PREMIUM PRODUCT PAGE (Mobile-First)
-   ========================================== */
-
-:root {
-  --mk-navy: #153A7A;
-  --mk-orange: #FF5A00;
-  --mk-orange-dark: #E04E00;
-  --mk-blue: #00A3FF;
-  --mk-bg: #F8FAFC;
-  --mk-text: #1E293B;
-  --mk-gray: #64748B;
-  --mk-green: #10B981;
-  --mk-red: #EF4444;
-  --mk-glass: rgba(255, 255, 255, 0.85);
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  --shadow-glow: 0 10px 25px -5px rgba(255, 90, 0, 0.4);
-}
-
-.shopify-page-wrapper {
-  background-color: var(--mk-bg);
-  color: var(--mk-text);
-  font-family: 'Inter', -apple-system, sans-serif;
-  overflow-x: hidden;
-}
-
-/* ==========================================
-   🚨 1. BANDA DE URGENȚĂ (MARQUEE)
-   ========================================== */
+/* =========================================
+   MARQUEE BARA SCROLLING
+   ========================================= */
 .marquee-container {
-  background: var(--mk-navy);
-  color: white;
-  padding: 10px 0;
   overflow: hidden;
   white-space: nowrap;
-  position: relative;
-  box-shadow: var(--shadow-sm);
+  background: #e61938; /* Roșu pur */
+  color: white;
+  padding: 12px 0;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
 }
-
 .marquee-text {
   display: inline-block;
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
-  animation: marquee 20s linear infinite;
+  animation: scrollLeft 25s linear infinite;
 }
-
-@keyframes marquee {
-  0% { transform: translateX(100%); }
+@keyframes scrollLeft {
+  0% { transform: translateX(100vw); }
   100% { transform: translateX(-100%); }
 }
 
-/* ==========================================
-   🖼️ 2. HERO SECTION (Poza + Info)
-   ========================================== */
-.shopify-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px 15px;
+.shopify-page-wrapper {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #121212;
+  background: #ffffff;
+  padding-bottom: 100px;
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  background: white;
-  border-radius: 24px;
-  padding: 30px;
-  box-shadow: var(--shadow-md);
-  margin-bottom: 30px;
-}
-
-.hero-image-col {
-  position: relative;
-}
-
-.main-prod-img {
-  width: 100%;
-  border-radius: 16px;
-  object-fit: cover;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.3s ease;
-}
-
-.main-prod-img:hover {
-  transform: scale(1.02);
-}
-
-/* Informații Produs */
-.reviews-badge {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
-  font-size: 0.9rem;
-  color: var(--mk-gray);
-  font-weight: 600;
-}
-
-.stars { color: #F59E0B; display: flex; gap: 2px; }
-
-.prod-title {
-  font-size: 2.2rem;
-  font-weight: 900;
-  color: var(--mk-navy);
-  margin: 0 0 15px 0;
-  line-height: 1.2;
-}
-
-/* Prețuri */
-.price-wrap {
-  margin-bottom: 25px;
-  padding-bottom: 20px;
-  border-bottom: 2px dashed #E2E8F0;
-}
-
-.price-new {
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: var(--mk-orange);
-}
-
-.urgent-price-tag {
-  background: var(--mk-red);
-  color: white;
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  animation: pulse-red 2s infinite;
-}
-
-.price-old {
-  display: block;
-  color: var(--mk-gray);
-  text-decoration: line-through;
-  font-size: 1.1rem;
-  margin-top: 5px;
-}
-
-@keyframes pulse-red {
-  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-}
-
-/* Bullet Points */
-.bullet-points p {
-  margin: 8px 0;
-  font-size: 1.05rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.stock-alert {
-  background: #FEF2F2;
-  color: var(--mk-red);
-  padding: 12px 15px;
-  border-radius: 12px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0;
-  border: 1px solid #FECACA;
-}
-
-.stock-alert .dot {
-  width: 10px; height: 10px;
-  background: var(--mk-red);
-  border-radius: 50%;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink { 50% { opacity: 0; } }
-
-/* ==========================================
-   🔥 3. BUTOANE DE ACȚIUNE (CTAs)
-   ========================================== */
-.mega-btn {
-  width: 100%;
-  background: linear-gradient(135deg, var(--mk-orange) 0%, var(--mk-orange-dark) 100%);
-  color: white;
-  border: none;
-  padding: 18px 20px;
-  border-radius: 16px;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  cursor: pointer;
-  box-shadow: var(--shadow-glow);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-bottom: 15px;
-}
-
-.mega-btn:active { transform: scale(0.97); }
-
-.mega-btn .btn-icon { font-size: 2rem; }
-
-.mega-btn .btn-text {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-}
-
-.mega-btn .btn-text strong { font-size: 1.3rem; letter-spacing: 0.5px; }
-.mega-btn .btn-text small { font-size: 0.8rem; opacity: 0.9; }
-
-.btn-phone-full {
-  width: 100%;
-  background: white;
-  color: var(--mk-navy);
-  border: 2px solid #E2E8F0;
-  padding: 15px 20px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  text-decoration: none;
-  font-weight: 800;
-  transition: all 0.3s ease;
-  margin-bottom: 25px;
-}
-
-.btn-phone-full:hover {
-  border-color: var(--mk-blue);
-  color: var(--mk-blue);
-  background: #F0F9FF;
-}
-
-.phone-icon-sleek svg { width: 24px; height: 24px; }
-
-/* ==========================================
-   ⏳ 4. TIMER & ELEMENTE DE ÎNCREDERE
-   ========================================== */
-.countdown-wrap {
-  background: #F8FAFC;
-  padding: 20px;
-  border-radius: 16px;
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.countdown-wrap p { margin: 0 0 15px 0; font-weight: 600; font-size: 0.9rem; }
-.text-red { color: var(--mk-red); font-weight: 800; }
-
-.circles-wrap {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.time-circle {
-  background: white;
-  width: 70px; height: 70px;
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid #E2E8F0;
-}
-
-.time-circle strong { font-size: 1.5rem; color: var(--mk-navy); line-height: 1; }
-.time-circle span { font-size: 0.7rem; color: var(--mk-gray); text-transform: uppercase; font-weight: 700; margin-top: 4px; }
-
-.trust-icons {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.t-icon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--mk-navy);
-}
-
-.t-icon svg { font-size: 1.8rem; color: var(--mk-blue); }
-
-.live-viewers {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  color: var(--mk-gray);
-}
-
-.live-viewers .dot {
-  width: 8px; height: 8px;
-  background: var(--mk-blue);
-  border-radius: 50%;
-  animation: pulse-blue 2s infinite;
-}
-
-@keyframes pulse-blue {
-  0% { box-shadow: 0 0 0 0 rgba(0, 163, 255, 0.4); }
-  70% { box-shadow: 0 0 0 8px rgba(0, 163, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 163, 255, 0); }
-}
-
-/* ==========================================
-   🛒 5. CHECKOUT MODAL (TUN BOMBĂ 💥)
-   ========================================== */
-.checkout-modal-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100vh;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index: 99999;
-  display: flex;
-  align-items: flex-end; /* Pe mobil pică de jos în sus */
-  justify-content: center;
-  animation: fadeIn 0.3s ease;
-}
-
-.checkout-modal-wrapper {
-  background: white;
-  width: 100%;
-  max-width: 900px;
-  height: 90vh; /* Nu ia tot ecranul pe mobil, dă senzația de sertar (drawer) */
-  border-radius: 30px 30px 0 0;
-  padding: 30px 20px;
-  position: relative;
-  overflow-y: auto;
-  box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
-  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.close-checkout-absolute-btn {
-  position: absolute;
-  top: 20px; right: 20px;
-  background: #F1F5F9;
-  border: none;
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.5rem;
-  color: var(--mk-text);
-  cursor: pointer;
-  z-index: 10;
-}
-
-.checkout-header-product {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 25px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #E2E8F0;
-}
-
-.checkout-header-product img {
-  width: 60px; height: 60px;
-  border-radius: 12px; object-fit: cover;
-}
-
-.checkout-header-product h4 { margin: 0 0 5px 0; font-size: 1.1rem; color: var(--mk-navy); }
-.checkout-header-product p { margin: 0; font-size: 0.85rem; color: var(--mk-gray); }
-
-/* GRID Checkout */
-.checkout-main-grid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 30px;
-}
-
-.section-title {
-  font-size: 1.2rem; font-weight: 800; color: var(--mk-navy);
-  margin: 0 0 15px 0;
-}
-
-/* Inputs */
-.input-group-wrapper { margin-bottom: 15px; width: 100%; }
-
-.checkout-input, .stripe-custom-input, select.checkout-input {
-  width: 100%;
-  padding: 16px 20px;
-  background: #F8FAFC;
-  border: 2px solid #E2E8F0;
-  border-radius: 14px;
-  font-size: 16px; /* Previne zoom iOS */
-  color: var(--mk-text);
-  transition: all 0.3s ease;
-  font-family: 'Inter', sans-serif;
-}
-
-.checkout-input:focus, .stripe-custom-input:focus {
-  background: white; border-color: var(--mk-blue); outline: none;
-  box-shadow: 0 0 0 4px rgba(0, 163, 255, 0.1);
-}
-
-.input-error { border-color: var(--mk-red) !important; background: #FEF2F2 !important; }
-.error-text { color: var(--mk-red); font-size: 0.8rem; font-weight: 600; margin-top: 5px; display: block; }
-
-.input-row { display: flex; gap: 15px; }
-
-/* Toggles (Card vs Ramburs, Curier vs Easybox) */
-.modern-toggle-group {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;
-}
-
-.modern-toggle-card {
-  border: 2px solid #E2E8F0; border-radius: 16px; padding: 15px;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  font-weight: 700; color: var(--mk-gray); cursor: pointer;
-  transition: all 0.2s ease; background: white;
-}
-
-.modern-toggle-card.active {
-  border-color: var(--mk-blue); background: #F0F9FF; color: var(--mk-blue);
-  box-shadow: 0 4px 12px rgba(0, 163, 255, 0.15);
-}
-
-.toggle-icon { font-size: 1.4rem; }
-
-/* Oferte (Pachete) */
-.offer-card {
-  border: 2px solid #E2E8F0; border-radius: 16px; padding: 18px 20px;
-  margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
-  cursor: pointer; transition: all 0.2s; position: relative; background: white;
-}
-
-.offer-card.active {
-  border-color: var(--mk-orange); background: #FFF7F2;
-  box-shadow: 0 4px 12px rgba(255, 90, 0, 0.1);
-}
-
-.rec-badge {
-  position: absolute; top: -10px; left: 20px;
-  background: var(--mk-red); color: white;
-  font-size: 0.7rem; font-weight: 800; padding: 3px 10px; border-radius: 6px;
-}
-
-/* Sumar & Buton Plată */
-.checkout-summary-side {
-  background: #F8FAFC; padding: 25px; border-radius: 20px;
-  border: 1px solid #E2E8F0; height: fit-content;
-}
-
-.summary-row {
-  display: flex; justify-content: space-between; margin-bottom: 12px;
-  font-size: 0.95rem; color: var(--mk-gray); font-weight: 500;
-}
-
-.total-row {
-  display: flex; justify-content: space-between; margin: 20px 0;
-  font-size: 1.3rem; font-weight: 900; color: var(--mk-navy);
-  padding-top: 20px; border-top: 2px solid #E2E8F0;
-}
-
-.btn-finalize {
-  width: 100%; border: none; padding: 20px; border-radius: 16px;
-  font-size: 1.1rem; font-weight: 900; color: white; cursor: pointer;
-  display: flex; justify-content: center; align-items: center; gap: 10px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-finalize.cash {
-  background: linear-gradient(135deg, var(--mk-orange), var(--mk-orange-dark));
-  box-shadow: 0 10px 20px rgba(255, 90, 0, 0.3);
-}
-
-.btn-finalize.card {
-  background: linear-gradient(135deg, var(--mk-navy), var(--mk-blue));
-  box-shadow: 0 10px 20px rgba(0, 163, 255, 0.3);
-}
-
-.btn-finalize:active { transform: scale(0.98); }
-
-/* ==========================================
-   📱 6. STICKY BUY BUTTON (MOBIL EROU)
-   ========================================== */
-.sticky-buy-wrapper {
-  position: fixed; bottom: 0; left: 0; width: 100%;
-  background: var(--mk-glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  padding: 15px 20px;
-  box-shadow: 0 -10px 20px rgba(0,0,0,0.05);
-  z-index: 999;
-  border-top: 1px solid rgba(255,255,255,0.5);
-  display: none; /* Ascuns pe desktop implicit */
-}
-
-.btn-sticky-buy {
-  width: 100%; background: var(--mk-orange); color: white;
-  border: none; padding: 18px; border-radius: 100px; /* formă de pastilă */
-  font-size: 1.2rem; font-weight: 900; letter-spacing: 1px;
-  box-shadow: var(--shadow-glow); cursor: pointer;
-  animation: pulse-orange-subtle 2s infinite;
-}
-
-@keyframes pulse-orange-subtle {
+.shopify-container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+/* =========================================
+   HERO SECTION & PREȚ URGENT
+   ========================================= */
+.hero-grid { display: flex; gap: 40px; margin-bottom: 50px; }
+.hero-image-col, .hero-info-col { flex: 1; }
+.main-prod-img { width: 100%; border-radius: 12px; display: block; border: 1px solid #f3f4f6; }
+
+.reviews-badge { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 0.95rem; }
+.stars { display: flex; gap: 2px; }
+.star-icon { color: #d1d5db; fill: #d1d5db; }
+.star-icon.filled { color: #facc15; fill: #facc15; }
+
+.prod-title { font-size: 2.2rem; font-weight: 800; margin: 0 0 15px 0; line-height: 1.2; letter-spacing: -0.5px; }
+
+.price-wrap { display: flex; flex-direction: column; gap: 5px; margin-bottom: 25px; }
+.price-new { font-size: 2rem; font-weight: 900; color: #111; }
+.urgent-price-tag { background: #fee2e2; color: #ef4444; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; animation: pulseTag 2s infinite; }
+.price-old { font-size: 1.2rem; color: #6b7280; text-decoration: line-through; font-weight: 600; }
+
+@keyframes pulseTag {
   0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
+  50% { transform: scale(1.05); }
   100% { transform: scale(1); }
 }
 
-/* ==========================================
-   🔔 7. SALES POPUP (Notificare Fake)
-   ========================================== */
+.bullet-points p { margin: 0 0 10px 0; font-size: 1.05rem; font-weight: 600; color: #374151; }
+
+.stock-alert { background: #fff5f5; color: #b91c1c; padding: 15px; border-radius: 8px; font-weight: 700; display: flex; align-items: center; gap: 10px; margin: 20px 0; border: 1px solid #fee2e2; }
+.dot { width: 10px; height: 10px; background: #ef4444; border-radius: 50%; display: inline-block; animation: pulseDot 1.5s infinite; }
+@keyframes pulseDot { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); } 70% { box-shadow: 0 0 0 6px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
+
+/* BUTON COMANDĂ MEGA */
+.btn-red { width: 100%; padding: 15px; background: #e61938; color: #fff; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 25px; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(230,25,56,0.3); }
+.btn-red:active { transform: scale(0.98); }
+.btn-red .btn-icon { font-size: 2rem; }
+.btn-red .btn-text { display: flex; flex-direction: column; align-items: flex-start; }
+.btn-red .btn-text strong { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; }
+.btn-red .btn-text small { font-size: 0.95rem; font-weight: 600; opacity: 0.9; }
+.mega-btn { padding: 20px; }
+
+/* CRONOMETRU CIRCULAR */
+.countdown-wrap { text-align: center; margin-bottom: 30px; }
+.countdown-wrap p { font-size: 1rem; font-weight: 600; margin-bottom: 15px; color: #4b5563; }
+.text-red { color: #e61938; font-weight: 800; text-decoration: underline; }
+.circles-wrap { display: flex; justify-content: center; gap: 15px; }
+.time-circle { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #e5e7eb; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.active-circle { border-color: #e61938; color: #e61938; }
+.time-circle strong { font-size: 1.4rem; font-weight: 800; line-height: 1; }
+.time-circle span { font-size: 0.65rem; color: #6b7280; text-transform: uppercase; font-weight: 700; margin-top: 2px; }
+
+/* TRUST ICONS */
+.trust-icons { display: flex; justify-content: space-between; border-top: 1px solid #e5e7eb; padding-top: 20px; margin-bottom: 20px; }
+.t-icon { display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 0.8rem; color: #374151; font-weight: 600; width: 30%; }
+.t-icon svg { font-size: 1.8rem; margin-bottom: 8px; color: #111; }
+
+/* ACORDEON LIVRARE */
+.accordion-wrap { border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; margin-bottom: 20px; }
+.acc-header { display: flex; justify-content: space-between; padding: 15px 0; cursor: pointer; font-weight: 700; font-size: 1.05rem; }
+.acc-content { padding-bottom: 15px; color: #4b5563; font-size: 0.95rem; line-height: 1.5; }
+
+.live-viewers { background: #f3f4f6; border: 1px solid #e5e7eb; color: #1f2937; padding: 12px; border-radius: 8px; text-align: center; font-weight: 600; font-size: 0.95rem; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+
+/* FACEBOOK PROOF SECTION */
+.facebook-proof-section { margin-top: 30px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 15px; }
+.fb-proof-title { font-weight: 700; color: #1c1e21; margin: 0 0 10px 0; display: flex; align-items: center; font-size: 0.95rem; }
+.fb-image-placeholder img { width: 100%; border-radius: 8px; display: block; border: 1px solid #f0f2f5; }
+
+
+/* =========================================
+   DYNAMIC SECTIONS
+   ========================================= */
+.dynamic-content { margin-top: 60px; }
+.info-block { text-align: center; margin-bottom: 60px; max-width: 650px; margin-left: auto; margin-right: auto; }
+.info-block h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; }
+.info-block p { font-size: 1.1rem; color: #374151; line-height: 1.6; margin-bottom: 30px; }
+.info-img { width: 100%; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+
+.percentage-block { text-align: center; margin-bottom: 60px; max-width: 500px; margin-left: auto; margin-right: auto; }
+.percentage-block h2 { font-size: 2rem; margin-bottom: 40px; }
+.perc-item { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; text-align: left; border-bottom: 1px solid #f3f4f6; padding-bottom: 20px; }
+.perc-circle { width: 70px; height: 70px; border: 4px solid #e61938; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 800; color: #111; flex-shrink: 0; }
+.perc-item p { font-size: 1.05rem; color: #111; font-weight: 600; margin: 0; line-height: 1.4; }
+
+/* TABEL COMPARATIV */
+.comparison-block { background: #f8fafc; padding: 50px 20px; border-radius: 16px; margin-bottom: 60px; text-align: center; border: 1px solid #e5e7eb; }
+.comparison-block h2 { font-size: 2rem; font-weight: 800; margin-bottom: 30px; }
+.comp-table { width: 100%; max-width: 600px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; border-collapse: collapse; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+.comp-table th, .comp-table td { padding: 18px; border-bottom: 1px solid #f3f4f6; text-align: center; font-weight: 700; color: #374151; }
+.comp-table td:first-child { background: #1f2937; color: #fff; text-align: left; }
+.comp-table th { font-size: 1.1rem; background: #f9fafb; color: #111; }
+.c-green { color: #10b981; font-size: 1.6rem; }
+.c-black { color: #d1d5db; font-size: 1.6rem; }
+
+/* =========================================
+   RECENZII (NOUL AGREGATOR)
+   ========================================= */
+.customer-reviews-section { margin-bottom: 80px; padding-top: 40px; border-top: 1px solid #e5e7eb; }
+.customer-reviews-section h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; text-align: center; }
+
+.reviews-aggregator { display: flex; gap: 40px; background: #f9fafb; padding: 30px; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 40px; align-items: center; max-width: 700px; margin-left: auto; margin-right: auto; }
+.agg-left { flex: 1; text-align: center; border-right: 1px solid #d1d5db; padding-right: 20px; }
+.agg-score { font-size: 3.5rem; font-weight: 900; color: #111; line-height: 1; }
+.agg-total { display: block; font-size: 0.9rem; color: #6b7280; margin-top: 10px; font-weight: 600; }
+.agg-right { flex: 2; display: flex; flex-direction: column; gap: 10px; }
+.progress-row { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; color: #4b5563; }
+.progress-bar { flex: 1; height: 10px; background: #e5e7eb; border-radius: 5px; overflow: hidden; }
+.progress-bar .fill { height: 100%; background: #facc15; border-radius: 5px; }
+
+.reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 50px; }
+.rev-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 25px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+.rev-card-top { display: flex; justify-content: space-between; margin-bottom: 15px; }
+.rev-img { width: 100%; height: 220px; object-fit: cover; border-radius: 8px; margin-top: 15px; }
+.rev-card h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: #111; }
+.rev-card p { font-size: 0.95rem; color: #4b5563; line-height: 1.5; font-style: italic; }
+
+.add-review-box { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; border: 2px dashed #d1d5db; text-align: center; }
+.add-review-box h3 { font-size: 1.5rem; margin-top: 0; }
+.stars-select { margin-bottom: 20px; font-size: 1.8rem; cursor: pointer; }
+.add-review-box input, .add-review-box textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #d1d5db; border-radius: 8px; font-family: inherit; font-size: 1rem; }
+.form-msg { background: #d1fae5; color: #065f46; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-weight: 700; }
+
+/* =========================================
+   NOTIFICARE SALES - FIX CENTRARE MOBIL
+   ========================================= */
 .sales-popup {
-  position: fixed; bottom: 20px; left: 20px;
-  background: white; border-radius: 16px; padding: 15px;
-  display: flex; align-items: center; gap: 15px;
-  box-shadow: var(--shadow-lg); z-index: 998;
-  transform: translateY(150px); opacity: 0; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  border-left: 4px solid var(--mk-green);
+  position: fixed;
+  z-index: 999999;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #eeeeee;
+  border-radius: 16px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  
+  /* Setări de bază pentru animație */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  pointer-events: none;
 }
 
-.sales-popup.show { transform: translateY(0); opacity: 1; }
-
-.sales-popup-img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
-.sales-popup-info p { margin: 0 0 3px 0; font-size: 0.85rem; color: var(--mk-gray); }
-.sales-popup-info .sales-popup-prod { font-weight: 800; color: var(--mk-navy); font-size: 0.95rem; }
-.sales-popup-info small { color: var(--mk-green); font-weight: 700; font-size: 0.75rem; }
-
-/* ==========================================
-   📐 8. RESPONSIVITATE EXTREMĂ PENTRU MOBIL
-   ========================================== */
-@media (max-width: 1024px) {
-  .hero-grid { grid-template-columns: 1fr; padding: 20px; gap: 25px; }
-  .checkout-main-grid { grid-template-columns: 1fr; }
-  .checkout-summary-side { order: -1; margin-bottom: 20px; } /* Pe tabletă/mobil, sumarul apare primul în checkout */
+/* --- VARIANTA DESKTOP --- */
+@media (min-width: 769px) {
+  .sales-popup {
+    top: 20px;
+    left: 50%;
+    width: 350px;
+    /* Centrare perfectă pe X și ascuns pe Y */
+    transform: translate(-50%, -150%); 
+  }
+  .sales-popup.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+  }
 }
 
+/* --- VARIANTA MOBIL (FĂRĂ ERORI) --- */
 @media (max-width: 768px) {
-  .shopify-container { padding: 15px 10px; }
-  
-  .prod-title { font-size: 1.8rem; }
-  .price-new { font-size: 2.2rem; }
-  
-  .trust-icons { grid-template-columns: 1fr; gap: 15px; text-align: left; }
-  .t-icon { flex-direction: row; font-size: 0.95rem; }
-  
-  .input-row { flex-direction: column; gap: 0; }
-  
-  /* Modal Checkout Optimitzat Mobile */
-  .checkout-modal-wrapper {
-    height: 95vh;
-    border-radius: 24px 24px 0 0;
-    padding: 20px 15px 100px 15px; /* Padding jos pt buton */
+  .sales-popup {
+    top: 15px;
+    /* În loc de left 50%, folosim margini egale stânga-dreapta */
+    left: 5%; 
+    right: 5%;
+    width: 90%; /* Ocupă aproape tot ecranul, dar centrat */
+    max-width: 350px; /* Să nu se întindă prea mult pe tablete */
+    margin: 0 auto; /* Centrare de rezervă */
+    
+    /* Pe mobil doar translație pe verticală (Y) */
+    transform: translateY(-150%);
   }
   
-  .close-checkout-absolute-btn { top: 15px; right: 15px; width: 35px; height: 35px; font-size: 1.2rem; }
-  
-  /* Activăm butonul lipicios doar pe mobil */
-  .sticky-buy-wrapper { display: block; }
-  
-  /* Mutăm notificarea fake mai sus să nu se bată cu butonul lipicios */
-  .sales-popup { bottom: 100px; left: 10px; right: 10px; width: calc(100% - 20px); }
-  
-  /* Stripe inputs */
-  .stripe-row { display: flex; flex-direction: column; gap: 0; }
+  .sales-popup.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .sales-popup-img {
+    width: 45px !important;
+    height: 45px !important;
+    flex-shrink: 0;
+    border-radius: 8px;
+  }
+
+  .sales-popup-info p {
+    font-size: 0.85rem !important;
+    margin: 0;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Taie textul dacă e prea lung pe ecrane mici */
+  }
+}/* =========================================
+   HERO SECTION - FIX IMAGINE (BOMBA)
+   ========================================= */
+.hero-grid {
+  display: flex;
+  flex-direction: column; /* Pe mobil: Imaginea sus, Textul jos */
+  gap: 20px;
+  width: 100%;
 }
 
+@media (min-width: 769px) {
+  .hero-grid {
+    flex-direction: row; /* Pe desktop: Imaginea în stânga, Textul în dreapta */
+    align-items: flex-start;
+    gap: 40px;
+  }
+}
+
+/* Coloana cu Imaginea */
+.hero-image-col {
+  flex: 1;
+  width: 100%;
+}
+
+.main-prod-img {
+  width: 100% !important; /* Forțăm lățimea maximă */
+  height: auto; /* Păstrăm proporțiile corecte */
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* O umbră fină să iasă în evidență */
+  object-fit: contain; /* Să nu se taie din ea dacă e format pătrat */
+}
+
+/* Coloana cu Info */
+.hero-info-col {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fix pentru containerele părinte - să nu strângă imaginea */
+.shopify-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   📱 OPTIMIZARE SPECIALĂ MOBIL
+   ========================================= */
+@media (max-width: 768px) {
+  .hero-image-col {
+    margin: 0 -15px; /* Scoatem imaginea puțin în afara padding-ului pentru impact maxim */
+    width: calc(100% + 30px); 
+  }
+  
+  .main-prod-img {
+    border-radius: 0; /* Pe mobil arată mai pro dacă e edge-to-edge */
+  }
+
+  .prod-title {
+    font-size: 1.8rem !important; /* Titlu mare și vizibil */
+    padding: 0 5px;
+  }
+  
+  .price-wrap, .bullet-points, .stock-alert {
+    padding: 0 5px; /* Păstrăm textul aliniat frumos */
+  }
+}/* =========================================
+   OVERLAY & MODAL CHECKOUT
+   ========================================= */
+.checkout-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 999999;
+  display: flex; justify-content: center; align-items: center;
+  padding: 20px;
+  animation: fadeInOverlay 0.3s ease-out forwards;
+}
+
+.checkout-modal-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 95vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: scaleUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.close-checkout-absolute-btn {
+  position: absolute; top: 15px; right: 15px;
+  background: #f1f5f9; border: none;
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1.2rem; color: #64748b;
+  z-index: 100; transition: 0.2s;
+}
+.close-checkout-absolute-btn:hover { background: #e2e8f0; color: #0f172a; transform: scale(1.1); }
+
+/* =========================================
+   HEADER & GRID CHECKOUT
+   ========================================= */
+.checkout-header-product {
+  display: flex; gap: 15px; align-items: center;
+  padding: 20px 30px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;
+}
+.checkout-header-product img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; border: 1px solid #cbd5e1; }
+.checkout-header-product h4 { margin: 0 0 4px 0; font-size: 1.1rem; color: #0f172a; }
+.checkout-header-product p { margin: 0; color: #64748b; font-size: 0.9rem; }
+
+.checkout-main-grid {
+  display: grid; grid-template-columns: 1.3fr 1fr; gap: 30px; padding: 30px;
+}
+
+.section-title {
+  font-size: 1.1rem; font-weight: 700; color: #1e293b;
+  border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px;
+}
+
+/* =========================================
+   INPUT-URI & FORMULARE
+   ========================================= */
+.input-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
+.input-row { display: flex; gap: 12px; }
+
+.checkout-input {
+  width: 100%; padding: 14px 16px; font-size: 1rem;
+  border: 1px solid #cbd5e1; border-radius: 10px;
+  background: #f8fafc; color: #0f172a; transition: 0.2s; outline: none;
+}
+.checkout-input:focus { border-color: #3b82f6; background: #ffffff; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+
+/* =========================================
+   BUTOANE TOGGLE (LIVRARE & PLATA)
+   ========================================= */
+.toggle-group { display: flex; gap: 12px; margin-bottom: 20px; }
+
+.toggle-btn {
+  flex: 1; padding: 14px; border: 1px solid #cbd5e1; border-radius: 10px;
+  background: #ffffff; color: #475569; font-weight: 600; font-size: 0.95rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+}
+.toggle-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+
+/* Starea activă pentru Livrare (Albastru) */
+.toggle-btn.delivery.active { border-color: #3b82f6; background: #eff6ff; color: #1d4ed8; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.1); }
+/* Starea activă pentru Plată (Verde) */
+.toggle-btn.payment.active { border-color: #10b981; background: #f0fdf4; color: #15803d; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.1); }
+
+/* =========================================
+   OFERTE & UPSELLS
+   ========================================= */
+.offer-card {
+  border: 1px solid #cbd5e1; padding: 16px; border-radius: 10px;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; background: #ffffff; transition: 0.2s; margin-bottom: 12px;
+}
+.offer-card:hover { border-color: #94a3b8; }
+.offer-card.active { border: 2px solid #3b82f6; background: #eff6ff; }
+
+.upsell-label {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 10px; cursor: pointer; transition: 0.2s; margin-bottom: 10px;
+}
+.upsell-label:hover { background: #f1f5f9; border-color: #cbd5e1; }
+.upsell-left { display: flex; align-items: center; gap: 10px; font-weight: 600; color: #334155; }
+
+/* =========================================
+   ZONA STRIPE (ACUM E VIZIBILĂ PERFECT)
+   ========================================= */
+.stripe-container-box { margin-top: 15px; }
+
+.stripe-card-element {
+  background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px;
+  padding: 16px; min-height: 52px; /* MAGIC FIX: Stripe are nevoie de inaltime */
+  transition: 0.2s; box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+}
+.stripe-card-element:hover { border-color: #94a3b8; }
+
+/* =========================================
+   BUTOANE ACȚIUNE & SUMAR
+   ========================================= */
+.btn-select-locker {
+  width: 100%; padding: 14px; background: #ffffff; border: 2px dashed #94a3b8;
+  border-radius: 10px; color: #475569; font-weight: 600; cursor: pointer; transition: 0.2s;
+}
+.btn-select-locker:hover { border-color: #3b82f6; color: #3b82f6; background: #eff6ff; }
+
+.checkout-summary-side { background: #f8fafc; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; height: fit-content; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; color: #334155; font-weight: 500; }
+.summary-row.extra { color: #64748b; font-size: 0.9rem; }
+
+.total-row {
+  border-top: 1px solid #cbd5e1; margin: 20px 0; padding-top: 20px;
+  display: flex; justify-content: space-between; font-weight: 900; font-size: 1.3rem; color: #0f172a;
+}
+
+.btn-finalize {
+  width: 100%; padding: 18px; border: none; border-radius: 12px;
+  font-size: 1.1rem; font-weight: 800; cursor: pointer;
+  display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.2s;
+}
+.btn-finalize.cash { background: #e61938; color: #ffffff; box-shadow: 0 8px 20px rgba(230, 25, 56, 0.25); }
+.btn-finalize.cash:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(230, 25, 56, 0.35); }
+
+.btn-finalize.card { background: #3b82f6; color: #ffffff; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25); margin-top: 15px; }
+.btn-finalize.card:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(59, 130, 246, 0.35); }
+.btn-finalize:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .checkout-main-grid { grid-template-columns: 1fr; padding: 20px; }
+  .checkout-modal-wrapper { max-height: 90vh; border-radius: 20px 20px 0 0; }
+  .checkout-modal-overlay { align-items: flex-end; padding: 0; }
+}/* =========================================================
+   🚀 CHECKOUT MODAL - ULTRA PREMIUM EDITION (2026)
+   ========================================================= */
+
+/* 1. OVERLAY (Fundalul întunecat și blurat) */
+.checkout-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(12px); /* Efect puternic de sticlă mată */
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 999999;
+  display: flex; justify-content: center; align-items: center;
+  padding: 20px;
+  animation: fadeInOverlay 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to { opacity: 1; backdrop-filter: blur(12px); }
+}
+
+/* 2. FEREASTRA PRINCIPALĂ (Modalul) */
+.checkout-modal-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1050px;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 24px;
+  /* Umbră complexă pe 3 straturi pentru profunzime 3D */
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 
+              0 20px 40px -10px rgba(0,0,0,0.15), 
+              0 40px 80px -20px rgba(0,0,0,0.15);
+  animation: scaleUpModal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes scaleUpModal {
+  from { transform: scale(0.92) translateY(30px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Butonul X (Zboară deasupra) */
+.close-checkout-absolute-btn {
+  position: absolute; top: 20px; right: 20px;
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  width: 42px; height: 42px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1.4rem; color: #475569;
+  z-index: 100; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.close-checkout-absolute-btn:hover { 
+  background: #ef4444; color: #fff; border-color: #ef4444; 
+  transform: rotate(90deg) scale(1.05); /* Efect fin de rotire */
+}
+
+/* 3. HEADER PRODUS */
+.checkout-header-product {
+  display: flex; gap: 20px; align-items: center;
+  padding: 25px 35px; 
+  background: linear-gradient(to right, #ffffff, #f8fafc);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+.checkout-header-product img { 
+  width: 70px; height: 70px; border-radius: 14px; 
+  object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+}
+.checkout-header-product h4 { margin: 0 0 6px 0; font-size: 1.3rem; font-weight: 800; color: #0f172a; }
+.checkout-header-product p { margin: 0; color: #64748b; font-size: 0.95rem; font-weight: 500; }
+
+/* 4. GRID CHECKOUT */
+.checkout-main-grid {
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; padding: 35px;
+}
+
+.section-title {
+  font-size: 1.15rem; font-weight: 800; color: #0f172a;
+  border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 25px;
+  display: flex; align-items: center; gap: 10px;
+}
+
+/* 5. INPUT-URI (STIL APPLE / STRIPE) */
+.input-row { display: flex; gap: 15px; margin-bottom: 15px; }
+
+.checkout-input {
+  width: 100%; padding: 16px 18px; font-size: 1rem; font-weight: 500;
+  border: 1px solid #cbd5e1; border-radius: 12px;
+  background: #f8fafc; color: #0f172a; 
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); outline: none;
+  margin-bottom: 15px;
+}
+.checkout-input:focus { 
+  border-color: #3b82f6; background: #ffffff; 
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); /* Halou de focus premium */
+  transform: translateY(-1px);
+}
+.checkout-input::placeholder { color: #94a3b8; font-weight: 400; }
+
+/* ERORI VIZUALE BOMBĂ */
+.input-error {
+  border-color: #ef4444 !important;
+  background-color: #fff1f2 !important;
+  color: #991b1b !important;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15) !important;
+  animation: shakeError 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+/* 6. BUTOANE DE SELECTIE (CARDURI MODERNE) */
+.modern-toggle-group { display: flex; gap: 15px; margin-bottom: 25px; }
+
+.modern-toggle-card {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 20px; border: 2px solid #e2e8f0; border-radius: 16px;
+  background: #ffffff; color: #64748b; font-weight: 700; font-size: 0.95rem;
+  cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modern-toggle-card .toggle-icon { font-size: 2rem; color: #94a3b8; transition: 0.2s; }
+.modern-toggle-card:hover { border-color: #cbd5e1; background: #f8fafc; transform: translateY(-2px); }
+
+/* Stare Activă - Livrare */
+.modern-toggle-card.active {
+  border-color: #3b82f6; background: #eff6ff; color: #1e293b;
+  box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.2);
+}
+.modern-toggle-card.active .toggle-icon { color: #3b82f6; }
+
+/* Stare Activă - Plată */
+.modern-toggle-card.payment.active {
+  border-color: #10b981; background: #f0fdf4; color: #1e293b;
+  box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.2);
+}
+.modern-toggle-card.payment.active .toggle-icon { color: #10b981; }
+
+/* 7. PACHETE (OFERTE) */
+.offer-card {
+  border: 2px solid #e2e8f0; padding: 20px; border-radius: 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; background: #ffffff; transition: all 0.2s; margin-bottom: 15px;
+}
+.offer-card:hover { border-color: #cbd5e1; background: #f8fafc; }
+.offer-card.active { 
+  border-color: #8b5cf6; /* Gradient-like purpuriu/albastru premium */
+  background: #f5f3ff; 
+  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.2);
+}
+.offer-card strong { font-size: 1.1rem; color: #0f172a; display: block; }
+.offer-card span { font-size: 1.2rem; font-weight: 900; }
+
+/* 8. UPSELLS */
+.upsell-label {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; background: #ffffff; border: 1px solid #e2e8f0;
+  border-radius: 12px; cursor: pointer; transition: 0.2s; margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.upsell-label:hover { border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-1px); }
+.upsell-left { display: flex; align-items: center; gap: 12px; font-weight: 700; color: #1e293b; }
+.upsell-left input[type="checkbox"] { width: 18px; height: 18px; accent-color: #3b82f6; cursor: pointer; }
+
+/* 9. COLOANA DE SUMAR (DREAPTA) */
+.checkout-summary-side { 
+  background: #f8fafc; padding: 35px; border-radius: 20px; 
+  border: 1px solid #e2e8f0; height: fit-content; 
+}
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 14px; color: #334155; font-weight: 600; font-size: 1.05rem; }
+.summary-row.extra { color: #64748b; font-weight: 500; font-size: 0.95rem; }
+
+.total-row {
+  border-top: 2px dashed #cbd5e1; margin: 25px 0; padding-top: 25px;
+  display: flex; justify-content: space-between; align-items: center; 
+  font-weight: 900; font-size: 1.4rem; color: #0f172a;
+}
+
+/* 10. BUTOANE DE FINALIZARE (GRADIENTE ȘI STRĂLUCIRE) */
+.btn-finalize {
+  width: 100%; padding: 20px; border: none; border-radius: 16px;
+  font-size: 1.15rem; font-weight: 900; letter-spacing: 0.5px;
+  cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; 
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-finalize.cash { 
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); 
+  color: #ffffff; 
+  box-shadow: 0 10px 20px -5px rgba(225, 29, 72, 0.4), inset 0 2px 0 rgba(255,255,255,0.2); 
+}
+.btn-finalize.cash:hover { 
+  transform: translateY(-3px); 
+  box-shadow: 0 15px 25px -5px rgba(225, 29, 72, 0.5), inset 0 2px 0 rgba(255,255,255,0.2); 
+}
+
+.btn-finalize.card { 
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); 
+  color: #ffffff; margin-top: 15px;
+  box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4), inset 0 2px 0 rgba(255,255,255,0.2); 
+}
+.btn-finalize.card:hover { 
+  transform: translateY(-3px); 
+  box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.5), inset 0 2px 0 rgba(255,255,255,0.2); 
+}
+
+.btn-finalize:active { transform: translateY(1px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+
+/* 11. STRIPE CARD ELEMENT (Câmpul de Card) */
+.stripe-card-element {
+  background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px;
+  padding: 18px; min-height: 56px;
+  transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.stripe-card-element:hover { border-color: #cbd5e1; }
+.stripe-container-box:focus-within .stripe-card-element {
+  border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+/* 12. BUTON EASYBOX HARTA */
+.btn-select-locker {
+  width: 100%; padding: 16px; background: #ffffff; border: 2px dashed #94a3b8;
+  border-radius: 12px; color: #334155; font-weight: 700; cursor: pointer; transition: 0.2s;
+}
+.btn-select-locker:hover { border-color: #3b82f6; color: #3b82f6; background: #eff6ff; }
+
+/* 13. RESPONSIVE MOBILE EXTREM DE CURAT */
+@media (max-width: 900px) {
+  .checkout-main-grid { grid-template-columns: 1fr; gap: 20px; padding: 20px; }
+  .checkout-header-product { padding: 15px 20px; }
+  
+  .checkout-modal-overlay { align-items: flex-end; padding: 0; }
+  .checkout-modal-wrapper { 
+    max-height: 90vh; border-radius: 24px 24px 0 0; 
+    animation: slideUpMobile 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  @keyframes slideUpMobile {
+    from { transform: translateY(100%); opacity: 1; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .input-row { flex-direction: column; gap: 0; }
+  .modern-toggle-group { flex-direction: column; gap: 10px; }
+  .modern-toggle-card { padding: 15px; flex-direction: row; justify-content: flex-start; gap: 15px; }
+  .modern-toggle-card .toggle-icon { font-size: 1.5rem; }
+}
+/* =========================================================
+   🛍️ SALES POPUP (Notificările Live - "X a cumpărat")
+   ========================================================= */
+
+.sales-popup {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background: #ffffff;
+  border-radius: 14px;
+  /* Umbră fină dar vizibilă ca să iasă în evidență peste fundal */
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(226, 232, 240, 1);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 18px;
+  z-index: 999; /* E peste site, dar SUB modalul de checkout care are 999999 */
+  
+  /* Starea ascunsă (jos de tot și invizibil) */
+  transform: translateY(150px) scale(0.9);
+  opacity: 0;
+  pointer-events: none; /* Ca să nu blocheze click-urile dacă dai cu mouse-ul din greșeală */
+  
+  /* Animație fluidă Apple-like */
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 340px;
+}
+
+/* Starea activă când .show este adăugat de React */
+.sales-popup.show {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.sales-popup-img {
+  width: 55px;
+  height: 55px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+}
+
+.sales-popup-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sales-popup-info p {
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.2;
+}
+
+.sales-popup-info strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.sales-popup-prod {
+  font-size: 0.85rem !important;
+  font-weight: 700;
+  color: #3b82f6 !important; /* Albastru premium ca să atragă privirea pe nume */
+}
+
+.sales-popup-info small {
+  font-size: 0.75rem;
+  color: #10b981; /* Verde de "Verificat" */
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* =========================================================
+   RESPONSIVE (CUM SE VEDE PE TELEFON)
+   ========================================================= */
+@media (max-width: 768px) {
+  .sales-popup {
+    /* Pe mobil îl punem pe centru, dar mai sus de Sticky Bar-ul de jos */
+    bottom: 95px; 
+    left: 50%;
+    
+    /* Centrare absolută cu transform */
+    transform: translate(-50%, 150px) scale(0.9);
+    width: 90%;
+    max-width: 350px;
+  }
+  
+  .sales-popup.show {
+    transform: translate(-50%, 0) scale(1);
+  }
+}/* =========================================
+   ERORI TEXT & INPUT WRAPPER
+   ========================================= */
+.input-group-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-group-wrapper .checkout-input {
+  margin-bottom: 4px; /* Lasă loc pentru textul de eroare dedesubt */
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 4px;
+  animation: slideDownError 0.2s ease-out forwards;
+}
+
+@keyframes slideDownError {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stripe-error-box {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #ef4444;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* =========================================
+   OFERTĂ RECOMANDATĂ (PRO DISCOUNT)
+   ========================================= */
+.offer-card.recommended {
+  position: relative;
+  border: 2px solid #3b82f6; /* Albastru scos în evidență */
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+}
+
+.offer-card.recommended.active {
+  background: #eff6ff;
+}
+
+.rec-badge {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3);
+}/* =========================================================
+   🧩 MODULE DINAMICE (Landing Page Builder)
+   ========================================================= */
+
+.dynamic-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin: 40px 0;
+  width: 100%;
+}
+
+/* Modul: Text + Imagine */
+.info-block {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  border: 1px solid #f1f5f9;
+}
+
+.info-block h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.info-block p {
+  font-size: 1.15rem;
+  color: #475569;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.info-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.center-btn {
+  margin: 0 auto;
+  display: flex;
+}
+
+/* Modul: Procente (Beneficii Grid) */
+.percentage-block {
+  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+  padding: 40px 30px;
+  border-radius: 24px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+}
+
+.percentage-block h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 30px;
+}
+
+.perc-list {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.perc-item {
+  background: #ffffff;
+  padding: 25px 20px;
+  border-radius: 16px;
+  width: 160px;
+  box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05);
+  border: 1px solid #f1f5f9;
+  transition: transform 0.3s;
+}
+
+.perc-item:hover {
+  transform: translateY(-5px);
+}
+
+.perc-circle {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #3b82f6; /* Albastru premium */
+  margin-bottom: 10px;
+}
+
+.perc-item p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+/* Modul: Tabel Comparativ */
+.comparison-block {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f5f9;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.comparison-block h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 30px;
+}
+
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.comp-table th, .comp-table td {
+  padding: 18px 15px;
+  text-align: center;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 1.05rem;
+}
+
+.comp-table th {
+  background: #f8fafc;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.comp-table th:first-child, .comp-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: #334155;
+}
+
+.comp-table tr:last-child td {
+  border-bottom: none;
+}
+
+.c-green { color: #10b981; font-size: 1.8rem; }
+.c-black { color: #ef4444; font-size: 1.8rem; } /* Roșu la "X" pentru ceilalți */
+
+/* Responsive pentru module */
+@media (max-width: 768px) {
+  .info-block, .percentage-block, .comparison-block {
+    padding: 30px 20px;
+  }
+  .info-block h2, .comparison-block h2, .percentage-block h2 {
+    font-size: 1.5rem;
+  }
+  .comp-table th, .comp-table td {
+    padding: 12px 10px;
+    font-size: 0.9rem;
+  }
+}
+/* =========================================================
+   🛍️ SALES POPUP (REPARAT - FORȚAT SĂ FIE MIC)
+   ========================================================= */
+
+.sales-popup {
+  position: fixed !important;
+  bottom: 30px !important;
+  left: 30px !important;
+  top: auto !important; /* Anulăm orice altă regulă */
+  right: auto !important;
+  background: #ffffff !important;
+  border-radius: 14px !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(226, 232, 240, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 15px !important;
+  padding: 12px 18px !important;
+  z-index: 9999 !important;
+  
+  /* AICI E SECRETUL: Forțăm dimensiuni mici, indiferent de alte CSS-uri */
+  width: max-content !important;
+  min-width: 250px !important;
+  max-width: 340px !important;
+  height: auto !important;
+  max-height: 100px !important;
+  
+  transform: translateY(150px) scale(0.9) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Clasa .show suprascrisă să nu o mai ia razna */
+.sales-popup.show {
+  transform: translateY(0) scale(1) !important;
+  opacity: 1 !important;
+}
+
+.sales-popup-img {
+  width: 55px !important;
+  height: 55px !important;
+  min-width: 55px !important;
+  border-radius: 10px !important;
+  object-fit: cover !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.sales-popup-info {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  text-align: left !important;
+}
+
+.sales-popup-info p {
+  margin: 0 0 4px 0 !important;
+  font-size: 0.9rem !important;
+  color: #475569 !important;
+  line-height: 1.2 !important;
+}
+
+.sales-popup-prod {
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  color: #3b82f6 !important; 
+}
+
+.sales-popup-info small {
+  font-size: 0.75rem !important;
+  color: #10b981 !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+/* =========================================================
+   RESPONSIVE (FORȚAT PENTRU MOBIL)
+   ========================================================= */
+@media (max-width: 768px) {
+  .sales-popup {
+    bottom: 95px !important; 
+    left: 50% !important;
+    transform: translate(-50%, 150px) scale(0.9) !important;
+    width: 90% !important;
+    max-width: 350px !important;
+  }
+  
+  .sales-popup.show {
+    transform: translate(-50%, 0) scale(1) !important;
+  }
+}/* =========================================================
+   📱 MOBILE CHECKOUT - ULTRA PREMIUM (iOS BOTTOM SHEET)
+   ========================================================= */
+
+@media (max-width: 900px) {
+  /* 1. Modificăm overlay-ul să lipească fereastra de jos */
+  .checkout-modal-overlay { 
+    align-items: flex-end !important; 
+    padding: 0 !important; 
+  }
+
+  /* 2. Transformăm modalul într-un "Sertar" iOS */
+  .checkout-modal-wrapper { 
+    max-height: 92vh; 
+    border-radius: 32px 32px 0 0; 
+    background: #ffffff;
+    box-shadow: 0 -15px 40px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    animation: slideUpBottomSheet 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  
+  /* Liniuța gri specifică meniurilor premium pe mobil (Drag Handle) */
+  .checkout-modal-wrapper::before {
+    content: '';
+    display: block;
+    width: 45px;
+    height: 5px;
+    background: #cbd5e1;
+    border-radius: 10px;
+    margin: 15px auto 5px auto;
+  }
+
+  @keyframes slideUpBottomSheet {
+    from { transform: translateY(100%); opacity: 1; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* 3. Header-ul curățat */
+  .checkout-header-product { 
+    padding: 10px 25px 20px 25px; 
+    border-bottom: none;
+    background: transparent;
+  }
+  
+  .close-checkout-absolute-btn {
+    top: 20px;
+    right: 20px;
+    background: #f1f5f9;
+    border: none;
+    width: 36px; 
+    height: 36px;
+    box-shadow: none;
+  }
+
+  /* 4. Conținutul scrollabil independent */
+  .checkout-main-grid { 
+    grid-template-columns: 1fr; 
+    gap: 25px; 
+    padding: 0 25px 25px 25px; 
+    overflow-y: auto;
+    scrollbar-width: none; /* Ascundem bara de scroll pt un look curat */
+  }
+  .checkout-main-grid::-webkit-scrollbar { display: none; }
+
+  /* 5. Input-urile optimizate pentru degete groase */
+  .input-row { flex-direction: column; gap: 0; }
+  .checkout-input {
+    padding: 15px;
+    font-size: 16px; /* 16px obligatoriu pt a preveni auto-zoom-ul enervant pe iPhone */
+  }
+
+  /* 6. Butoanele Livrare/Plată stau unele lângă altele pe mobil */
+  .modern-toggle-group { 
+    flex-direction: row; 
+    gap: 12px; 
+  }
+  .modern-toggle-card { 
+    padding: 12px 10px; 
+    flex-direction: column; 
+    justify-content: center; 
+    gap: 5px; 
+    font-size: 0.85rem; 
+    border-radius: 14px;
+  }
+  .modern-toggle-card .toggle-icon { font-size: 1.4rem; }
+
+  /* 7. Colțurile ofertelor ajustate */
+  .offer-card { padding: 16px; border-radius: 14px; }
+  .offer-card strong { font-size: 1rem; }
+  .offer-card span { font-size: 1.1rem; }
+
+  /* 8. Sumarul integrat perfect */
+  .checkout-summary-side {
+    background: transparent;
+    padding: 25px 0 0 0;
+    border-radius: 0;
+    border: none;
+    border-top: 2px dashed #e2e8f0;
+  }
+  
+  .total-row {
+    padding-top: 15px;
+    margin: 15px 0;
+    font-size: 1.3rem;
+  }
+
+  /* 9. STICKY BUY BUTTON - Cel mai important pt conversii pe mobil! */
+  .btn-finalize, .stripe-container-box {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+  }
+  
+  .btn-finalize.cash, .btn-finalize.card {
+    padding: 20px;
+    font-size: 1.1rem;
+    border-radius: 16px;
+    box-shadow: 0 -10px 30px rgba(255,255,255,0.9), 0 8px 20px rgba(0,0,0,0.15) !important; 
+    /* Umbra albă de sus dă senzația că plutește peste conținut */
+  }
+}/* =========================================================
+   📱 MOBILE CHECKOUT - PREMIUM FLOATING CARD (REPARAT)
+   ========================================================= */
+
+@media (max-width: 900px) {
+  /* 1. Overlay-ul: Centrăm cardul și adăugăm spațiul proporțional (Padding) */
+  .checkout-modal-overlay { 
+    align-items: center !important; /* Îl punem pe centrul ecranului, nu jos */
+    justify-content: center !important;
+    padding: 20px !important; /* Distanța proporțională față de "pereții" telefonului */
+    box-sizing: border-box !important;
+  }
+
+  /* 2. Wrapper-ul: Devine un card plutitor rotunjit total */
+  .checkout-modal-wrapper { 
+    position: relative !important;
+    width: 100% !important; /* Ocupă lățimea disponibilă minus padding-ul de 20px */
+    max-width: 500px !important; /* Prevenim lățimea excesivă pe tablete mici */
+    max-height: calc(100vh - 40px) !important; /* Înălțime maximă din care scădem spațiul de sus/jos */
+    border-radius: 24px !important; /* Rotunjim toate colțurile, nu doar sus */
+    background: #ffffff !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3) !important; /* Umbră mai pronunțată ca să pară că plutește */
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important; /* Păstrăm colțurile rotunde */
+    
+    /* Animație de apariție prin Scale-Up (crește fin din centru) */
+    animation: scaleUpFloatingCard 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  }
+  
+  /* Ștergem liniuța de drag (handle) de sus, nu mai e nevoie de ea la card plutitor */
+  .checkout-modal-wrapper::before {
+    display: none !important;
+  }
+
+  @keyframes scaleUpFloatingCard {
+    from { transform: scale(0.9) translateY(20px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  /* 3. Header-ul ajustat pentru spațiul nou */
+  .checkout-header-product { 
+    padding: 20px 20px 15px 20px !important; 
+    border-bottom: 1px solid #f1f5f9 !important;
+    background: #f8fafc !important;
+  }
+  
+  .checkout-header-product img {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .checkout-header-product h4 { font-size: 1.1rem !important; }
+
+  /* Butonul de închidere mai discret pe card */
+  .close-checkout-absolute-btn {
+    top: 15px !important;
+    right: 15px !important;
+    width: 32px !important; 
+    height: 32px !important;
+    font-size: 1.1rem !important;
+    background: rgba(255,255,255,0.8) !important;
+    backdrop-filter: blur(4px);
+  }
+
+  /* 4. Conținutul scrollabil în interiorul cardului */
+  .checkout-main-grid { 
+    grid-template-columns: 1fr !important; 
+    gap: 20px !important; 
+    padding: 20px !important; 
+    overflow-y: auto !important; /* Scroll doar în interiorul cardului */
+    scrollbar-width: none !important;
+  }
+  .checkout-main-grid::-webkit-scrollbar { display: none !important; }
+
+  /* 5. Input-uri și Toggle-uri optimizate pentru spațiul cardului */
+  .input-row { flex-direction: column !important; gap: 0 !important; }
+  .checkout-input {
+    padding: 14px !important;
+    font-size: 16px !important; /* Esențial pt a preveni auto-zoom pe iOS */
+    margin-bottom: 12px !important;
+  }
+  
+  .input-group-wrapper .error-text {
+    margin-bottom: 10px !important;
+    margin-top: -8px !important;
+  }
+
+  .modern-toggle-group { 
+    flex-direction: row !important; 
+    gap: 10px !important; 
+    margin-bottom: 15px !important;
+  }
+  .modern-toggle-card { 
+    padding: 12px 8px !important; 
+    font-size: 0.8rem !important; 
+    border-radius: 12px !important;
+  }
+  .modern-toggle-card .toggle-icon { font-size: 1.3rem !important; }
+
+  /* Oferte ajustate */
+  .offer-card { padding: 14px !important; border-radius: 12px !important; }
+  .offer-card strong { font-size: 0.95rem !important; }
+  .offer-card span { font-size: 1.05rem !important; }
+  .rec-badge { top: -10px !important; font-size: 0.7rem !important; padding: 3px 10px !important; }
+
+  /* 6. Sumarul integrat */
+  .checkout-summary-side {
+    background: #f8fafc !important;
+    padding: 20px !important;
+    border-radius: 16px !important;
+    border: 1px solid #e2e8f0 !important;
+    margin-top: 10px !important;
+  }
+  
+  .summary-row { font-size: 0.95rem !important; }
+  .total-row { padding-top: 15px !important; margin: 15px 0 !important; font-size: 1.2rem !important; }
+
+  /* 7. Zona de plată și Butonul final */
+  .stripe-container-box { margin-top: 10px !important; }
+  .stripe-card-element { padding: 14px !important; }
+
+  .btn-finalize {
+    position: static !important; /* Nu-l mai punem sticky jos pe mobil în card plutitor */
+    padding: 16px !important;
+    font-size: 1.05rem !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+  }
+}/* CONTAINERUL FORMULARULUI DE CARD */
+.stripe-split-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.stripe-element-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stripe-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #475569;
+  margin-left: 4px;
+}
+
+/* Wright-ul care simulează input-ul tău */
+.stripe-input-wrapper {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px; /* Spațiu în interiorul casetei */
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* Efect de Focus pentru casetele Stripe */
+.stripe-input-wrapper:focus-within {
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Randul cu Expirare si CVC */
+.stripe-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Ajustare Mobile pentru randul cu cardul */
+@media (max-width: 600px) {
+  .stripe-row {
+    grid-template-columns: 1fr; /* Le punem unul sub altul pe telefoane mici */
+  }
+}
+
+/* STILUL PENTRU AUTO-SCROLL LA EROARE (REPARAT) */
+.input-error {
+  border: 2px solid #ef4444 !important;
+  background-color: #fff1f2 !important;
+  animation: shakeError 0.4s ease-in-out !important;
+}
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}/* =========================================================
+   1. BUTONUL STICKY (LIPIT JOS)
+   ========================================================= */
+.sticky-buy-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px); /* Efect premium de sticlă pe iPhone */
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.08);
+  z-index: 9999;
+  padding: 12px 20px;
+  /* Extra padding pentru telefoanele cu bară jos (ex: iPhone) */
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+}
+
+.sticky-buy-content {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.sticky-price-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sticky-old-price {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-decoration: line-through;
+  font-weight: 600;
+}
+
+.sticky-new-price {
+  font-size: 1.3rem;
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.btn-sticky-buy {
+  flex: 1;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: pulse-button 2s infinite;
+}
+
+.btn-sticky-buy:active {
+  transform: scale(0.96);
+}
+
+/* O animație fină ca butonul să "respire" și să atragă atenția */
+@keyframes pulse-button {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* =========================================================
+   2. TEXT ALB PENTRU COMPARAȚII
+   ========================================================= */
+/* Presupunând că pui un fundal închis la secțiunea de comparație */
+.comparatie-section {
+  background-color: #0f172a; /* Un bleumarin foarte închis, arată extrem de bine */
+  padding: 40px 20px;
+  border-radius: 16px;
+  margin: 30px 0;
+}
+
+.comparatie-text {
+  color: #ffffff !important; /* Forțăm culoarea albă */
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   3. DESIGN PREMIUM PENTRU PROCENTE
+   ========================================================= */
+.procente-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 30px 0;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+}
+
+.procent-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.procent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+.procent-valoare {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #2563eb; /* Culoare de accent pt procente */
+}
+
+/* Bara din spate (gri deschis) */
+.procent-bar-bg {
+  width: 100%;
+  height: 12px;
+  background-color: #e2e8f0;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Bara din față (gradient colorat) care se umple */
+.procent-bar-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+  width: 0; /* Pornește de la 0 pentru animație */
+  /* Schimbă valoarea asta în HTML (ex: style={{ width: '95%' }}) */
+  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+} /* --- FIX SUPRAPUNERE STRIPE LA SCROLL PE MOBIL --- */
+
+.stripe-container-box {
+  position: relative;
+  background-color: #ffffff; /* VITAL: Maschează tot ce trece pe sub formular la scroll */
+  z-index: 10; /* Îl ține în ierarhia corectă */
+  isolation: isolate; /* Forțează browserul să creeze un strat izolat pentru Stripe */
+  border-radius: 8px; /* Opțional, pentru un aspect curat */
+  padding: 5px 0; /* Un mic spațiu de respirație */
+}
+
+.stripe-split-form {
+  position: relative;
+  background-color: #ffffff;
+}
+
+/* Asigură-te că și wrapper-ul direct al inputului are fundal solid */
+.stripe-input-wrapper {
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1;
+}
+
+/* Restrângem fix-ul mai agresiv doar pentru ecranele mici */
+@media (max-width: 768px) {
+  .stripe-container-box {
+    /* O mică umbră sus și jos pe mobil te ajută să delimitezi 
+       vizual formularul de plată când faci scroll peste alte texte */
+    box-shadow: 0 -4px 10px rgba(255, 255, 255, 0.9), 0 4px 10px rgba(255, 255, 255, 0.9);
+  }
+}/* ====================================================
+   📞 BUTON COMANDĂ TELEFONICĂ (FULL-WIDTH, TEXT ALB)
+   ==================================================== */
+
+.btn-phone-full {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #059669; /* Verde Emerald închis pentru contrast maxim */
+  width: 100%;
+  padding: 10px 0; /* Îngust pe verticală */
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+  margin-bottom: 50px; /* Spațiu generos sub el ca să respire pagina */
+  box-sizing: border-box;
+}
+
+.btn-phone-full:hover {
+  background: #047857;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Iconița Albă */
+.phone-icon-sleek svg {
+  width: 18px;
+  height: 18px;
+  color: #ffffff !important;
+  display: block;
+}
+
+/* Textul Alb și Foarte Vizibil */
+.phone-text-sleek {
+  color: #ffffff !important; /* Alb pur, suprascrie orice altă regulă */
+  font-size: 0.95rem;
+  font-weight: 900; /* Foarte gros pentru lizibilitate maximă */
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+/* Ajustare pentru ecrane de telefon */
 @media (max-width: 480px) {
-  .modern-toggle-group { grid-template-columns: 1fr; gap: 10px; }
-  .circles-wrap { gap: 10px; }
-  .time-circle { width: 60px; height: 60px; }
-  .time-circle strong { font-size: 1.2rem; }
+  .btn-phone-full {
+    padding: 12px 0; /* Pe mobil îl lăsăm o idee mai înalt ca să fie ușor de apăsat cu degetul */
+  }
 }
