@@ -229,7 +229,7 @@ const trimiteInEawb = async (comanda) => {
       observations: "Comanda de pe site" // Poți adăuga note aici
     };
 
-    const url = 'https://api.eawb.ro/api/v1/orders'; // Endpoint-ul lor standard
+const urlEawb = 'https://api.eawb.ro/v1/orders';
 
     const raspuns = await fetch(url, {
       method: 'POST',
@@ -600,9 +600,14 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     await comanda.save();
 
     res.json({ success: true, awb: numarAWBGenerat, mesaj: "AWB Generat cu succes!" });
+} catch (err) {
+    console.error("❌ Eroare server la generarea AWB:", err.message);
+    
+    // 👈 ASTA E CHEIA! Ne va arăta fix de ce a picat rețeaua în logurile din Render
+    if (err.cause) {
+        console.error("🔍 CAUZA EXACTĂ A CĂDERII:", err.cause);
+    }
 
-  } catch (err) {
-    console.error("❌ Eroare server la generarea AWB:", err);
     res.status(500).json({ eroare: "Eroare internă server: " + err.message });
   }
 });
