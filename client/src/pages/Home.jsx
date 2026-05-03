@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
-  FiShoppingCart, FiStar, FiHeart, FiShield, FiAward, 
+  FiMonitor, FiHome, FiTool, FiShoppingCart, FiStar, FiHeart, FiShield, FiAward, 
   FiHeadphones, FiChevronLeft, FiChevronRight, FiTrendingUp, 
   FiTruck, FiCheckCircle, FiPlayCircle, FiPlus, FiMinus
 } from 'react-icons/fi';
