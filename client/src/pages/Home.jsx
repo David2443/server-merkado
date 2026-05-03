@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { 
   FiMonitor, FiHome, FiTool, FiShoppingCart, FiStar, FiHeart, FiShield, FiAward, 
   FiHeadphones, FiChevronLeft, FiChevronRight, FiTrendingUp, 
-  FiTruck, FiCheckCircle, FiPlayCircle, FiPlus, FiMinus
+  FiTruck, FiCheckCircle, FiPlayCircle, FiPlus, FiMinus, FiArrowRight
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import './Home.css';
