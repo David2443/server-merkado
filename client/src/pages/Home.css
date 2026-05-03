@@ -783,39 +783,217 @@
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 5rem; color: #fff; opacity: 0.8; transition: 0.3s; pointer-events: none;
 }
 .video-mockup-wrapper:hover .play-button-overlay { opacity: 1; transform: scale(1.1); color: #F05A28; }
-/* --- 7. BENTO GRID (Why Us) --- */
-.why-bomba-section { padding: 100px 0; background: #ffffff; }
-.why-badge { color: #2196F3; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 15px; }
+/* ==========================================
+   🧩 AVANTAJE BENTO GRID (APPLE STYLE)
+   ========================================== */
 
+.why-bomba-section {
+  padding: 100px 0;
+  background: #F8FAFC; /* Un fundal extra-curat ca să iasă cardurile în evidență */
+}
+
+.why-container-premium {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px; /* OBLIGATORIU: Păstrează distanța de marginile telefonului */
+}
+
+.why-badge {
+  display: inline-block;
+  padding: 8px 20px;
+  background: rgba(255, 90, 0, 0.1);
+  color: #FF5A00;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 20px;
+}
+
+.section-header-center h2 {
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  font-weight: 900;
+  color: #0F172A;
+  letter-spacing: -1px;
+  margin-bottom: 50px;
+}
+
+.section-header-center h2 span {
+  color: #00A3FF;
+}
+
+/* --- MAGIA BENTO GRID-ULUI --- */
 .why-bento-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 200px);
-  gap: 25px;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 25px;
+  gap: 30px;
 }
 
 .why-card {
-  background: #f8fafc; border-radius: 24px; padding: 40px; position: relative; overflow: hidden; border: 1px solid #e2e8f0; transition: 0.3s;
+  position: relative;
+  background: #ffffff;
+  border-radius: 32px; /* Rotunjire generoasă, foarte modernă */
+  padding: 45px 40px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 1;
 }
-.why-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(19, 62, 112, 0.08); border-color: #cbd5e1; }
 
-.card-delivery { grid-column: span 2; grid-row: span 2; background: #133E70; color: #fff; }
-.card-quality { grid-column: span 2; }
-.card-support { grid-column: span 1; }
-.card-secure { grid-column: span 1; }
+.why-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.08);
+  border-color: rgba(0, 163, 255, 0.2);
+}
 
-.why-icon { font-size: 3rem; margin-bottom: 25px; color: #F05A28; }
-.card-delivery .why-icon { color: #2196F3; font-size: 4rem; }
-.why-big-number { font-size: 5rem; font-weight: 900; color: rgba(255,255,255,0.1); position: absolute; top: -10px; right: 20px; }
+.why-card h3 {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #0F172A;
+  margin-bottom: 15px;
+}
 
-.why-card h3 { font-size: 1.5rem; font-weight: 900; margin-bottom: 10px; color: #1e293b; }
-.card-delivery h3 { color: #fff; font-size: 2.5rem; }
-.why-card p { color: #64748b; font-size: 1.05rem; line-height: 1.6; }
-.card-delivery p { color: #94a3b8; font-size: 1.2rem; }
+.why-card p {
+  color: #64748B;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 500;
+}
 
+/* Stilizare Iconițe înăuntrul cardurilor */
+.why-icon {
+  width: 35px;
+  height: 35px;
+  padding: 18px;
+  border-radius: 20px;
+  margin-bottom: 30px;
+  transition: transform 0.4s ease;
+}
+
+.why-card:hover .why-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* CULORI SPECIFICE PE CARDURI PENTRU CONTRAST */
+
+/* 1. Quality Card */
+.card-quality .why-icon { background: rgba(0, 163, 255, 0.1); color: #00A3FF; }
+
+/* 2. Support Card */
+.card-support .why-icon { background: rgba(255, 90, 0, 0.1); color: #FF5A00; }
+
+/* 3. Secure Card */
+.card-secure .why-icon { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+
+
+/* ==========================================
+   🚀 CARDUL VEDETĂ: LIVRAREA FULGER (DARK MODE)
+   ========================================== */
+.card-delivery {
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); /* Dark Navy */
+  color: white;
+  border: none;
+}
+
+.card-delivery .why-icon {
+  background: rgba(255, 90, 0, 0.15);
+  color: #FF5A00;
+  box-shadow: 0 10px 20px rgba(255, 90, 0, 0.2);
+}
+
+.card-delivery h3 {
+  color: white;
+  font-size: 1.8rem; /* Titlu mai mare pentru vedetă */
+}
+
+.card-delivery p {
+  color: #94A3B8;
+  font-size: 1.15rem;
+  max-width: 80%; /* Aerisit în dreapta */
+}
+
+/* 💦 Efectul de Watermark (Text uriaș transparent) */
+.why-big-number {
+  position: absolute;
+  right: -20px;
+  bottom: -30px;
+  font-size: 10rem; /* URIAȘ */
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.04); /* Aproape invizibil, doar ca textură */
+  line-height: 1;
+  z-index: -1;
+  pointer-events: none;
+  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.card-delivery:hover .why-big-number {
+  transform: scale(1.05) translate(-10px, -10px);
+  color: rgba(255, 255, 255, 0.08);
+}
+
+
+/* ==========================================
+   📐 STRUCTURA BENTO GRID (RESPONSIVITATE)
+   ========================================== */
+
+/* PE DESKTOP: Aranjament 6 coloane (Stil Puzzle) */
+@media (min-width: 992px) {
+  .why-bento-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  
+  /* Livrarea e lată, ia 4 coloane */
+  .card-delivery { grid-column: span 4; }
+  
+  /* Calitatea stă lângă ea, ia 2 coloane */
+  .card-quality { grid-column: span 2; }
+  
+  /* Suportul și Securitatea împart rândul de jos (3 coloane fiecare) */
+  .card-support { grid-column: span 3; }
+  .card-secure { grid-column: span 3; }
+}
+
+/* PE TABLETĂ */
+@media (max-width: 991px) and (min-width: 768px) {
+  .why-bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .card-delivery {
+    grid-column: span 2; /* Devine full width sus */
+  }
+}
+
+/* PE TELEFON: Aerisit la maxim */
+@media (max-width: 767px) {
+  .why-bomba-section {
+    padding: 60px 0;
+  }
+  
+  .why-bento-grid {
+    grid-template-columns: 1fr; /* Toate stau una sub alta */
+    gap: 20px;
+  }
+  
+  .why-card {
+    padding: 35px 30px; /* Padding un pic mai mic să lase loc pozei pe ecran mic */
+    border-radius: 24px;
+  }
+
+  .card-delivery h3 { font-size: 1.5rem; }
+  .card-delivery p { max-width: 100%; }
+  
+  /* Tăiem un pic din mărimea watermark-ului ca să nu strice ecranul */
+  .why-big-number {
+    font-size: 6rem;
+    bottom: -15px;
+    right: -10px;
+  }
+}
 /* --- 8. BANDA DE IMPULS --- */
 .impulse-buy-section { padding: 60px 0; background: #fff7ed; border-top: 1px solid #ffedd5; border-bottom: 1px solid #ffedd5; }
 .impulse-header { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 30px; padding: 0 25px; }

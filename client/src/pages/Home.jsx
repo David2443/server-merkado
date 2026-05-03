@@ -276,39 +276,54 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 🧩 7. AVANTAJE (Bento Grid) */}
+      {/* 🧩 7. AVANTAJE (Bento Grid Premium) */}
       <section className="why-bomba-section">
-        <div className="container">
+        <div className="why-container-premium">
           <div className="section-header-center">
             <span className="why-badge">Avantajele Tale</span>
             <h2>De ce suntem <span>alegerea numărul 1?</span></h2>
           </div>
+          
           <div className="why-bento-grid">
+            
+            {/* Cardul Vedetă (Mare) */}
             <div className="why-card card-delivery">
               <FiTruck className="why-icon" />
               <div className="why-big-number">24/48h</div>
-              <h3>Livrare Fulger</h3>
-              <p>Comenzile plasate până în ora 15:00 pleacă în aceeași zi.</p>
+              <div className="why-content">
+                <h3>Livrare Fulger</h3>
+                <p>Comenzile plasate până în ora 15:00 pleacă în aceeași zi. Ajung la tine înainte să îți dai seama.</p>
+              </div>
             </div>
+
+            {/* Cardurile Secundare */}
             <div className="why-card card-quality">
               <FiAward className="why-icon" />
-              <h3>Calitate Garantată</h3>
-              <p>Fiecare produs este testat riguros înainte de a ajunge în oferta noastră.</p>
+              <div className="why-content">
+                <h3>Calitate Garantată</h3>
+                <p>Fiecare produs este testat riguros înainte de a ajunge în oferta noastră.</p>
+              </div>
             </div>
+
             <div className="why-card card-support">
               <FiHeadphones className="why-icon" />
-              <h3>Suport VIP 24/7</h3>
-              <p>Echipa noastră răspunde instant. Aici nu vorbești cu roboți.</p>
+              <div className="why-content">
+                <h3>Suport VIP 24/7</h3>
+                <p>Echipa noastră răspunde instant. Aici nu vorbești cu roboți.</p>
+              </div>
             </div>
+
             <div className="why-card card-secure">
               <FiShield className="why-icon" />
-              <h3>Plăți Securizate</h3>
-              <p>Criptare SSL de ultimă generație pentru siguranța ta totală.</p>
+              <div className="why-content">
+                <h3>Plăți Securizate</h3>
+                <p>Criptare SSL de ultimă generație pentru siguranța banilor tăi.</p>
+              </div>
             </div>
+
           </div>
         </div>
       </section>
-
 
       {/* ⭐ 9. WALL OF LOVE (VIP REVIEWS) */}
       <section className="reviews-vip-section">
