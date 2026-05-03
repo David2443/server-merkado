@@ -139,35 +139,46 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 🏷️ NOU: 4. GRILA VIZUALĂ DE CATEGORII */}
+  {/* 🏷️ NOU: 4. GRILA VIZUALĂ DE CATEGORII (PREMIUM) */}
       <section className="categories-visual-section">
-        <div className="container">
+        <div className="cat-container-premium">
           <div className="section-header-center">
             <h2>Explorează pe <span>Categorii</span></h2>
-            <p>Alege direct ceea ce te interesează.</p>
+            <p>Găsește exact ceea ce cauți, rapid și ușor.</p>
           </div>
-          <div className="categories-grid" ref={categoriesRef}>
+          
+          <div className="categories-grid">
+            
+            {/* CATEGORIA 1: AUTO */}
             <div className="category-card" onClick={() => navigate('/shop?cat=Auto')}>
-              <img src="https://images.unsplash.com/photo-1600705722908-bab1e6190b05?w=500" alt="Auto" />
+              <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=800" alt="Auto & Moto" />
               <div className="cat-overlay">
+                <div className="cat-icon-glass"><FiTool /></div>
                 <h3>Auto & Moto</h3>
                 <span className="cat-link">Vezi Produsele &rarr;</span>
               </div>
             </div>
+
+            {/* CATEGORIA 2: CASĂ */}
             <div className="category-card" onClick={() => navigate('/shop?cat=Casa')}>
-              <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500" alt="Casa" />
+              <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" alt="Casă & Grădină" />
               <div className="cat-overlay">
+                <div className="cat-icon-glass"><FiHome /></div>
                 <h3>Casă & Grădină</h3>
                 <span className="cat-link">Vezi Produsele &rarr;</span>
               </div>
             </div>
+
+            {/* CATEGORIA 3: ELECTRONICE */}
             <div className="category-card" onClick={() => navigate('/shop?cat=Electronice')}>
-              <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500" alt="Electronice" />
+              <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&q=80&w=800" alt="Electronice" />
               <div className="cat-overlay">
+                <div className="cat-icon-glass"><FiMonitor /></div>
                 <h3>Electronice</h3>
                 <span className="cat-link">Vezi Produsele &rarr;</span>
               </div>
             </div>
+
           </div>
         </div>
       </section>
