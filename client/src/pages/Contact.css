@@ -1,246 +1,340 @@
 /* =========================================
-   --- PAGINA CONTACT PREMIUM (OPTIMIZATĂ) --- 
-   ========================================= */
+   VARIABILE PENTRU DESIGN PREMIUM
+========================================= */
+:root {
+  --contact-primary: #2563eb;       /* Albastru electric (brand) */
+  --contact-primary-hover: #1d4ed8;
+  --contact-bg: #f8fafc;            /* Fundal pagină foarte fin */
+  --contact-card: #ffffff;          /* Fundal formulare/carduri */
+  --contact-text: #0f172a;          /* Text principal (negru soft) */
+  --contact-muted: #64748b;         /* Text secundar (gri) */
+  --contact-border: #e2e8f0;        /* Margini fine */
+  --contact-error: #ef4444;         /* Roșu pentru erori */
+  --contact-success: #10b981;       /* Verde pentru succes */
+  --contact-radius: 16px;           /* Colțuri rotunjite moderne */
+  --contact-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+  --contact-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
 
+/* =========================================
+   STRUCTURA PRINCIPALĂ
+========================================= */
 .contact-page-wrapper {
-    font-family: 'Inter', sans-serif;
-    color: #0f172a;
-    background: #f8fafc;
-    min-height: 100vh;
-    padding-bottom: 100px; /* Mai mult spațiu jos pentru a nu "cădea" în footer */
+  background-color: var(--contact-bg);
+  min-height: 100vh;
+  padding: 4rem 1.5rem;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--contact-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* HERO SECTION - Mai aerisit */
 .contact-hero {
-    background: #ffffff;
-    text-align: center;
-    padding: 100px 20px 140px; /* Padding generos pentru a crea spațiu de plutire */
-    border-bottom: 1px solid #e2e8f0;
-}
-.contact-hero h1 { 
-    font-size: 3rem; 
-    font-weight: 900; 
-    margin-bottom: 20px; 
-    color: #0f172a; 
-    letter-spacing: -1px;
-}
-.contact-hero p { 
-    font-size: 1.15rem; 
-    color: #64748b; 
-    max-width: 650px; 
-    margin: 0 auto; 
-    line-height: 1.8; 
+  text-align: center;
+  margin-bottom: 4rem;
+  max-width: 600px;
 }
 
-/* MAIN GRID - Corecție poziționare */
+.contact-hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.contact-hero p {
+  font-size: 1.125rem;
+  color: var(--contact-muted);
+  line-height: 1.6;
+}
+
 .contact-main-container {
-    max-width: 1200px;
-    margin: -80px auto 0; /* Ridicăm containerul peste Hero cu un balans mai bun */
-    padding: 0 25px;
-    display: grid;
-    grid-template-columns: 1fr 1.6fr; /* Formularul primește mai mult spațiu */
-    gap: 50px; /* Spațiu mai mare între coloane */
-    position: relative;
-    z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  max-width: 1100px;
+  width: 100%;
 }
 
-/* CARDS (STÂNGA) - Aliniere la început */
+/* =========================================
+   CARDURILE DE INFORMAȚII (STÂNGA)
+========================================= */
 .contact-info-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    align-self: start; /* Previne întinderea cardurilor pe toată înălțimea coloanei */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .info-card {
-    background: white;
-    padding: 35px;
-    border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-    border: 1px solid #f1f5f9;
-    transition: all 0.3s ease;
-}
-.info-card:hover { 
-    transform: translateY(-5px); 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.08); 
-    border-color: #3b82f6;
+  background: var(--contact-card);
+  padding: 2rem;
+  border-radius: var(--contact-radius);
+  box-shadow: var(--contact-shadow);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.icon-wrapper { 
-    width: 60px; 
-    height: 60px; 
-    border-radius: 18px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-size: 1.8rem; 
-    margin-bottom: 20px; 
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--contact-shadow-hover);
 }
-.icon-wrapper.blue { background: #eff6ff; color: #3b82f6; }
-.icon-wrapper.green { background: #f0fdf4; color: #10b981; }
-.icon-wrapper.purple { background: #fdf4ff; color: #d946ef; }
 
-.info-card h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
-.info-card p { color: #64748b; font-size: 1rem; margin-bottom: 20px; line-height: 1.5; }
-.contact-link { font-weight: 800; font-size: 1.15rem; color: #0f172a; text-decoration: none; transition: 0.2s; }
-.contact-link:hover { color: #3b82f6; }
-.status-badge { background: #dcfce7; color: #166534; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; }
+.icon-wrapper {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  transition: transform 0.3s ease;
+}
 
-/* FORM (DREAPTA) - Mai solid și spațios */
+.info-card:hover .icon-wrapper {
+  transform: scale(1.1);
+}
+
+.icon-wrapper.blue {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--contact-primary);
+}
+
+.icon-wrapper.green {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--contact-success);
+}
+
+.info-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.contact-link {
+  color: var(--contact-muted);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.contact-link:hover {
+  color: var(--contact-primary);
+}
+
+/* =========================================
+   FORMULARUL (DREAPTA)
+========================================= */
 .contact-form-container {
-    background: white;
-    padding: 50px; /* Padding interior crescut pentru "Premium feel" */
-    border-radius: 32px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.06);
-    border: 1px solid #f1f5f9;
+  background: var(--contact-card);
+  padding: 3rem;
+  border-radius: var(--contact-radius);
+  box-shadow: var(--contact-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.form-header { margin-bottom: 40px; }
-.form-header h2 { font-size: 2rem; font-weight: 900; margin-bottom: 12px; }
-.form-header p { color: #64748b; font-size: 1.05rem; }
-
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-
-.input-group { margin-bottom: 25px; display: flex; flex-direction: column; }
-.input-group label { font-size: 0.95rem; font-weight: 700; color: #334155; margin-bottom: 10px; }
-.input-group input, .input-group select, .input-group textarea {
-    padding: 18px;
-    border: 2px solid #f1f5f9;
-    border-radius: 16px;
-    font-size: 1rem;
-    font-family: inherit;
-    transition: all 0.2s ease;
-    background: #f8fafc;
-}
-.input-group input:focus, .input-group select:focus, .input-group textarea:focus {
-    border-color: #3b82f6; 
-    background: white; 
-    outline: none; 
-    box-shadow: 0 0 0 5px rgba(59, 130, 246, 0.08);
+.premium-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.btn-send-message {
-    width: 100%;
-    padding: 20px;
-    background: #0f172a;
-    color: white;
-    border: none;
-    border-radius: 18px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    transition: 0.3s;
-    margin-top: 10px;
-}
-.btn-send-message:hover { background: #3b82f6; transform: translateY(-3px); box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3); }
-
-/* SUCCESS STATE */
-.success-message-box {
-    text-align: center;
-    padding: 80px 30px;
-    background: #f0fdf4;
-    border: 2px dashed #86efac;
-    border-radius: 24px;
-}
-.success-icon-large { font-size: 5rem; color: #10b981; margin-bottom: 25px; }
-
-/* RESPONSIVE PENTRU MOBIL */
-@media (max-width: 1024px) {
-    .contact-main-container { grid-template-columns: 1fr; margin-top: -50px; }
-    .contact-info-grid { flex-direction: row; flex-wrap: wrap; }
-    .info-card { flex: 1; min-width: 300px; }
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
 }
 
-@media (max-width: 768px) {
-    .contact-hero { padding: 80px 20px 100px; }
-    .contact-hero h1 { font-size: 2.2rem; }
-    .contact-info-grid { flex-direction: column; }
-    .form-row { grid-template-columns: 1fr; gap: 0; }
-    .contact-form-container { padding: 35px 20px; }
-}/* --- VALIDARE ȘI ERORI --- */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.input-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--contact-text);
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--contact-border);
+  border-radius: 10px;
+  font-size: 1rem;
+  color: var(--contact-text);
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+  outline: none;
+  border-color: var(--contact-primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.input-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* ERORI */
 .input-group.has-error input,
 .input-group.has-error select,
 .input-group.has-error textarea {
-    border-color: #ef4444 !important; /* Roșu de eroare */
-    background-color: #fffafb; /* O nuanță foarte slabă de roz */
+  border-color: var(--contact-error);
+  background: #fef2f2;
 }
 
-.input-group.has-error label {
-    color: #ef4444;
+.input-group.has-error input:focus,
+.input-group.has-error select:focus,
+.input-group.has-error textarea:focus {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
 
 .error-msg {
-    color: #ef4444;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-top: 6px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    animation: shake 0.4s ease-in-out;
+  font-size: 0.8rem;
+  color: var(--contact-error);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+  animation: slideIn 0.3s ease;
 }
 
-/* Animație de tremurat pentru eroare */
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+/* BUTON SUBMIT */
+.btn-send-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--contact-primary) 0%, #1e40af 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
 }
 
-/* --- REPARAȚII MOBIL (CRITICAL) --- */
-@media (max-width: 768px) {
-    .contact-page-wrapper {
-        padding-bottom: 50px;
-    }
+.btn-send-message:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+}
 
-    .contact-hero {
-        padding: 60px 20px 80px; /* Reducem padding-ul pe mobil */
-    }
+.btn-send-message:active:not(:disabled) {
+  transform: translateY(0);
+}
 
-    .contact-hero h1 {
-        font-size: 2rem;
-    }
+.btn-send-message:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: var(--contact-muted);
+  box-shadow: none;
+}
 
-    .contact-main-container {
-        margin-top: -40px; /* Mai puțină suprapunere pe mobil */
-        gap: 20px;
-        display: flex; /* Schimbăm grid în flex pentru control mai bun */
-        flex-direction: column;
-    }
+/* =========================================
+   MESAJ DE SUCCES (ANIMAT)
+========================================= */
+.success-message-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  height: 100%;
+}
 
-    .contact-info-grid {
-        order: 2; /* Punem cardurile SUB formular pe mobil pentru UX mai bun */
-        flex-direction: row;
-        gap: 15px;
-    }
+.success-icon-large {
+  font-size: 5rem;
+  color: var(--contact-success);
+  margin-bottom: 1.5rem;
+  animation: scalePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-    .info-card {
-        padding: 20px;
-        flex: 1;
-        min-width: 140px;
-        text-align: center;
-    }
+.success-message-box h3 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: var(--contact-text);
+}
 
-    .info-card h3 { font-size: 1rem; }
-    .contact-link { font-size: 0.9rem; }
+.success-message-box p {
+  color: var(--contact-muted);
+  font-size: 1.1rem;
+}
 
-    .contact-form-container {
-        order: 1; /* Formularul apare primul */
-        padding: 25px 20px;
-        border-radius: 20px;
-    }
+/* =========================================
+   ANIMAȚII
+========================================= */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    .form-row {
-        grid-template-columns: 1fr; /* Forțăm o singură coloană pe mobil */
-        gap: 0;
-    }
+@keyframes scalePop {
+  0% { transform: scale(0); opacity: 0; }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
 
-    .btn-send-message {
-        padding: 16px;
-        font-size: 1rem;
-    }
+.fade-in {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+/* =========================================
+   RESPONSIVE (TELEFOANE ȘI TABLETE)
+========================================= */
+@media (max-width: 900px) {
+  .contact-main-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .contact-info-grid {
+    flex-direction: row;
+  }
+  
+  .info-card {
+    flex: 1;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-page-wrapper {
+    padding: 2rem 1rem;
+  }
+
+  .contact-info-grid {
+    flex-direction: column;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .contact-form-container {
+    padding: 2rem 1.5rem;
+  }
 }
