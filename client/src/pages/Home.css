@@ -1201,17 +1201,14 @@
 
 @media (max-width: 768px) {
   .hero-video-wrapper {
-    max-width: 95%; /* Mărit de la 90% - acum ocupă aproape tot ecranul */
-    aspect-ratio: 4 / 5; /* Formă verticală ideală pentru telefon, îl face mai înalt! */
+    max-width: 95%; /* Păstrăm lățimea mare pe ecran */
+    aspect-ratio: 1 / 1; /* O readucem la formă pătrată - nici prea lungă, nici prea îngustă */
     border-radius: 16px;
     margin: 0 auto;
-    
-    /* Păstrăm și umbra pe mobil ca să iasă în evidență */
     box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(35, 171, 132, 0.15);
   }
   
   .main-hero-img {
-    /* Păstrăm zoom-ul pe interior și pe mobil ca să fim siguri că nu reapar dungile negre */
-    transform: scale(1.35); 
+    transform: scale(1.35); /* Menținem zoom-ul care ascunde marginile negre */
   }
 }
