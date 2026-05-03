@@ -233,66 +233,185 @@
   100% { transform: translateX(-50%); }
 }
 
-/* --- 4. CATEGORII VIZUALE --- */
+/* ==========================================
+   🌈 CATEGORIES VISUAL SECTION (STIL BOMBA)
+   ========================================== */
+
 .categories-visual-section {
-  padding: 100px 0;
-  background: #ffffff;
+  padding: 80px 0;
+  background-color: #F8FAFC; /* Fundal curat */
+  overflow: hidden;
 }
 
 .section-header-center {
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 50px;
 }
 
 .section-header-center h2 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 900;
-  color: #133E70;
+  color: #153A7A; /* Navy Merkado */
+  margin-bottom: 10px;
+  text-transform: uppercase;
   letter-spacing: -1px;
 }
 
-.section-header-center h2 span { color: #F05A28; }
-.section-header-center p { color: #64748b; font-size: 1.2rem; margin-top: 10px; }
+.section-header-center h2 span {
+  color: #FF5A00; /* Orange Merkado */
+  position: relative;
+}
 
+/* Liniuța de sub "Categorii" */
+.section-header-center h2 span::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #00A3FF; /* Blue Merkado */
+  border-radius: 2px;
+}
+
+.section-header-center p {
+  color: #64748B;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* --- GRILA DE CARDURI --- */
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 25px;
+  gap: 25px;
+  perspective: 1000px; /* Pregătim terenul pentru efecte 3D */
 }
 
 .category-card {
   position: relative;
+  height: 400px;
   border-radius: 24px;
   overflow: hidden;
-  aspect-ratio: 4/5;
   cursor: pointer;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(21, 58, 122, 0.1);
+  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .category-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
+/* Overlay-ul cu gradient (Esențial pentru lizibilitate) */
 .cat-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(19, 62, 112, 0.9) 0%, rgba(0,0,0,0) 60%);
+  background: linear-gradient(
+    to top,
+    rgba(21, 58, 122, 0.9) 0%,
+    rgba(21, 58, 122, 0.4) 40%,
+    transparent 100%
+  );
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 40px;
+  padding: 30px;
+  transition: all 0.4s ease;
 }
 
-.category-card:hover img { transform: scale(1.08); }
-.cat-overlay h3 { color: #fff; font-size: 2rem; font-weight: 900; margin-bottom: 10px; }
-.cat-link { color: #F05A28; font-weight: 800; font-size: 1.1rem; opacity: 0; transform: translateY(10px); transition: 0.3s; }
-.category-card:hover .cat-link { opacity: 1; transform: translateY(0); }
+.cat-overlay h3 {
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  transform: translateY(20px);
+  transition: transform 0.4s ease;
+}
+
+.cat-link {
+  color: #00A3FF;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease 0.1s; /* Mic delay pentru un efect fluid */
+}
+
+/* ==========================================
+   🔥 EFECTE DE HOVER (MAGIA)
+   ========================================== */
+
+.category-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(255, 90, 0, 0.2);
+}
+
+.category-card:hover img {
+  transform: scale(1.15); /* Imaginea se mărește în interior */
+}
+
+.category-card:hover .cat-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(255, 90, 0, 0.8) 0%, /* Se schimbă în portocaliu la hover! */
+    rgba(21, 58, 122, 0.5) 100%
+  );
+}
+
+.category-card:hover h3 {
+  transform: translateY(0);
+}
+
+.category-card:hover .cat-link {
+  opacity: 1;
+  transform: translateY(0);
+  color: white;
+}
+
+/* ==========================================
+   📱 RESPONSIVITATE (PENTRU TELEFON)
+   ========================================== */
+
+@media (max-width: 1024px) {
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .categories-visual-section {
+    padding: 50px 0;
+  }
+  
+  .categories-grid {
+    grid-template-columns: 1fr; /* O singură coloană pe mobil */
+    gap: 20px;
+  }
+  
+  .category-card {
+    height: 300px; /* Mai micuțe pe mobil */
+  }
+
+  .section-header-center h2 {
+    font-size: 2rem;
+  }
+
+  /* Pe mobil lăsăm link-ul mereu vizibil că nu avem hover */
+  .cat-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .cat-overlay h3 {
+    transform: translateY(0);
+    font-size: 1.5rem;
+  }
+}
 
 /* --- 5. PRODUSE PREMIUM (Slider) --- */
 .products-premium-section {
