@@ -1874,3 +1874,76 @@
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), bottom 0.4s ease;
   }
 }
+/* ==========================================
+   ⏳ 20. PREMIUM LOADING SCREEN (MERKADO)
+   ========================================== */
+
+.merkado-loader-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: var(--mk-bg);
+  animation: fadeInModal 0.3s ease;
+}
+
+.merkado-spinner-container {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+/* Inelul care se rotește cu culorile brandului */
+.merkado-spin-ring {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  border: 4px solid rgba(0, 163, 255, 0.1);
+  border-top-color: var(--mk-orange);
+  border-right-color: var(--mk-blue);
+  border-radius: 50%;
+  /* Folosim un cubic-bezier pentru o viteză care "prinde viteză și frânează", mult mai elegant decât un simplu 'linear' */
+  animation: spinPremium 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+}
+
+/* Litera M din interior care pulsează */
+.merkado-spin-logo {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--mk-navy);
+  font-family: 'Inter', sans-serif;
+  animation: pulseLogo 1.5s ease-in-out infinite;
+}
+
+.merkado-loader-text {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--mk-navy);
+  letter-spacing: 0.5px;
+  margin: 0;
+  animation: pulseText 1.5s ease-in-out infinite;
+}
+
+.merkado-loader-text span {
+  color: var(--mk-orange);
+}
+
+/* --- KEYFRAMES (Animațiile propriu-zise) --- */
+@keyframes spinPremium {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseLogo {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.85); opacity: 0.5; }
+}
+
+@keyframes pulseText {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}

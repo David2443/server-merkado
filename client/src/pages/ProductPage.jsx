@@ -403,8 +403,22 @@ const ProductPage = () => {
 
   // 🛑 6. LA FINAL DE TOT: RETURN-URILE DE LOADING ȘI PRODUS LIPSĂ
   // Acum React nu se mai supără, pentru că nu mai este niciun hook deasupra lor!
-  if (isLoading) return <div className="loading-screen">Se încarcă...</div>;
-  if (!produs) return <div className="loading-screen">Produsul nu a fost găsit.</div>;
+if (isLoading) return (
+    <div className="merkado-loader-wrapper">
+      <div className="merkado-spinner-container">
+        <div className="merkado-spin-ring"></div>
+        <div className="merkado-spin-logo">M</div>
+      </div>
+      <h3 className="merkado-loader-text">Pregătim oferta<span>...</span></h3>
+    </div>
+  );
+
+  if (!produs) return (
+    <div className="merkado-loader-wrapper">
+      <h3 className="merkado-loader-text" style={{color: '#EF4444'}}>Produsul nu a fost găsit 😕</h3>
+      <button onClick={() => navigate('/shop')} className="btn-red" style={{marginTop: '20px', padding: '10px 20px', fontSize: '1rem'}}>Înapoi la Magazin</button>
+    </div>
+  );
 
   const sectiuniActive = produs.sectiuniLanding?.length > 0 ? produs.sectiuniLanding : [
     {
