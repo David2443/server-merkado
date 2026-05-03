@@ -274,9 +274,9 @@ const actualizeazaStatus = async (id, statusNou) => {
       <div className="ac-header-bar">
         <div className="ac-header-left">
           <h1 className="ac-page-title">Gestionare Comenzi</h1>
-          <button className="ac-btn-new-order" onClick={() => openEditModal({ cantitate: 1, metodaPlata: 'Ramburs', tipLivrare: 'curier' }, 'creare')}>
-            <FiPlusSquare /> Comandă Nouă
-          </button>
+          <button className="ac-btn-new-order" onClick={() => openEditModal({ cantitate: 1, metodaPlata: 'Ramburs', tipLivrare: 'curier', sursa: 'Creată de Admin' }, 'creare')}>
+  <FiPlusSquare /> Comandă Nouă
+</button>
         </div>
         
         <div className="ac-header-right">
