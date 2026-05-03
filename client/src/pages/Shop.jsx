@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async'; // 🛡️ Importul pentru SEO
 import { FiSearch, FiFilter, FiChevronDown, FiStar, FiShoppingCart, FiHeart, FiEye } from 'react-icons/fi';
 import './Shop.css';
-import React from 'react';
+
 const Shop = () => {
   const navigate = useNavigate();
   const [produse, setProduse] = useState([]);
@@ -59,9 +60,42 @@ const Shop = () => {
     // Aici vine logica ta de Context/Redux pentru coș
   };
 
+  // 🚀 Pregătim datele pentru Schema.org (Google ItemList)
+  // Luăm doar primele 15 ca să nu încărcăm excesiv codul sursă pentru roboții Google
+  const schemaItemList = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": filteredProduse.slice(0, 15).map((produs, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "url": `${window.location.origin}/produs/${produs.slug || produs._id}`,
+      "name": produs.nume,
+      "image": produs.imaginePrincipala
+    }))
+  };
+
   return (
     <div className="shop-page-wrapper">
       
+      {/* 🚀 SEO BLOCK INCEPE AICI */}
+      <Helmet>
+        <title>Magazin MERKADO | Catalog Produse Premium & Oferte</title>
+        <meta name="description" content="Explorează catalogul MERKADO. Cele mai noi produse premium din categoriile Auto, Casă, Electronice și Sport la prețuri excelente. Livrare 24h!" />
+        <link rel="canonical" href={`${window.location.origin}/shop`} />
+        
+        {/* Open Graph pentru Share-uri pe rețele sociale */}
+        <meta property="og:title" content="Magazin MERKADO | Catalog Produse Premium" />
+        <meta property="og:description" content="Răsfoiește sute de produse cu livrare rapidă. Găsește exact ce ai nevoie la MERKADO." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${window.location.origin}/shop`} />
+        
+        {/* Injectăm lista de produse către Google */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schemaItemList)
+        }}></script>
+      </Helmet>
+      {/* 🚀 SEO BLOCK SE TERMINA AICI */}
+
       <section className="shop-hero">
         <div className="container">
           <h1>Catalog Produse</h1>
@@ -124,9 +158,14 @@ const Shop = () => {
                   onClick={() => navigate(`/produs/${produs.slug || produs._id}`)}
                 >
                   <div className="shop-card-img">
-                    <img src={produs.imaginePrincipala} alt={produs.nume} />
+                    {/* 🛡️ SEO FIX: loading="lazy" și Alt-uri descriptive */}
+                    <img 
+                      src={produs.imaginePrincipala} 
+                      alt={`Cumpără ${produs.nume} - Magazin Merkado`} 
+                      loading="lazy" 
+                    />
                     {produs.pretVechi && <div className="shop-badge">OFERTĂ</div>}
-                    <button className="shop-wishlist" onClick={(e) => e.stopPropagation()}>
+                    <button className="shop-wishlist" onClick={(e) => e.stopPropagation()} aria-label="Adaugă la favorite">
                       <FiHeart />
                     </button>
                   </div>
@@ -149,6 +188,7 @@ const Shop = () => {
                       <button 
                         className="shop-cart-btn" 
                         onClick={(e) => handleAddToCart(e, produs._id)}
+                        aria-label={`Adaugă ${produs.nume} în coș`}
                       >
                         <FiShoppingCart />
                       </button>
