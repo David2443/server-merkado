@@ -229,8 +229,7 @@ const trimiteInEawb = async (comanda) => {
       observations: "Comanda de pe site" // Poți adăuga note aici
     };
 
-const urlEawb = 'https://api.eawb.ro/v1/orders';
-
+const urlEawb = 'https://eawb.ro/api/v1/orders';
     const raspuns = await fetch(url, {
       method: 'POST',
       headers: {
@@ -571,7 +570,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     console.log("Trimitem către eAWB datele:", payloadEAWB);
 
     // 3. Facem cererea securizată către eAWB
-    const urlEawb = 'https://api.eawb.ro/api/v1/orders'; // Endpoint-ul de creare
+const urlEawb = 'https://eawb.ro/api/v1/orders';
     const raspunsEawb = await fetch(urlEawb, {
       method: 'POST',
       headers: {
