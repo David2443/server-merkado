@@ -23,17 +23,24 @@ const AdminComenzi = () => {
   const [toast, setToast] = useState({ visible: false, message: '', type: 'success' });
 
 // Funcția de apelare
+// Funcția de apelare REPARATĂ
 const genereazaAWB = async (idComanda) => {
-  // Un mic pop-up de confirmare să nu apeși din greșeală
   const confirmare = window.confirm("Ești sigur că vrei să generezi AWB-ul pentru această comandă?");
   if (!confirmare) return;
 
+  // 1. REPARAT: Extragem token-ul aici, ca să știe cine e adminul!
+  const token = localStorage.getItem('adminToken');
+
+  // 2. Pentru a folosi API_URL curat, trebuie definit (sau refolosit cel de jos)
+  const API_URL = import.meta.env.VITE_API_URL || 'https://numele-backendului-tau.onrender.com'; // Pune linkul real de render aici dacă nu ai .env
+
   try {
-    const response = await fetch(`http://localhost:5000/api/admin/comenzi/${idComanda}/awb`, {
+    // 3. REPARAT: Folosim API_URL în loc de localhost
+    const response = await fetch(`${API_URL}/api/admin/comenzi/${idComanda}/awb`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Tokenul tău din localStorage
+        'Authorization': `Bearer ${token}` 
       }
     });
 
@@ -41,8 +48,9 @@ const genereazaAWB = async (idComanda) => {
 
     if (response.ok && data.success) {
       alert(`✅ SUCCES! AWB-ul a fost generat: ${data.awb}`);
-      // AICI PUI FUNCȚIA CARE ÎȚI REÎNCARCĂ COMENZILE (ex: fetchComenzi() )
-      // ca să apară noul status imediat în tabel
+      
+      // 4. REPARAT: Așa dai refresh instant la tabel ca să apară pastila verde cu AWB!
+      fetchData(); 
     } else {
       alert(`❌ EROARE: ${data.eroare}`);
     }
@@ -375,21 +383,20 @@ const actualizeazaStatus = async (id, statusNou) => {
                     </td>
                   )}
 
-                  <td>
-        {!comanda.awb ? (
-          <button 
-            onClick={() => genereazaAWB(comanda._id)} 
-            className="btn-awb"
-            style={{ background: '#2563eb', color: 'white', padding: '8px 12px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
-          >
-            📦 Generează AWB
-          </button>
-        ) : (
-          <span className="badge-awb" style={{ background: '#22c55e', color: 'white', padding: '5px 10px', borderRadius: '5px' }}>
-            AWB: {comanda.awb}
-          </span>
-        )}
-      </td>
+                 <td>
+  {!item.awb ? (
+    <button 
+      onClick={() => genereazaAWB(item._id)} 
+      className="btn-awb-bomba"
+    >
+      📦 Generează AWB
+    </button>
+  ) : (
+    <span className="badge-awb-bomba">
+      ✅ AWB: {item.awb}
+    </span>
+  )}
+</td>
                   
                   <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938' }}>
                     {item.total || item.totalComanda} Lei
