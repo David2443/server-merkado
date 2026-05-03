@@ -968,3 +968,140 @@
     font-size: 0.95rem;
   }
 }
+
+/* ==========================================
+   💳 13. CHECKOUT - FORMULARE, STRIPE & EASYBOX
+   ========================================== */
+
+/* Butonul de ales Locker Easybox */
+.btn-select-locker {
+  width: 100%;
+  background: #F0F9FF;
+  color: var(--mk-blue);
+  border: 2px dashed #BAE6FD;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-select-locker:hover {
+  background: #E0F2FE;
+  border-color: var(--mk-blue);
+  transform: translateY(-2px);
+}
+
+/* Animație pentru Ecranul de Succes (Comandă Reușită) */
+.checkout-success {
+  animation: scaleInBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+@keyframes scaleInBounce {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================
+   🔒 ZONA DE PLATĂ STRIPE (Card)
+   ========================================== */
+.stripe-container-box {
+  background: white;
+  border: 2px solid #E2E8F0;
+  padding: 20px;
+  border-radius: 16px;
+  margin-top: 15px;
+  animation: fadeIn 0.4s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.stripe-element-container {
+  margin-bottom: 15px;
+}
+
+.stripe-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--mk-navy);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Cum arată caseta în care scrii efectiv cardul */
+.stripe-custom-input {
+  background: #F8FAFC !important;
+  border: 2px solid #E2E8F0 !important;
+  padding: 14px 16px !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Când dai click pe ea (Focus) */
+.stripe-custom-input.StripeElement--focus {
+  background: white !important;
+  border-color: var(--mk-blue) !important;
+  box-shadow: 0 0 0 4px rgba(0, 163, 255, 0.1) !important;
+}
+
+/* Dacă clientul bagă un card greșit */
+.stripe-custom-input.StripeElement--invalid {
+  border-color: var(--mk-red) !important;
+  background: #FEF2F2 !important;
+}
+
+.stripe-row {
+  display: flex;
+  gap: 15px;
+}
+
+.stripe-row .stripe-element-container {
+  flex: 1;
+}
+
+/* Caseta de eroare de la Stripe (Ex: Fonduri insuficiente) */
+.stripe-error-box {
+  background: #FEF2F2;
+  color: var(--mk-red);
+  padding: 12px 15px;
+  border-radius: 10px;
+  border-left: 4px solid var(--mk-red);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  animation: errorShake 0.4s ease-in-out; /* Efectul de cutremur */
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Ajustare inputuri text normale (Nume, Telefon) să se pupe cu Stripe-ul */
+.checkout-input {
+  width: 100%;
+  padding: 16px 20px;
+  background: #F8FAFC;
+  border: 2px solid #E2E8F0;
+  border-radius: 12px;
+  font-size: 16px; /* 16px OBLIGATORIU ca să nu dea iPhone-ul zoom! */
+  color: var(--mk-text);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.checkout-input::placeholder {
+  color: #94A3B8;
+}
