@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Nu vrem ca Google să indexeze coșul de cumpărături sau contul clientului
+Disallow: /checkout
+Disallow: /account
+
+# Aici punem adresa de la backend unde se generează sitemap-ul
+# Schimbă "merkado-backend.onrender.com" cu domeniul tău real de backend
+Sitemap: https://merkado-backend.onrender.com/sitemap.xml
