@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async'; // 🛡️ Importul magic pentru SEO
 import { 
   FiMonitor, FiHome, FiTool, FiShoppingCart, FiStar, FiHeart, FiShield, FiAward, 
   FiHeadphones, FiChevronLeft, FiChevronRight, FiTrendingUp, 
@@ -76,6 +77,56 @@ const Home = () => {
   return (
     <div className="general-ecom-wrapper">
       
+      {/* 🚀 SEO BLOCK HOMEPAGE START */}
+      <Helmet>
+        <title>MERKADO | Magazin Online Produse Premium & Oferte Exclusive</title>
+        <link rel="canonical" href={window.location.origin} />
+        <meta name="description" content="Descoperă universul MERKADO: selecții riguroase de produse premium, prețuri imbatabile, livrare fulger în 24h și plată 100% securizată. Cumpără acum!" />
+        
+        {/* Open Graph (Facebook/WhatsApp/Instagram) */}
+        <meta property="og:title" content="MERKADO | Tot ce îți dorești, într-un singur loc." />
+        <meta property="og:description" content="Profită de reducerile zilnice și livrarea rapidă la mii de produse. Experiență de shopping creată special pentru tine." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.origin} />
+        {/* Schimbă link-ul cu logo-ul tău real */}
+        <meta property="og:image" content="https://res.cloudinary.com/dfc83yl1q/image/upload/v1/logo_merkado.png" /> 
+        
+        {/* Date Structurate - Brand & Website */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": `${window.location.origin}/#organization`,
+                "name": "MERKADO",
+                "legalName": "DS RETAIL NETWORK SRL",
+                "url": window.location.origin,
+                "logo": "https://res.cloudinary.com/dfc83yl1q/image/upload/v1/logo_merkado.png",
+                "contactPoint": {
+                  "@type": "ContactPoint",
+                  "telephone": `+${numarTelefonSuport}`,
+                  "contactType": "customer service",
+                  "areaServed": "RO",
+                  "availableLanguage": "Romanian"
+                }
+              },
+              {
+                "@type": "WebSite",
+                "@id": `${window.location.origin}/#website`,
+                "url": window.location.origin,
+                "name": "MERKADO",
+                "description": "Magazin online de top din România cu produse premium.",
+                "publisher": {
+                  "@id": `${window.location.origin}/#organization`
+                }
+              }
+            ]
+          })
+        }}></script>
+      </Helmet>
+      {/* 🚀 SEO BLOCK HOMEPAGE END */}
+
       {/* 🚨 1. BARA DE PANICĂ */}
       <div className="top-panic-bar">
         <div className="panic-content">
@@ -104,14 +155,15 @@ const Home = () => {
       
       <div className="hero-actions-row">
      <button onClick={() => navigate('/shop')} className="btn-shop-mega" style={{ border: 'none', cursor: 'pointer' }}>
-          Explorează Magazinul <FiArrowRight />
-        </button>
+        Explorează Magazinul <FiArrowRight />
+      </button>
         
         <div className="hero-social-proof">
           <div className="avatars-group">
-            <img src="https://i.pravatar.cc/100?img=12" alt="user" />
-            <img src="https://i.pravatar.cc/100?img=45" alt="user" />
-            <img src="https://i.pravatar.cc/100?img=33" alt="user" />
+            {/* 🛡️ SEO FIX: Alt-uri relevante la imagini */}
+            <img src="https://i.pravatar.cc/100?img=12" alt="Client verificat Merkado" />
+            <img src="https://i.pravatar.cc/100?img=45" alt="Client fidel Merkado" />
+            <img src="https://i.pravatar.cc/100?img=33" alt="Cumpărător Merkado" />
             <div className="avatar-plus">+10k</div>
           </div>
           <div className="proof-text">
@@ -124,13 +176,12 @@ const Home = () => {
 
     <div className="hero-right">
       <div className="hero-image-composition">
-        {/* Imagine noua: Setup modern, curat, care sugerează calitate */}
-        
            <div className="hero-video-wrapper">
   <video 
     src="https://res.cloudinary.com/dfc83yl1q/video/upload/v1777818851/f_c_c_f_f_f_mp__u44zyo.mp4" 
     className="main-hero-img"
     autoPlay loop muted playsInline
+    aria-label="Prezentare video produse premium Merkado"
   >
   </video>
 </div>
@@ -184,7 +235,8 @@ const Home = () => {
             
             {/* CATEGORIA 1: AUTO */}
             <div className="category-card" onClick={() => navigate('/shop?cat=Auto')}>
-              <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=800" alt="Auto & Moto" />
+              {/* 🛡️ SEO FIX: Alt descriptiv */}
+              <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=800" alt="Produse și accesorii Auto & Moto Merkado" loading="lazy" />
               <div className="cat-overlay">
                 <div className="cat-icon-glass"><FiTool /></div>
                 <h3>Auto & Moto</h3>
@@ -194,7 +246,8 @@ const Home = () => {
 
             {/* CATEGORIA 2: CASĂ */}
             <div className="category-card" onClick={() => navigate('/shop?cat=Casa')}>
-              <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" alt="Casă & Grădină" />
+              {/* 🛡️ SEO FIX: Alt descriptiv */}
+              <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" alt="Decorațiuni și articole Casă & Grădină Merkado" loading="lazy" />
               <div className="cat-overlay">
                 <div className="cat-icon-glass"><FiHome /></div>
                 <h3>Casă & Grădină</h3>
@@ -204,7 +257,8 @@ const Home = () => {
 
             {/* CATEGORIA 3: ELECTRONICE */}
             <div className="category-card" onClick={() => navigate('/shop?cat=Electronice')}>
-              <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&q=80&w=800" alt="Electronice" />
+              {/* 🛡️ SEO FIX: Alt descriptiv */}
+              <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&q=80&w=800" alt="Electronice și gadgeturi premium Merkado" loading="lazy" />
               <div className="cat-overlay">
                 <div className="cat-icon-glass"><FiMonitor /></div>
                 <h3>Electronice</h3>
@@ -225,8 +279,8 @@ const Home = () => {
                <h2>Top Vânzări <span>Săptămâna Asta</span></h2>
             </div>
             <div className="slider-arrows-desktop">
-              <button onClick={() => scrollSlider(productsRef, 'left')} className="arrow-btn"><FiChevronLeft /></button>
-              <button onClick={() => scrollSlider(productsRef, 'right')} className="arrow-btn"><FiChevronRight /></button>
+              <button onClick={() => scrollSlider(productsRef, 'left')} className="arrow-btn" aria-label="Derulează stânga"><FiChevronLeft /></button>
+              <button onClick={() => scrollSlider(productsRef, 'right')} className="arrow-btn" aria-label="Derulează dreapta"><FiChevronRight /></button>
             </div>
           </div>
 
@@ -243,7 +297,7 @@ const Home = () => {
               produse.slice(0, 6).map(produs => (
                 <div key={produs._id} className="premium-card-scroll" onClick={() => navigate(`/produs/${produs._id}`)}>
                   <div className="premium-img-box">
-                    <img src={produs.imaginePrincipala || 'https://via.placeholder.com/300x300'} alt={produs.nume} loading="lazy" />
+                    <img src={produs.imaginePrincipala || 'https://via.placeholder.com/300x300'} alt={`Cumpără ${produs.nume} la ofertă pe Merkado`} loading="lazy" />
                     <div className="badge-discount">🔥 TOP</div>
                   </div>
                   <div className="premium-card-body">
@@ -253,7 +307,7 @@ const Home = () => {
                         <span className="price-new">{produs.pret} Lei</span>
                         {produs.pretVechi && <span className="price-old">{produs.pretVechi} Lei</span>}
                       </div>
-                      <button type="button" className="add-to-cart-mini" onClick={(e) => handleAddToCart(e, produs._id)}>
+                      <button type="button" className="add-to-cart-mini" onClick={(e) => handleAddToCart(e, produs._id)} aria-label={`Adaugă ${produs.nume} în coș`}>
                         <FiShoppingCart />
                       </button>
                     </div>
@@ -283,11 +337,10 @@ const Home = () => {
           </div>
           <div className="spotlight-visual">
              <div className="video-mockup-wrapper">
-                
-
-                  <video 
+                 <video 
   src="https://res.cloudinary.com/dfc83yl1q/video/upload/v1777818851/f_c_c_f_f_f_mp__u44zyo.mp4" 
- lt="Spotlight" className="spotlight-img"
+  className="spotlight-img"
+  aria-label="Video demonstrație produs vedetă"
   autoPlay 
   loop 
   muted 
@@ -359,8 +412,8 @@ const Home = () => {
               <h2>Peste 10.000 de <span>Clienți Fericiți</span></h2>
             </div>
             <div className="vip-slider-controls">
-              <button onClick={() => scrollSlider(reviewsRef, 'left')}><FiChevronLeft /></button>
-              <button onClick={() => scrollSlider(reviewsRef, 'right')}><FiChevronRight /></button>
+              <button onClick={() => scrollSlider(reviewsRef, 'left')} aria-label="Recenzii stânga"><FiChevronLeft /></button>
+              <button onClick={() => scrollSlider(reviewsRef, 'right')} aria-label="Recenzii dreapta"><FiChevronRight /></button>
             </div>
           </div>
           
@@ -378,7 +431,7 @@ const Home = () => {
                 </div>
                 <p className="vip-review-text">"{review.text}"</p>
                 <div className="vip-user-info">
-                  <img src={`https://i.pravatar.cc/150?img=${review.img}`} alt={review.name} />
+                  <img src={`https://i.pravatar.cc/150?img=${review.img}`} alt={`Recenzie ${review.name} - Merkado`} loading="lazy" />
                   <div>
                     <strong>{review.name}</strong>
                     <span>Cumpărător Verificat</span>
@@ -401,11 +454,7 @@ const Home = () => {
                </a>
             </div>
             <div className="faq-accordion-side">
-               {[
-                 { q: "Cât durează livrarea?", a: "Toate comenzile confirmate până în ora 15:00 sunt expediate în aceeași zi și ajung la tine în 24-48 de ore lucrătoare." },
-                 { q: "Pot returna produsul dacă nu îmi place?", a: "Absolut! Ai 14 zile la dispoziție să returnezi orice produs, fără întrebări suplimentare." },
-                 { q: "Oferiți garanție?", a: "Da, toate produsele noastre electronice beneficiază de 24 de luni garanție comercială." }
-               ].map((item, idx) => (
+               {faqData.map((item, idx) => (
                   <div key={idx} className={`faq-item ${activeFaq === idx ? 'active' : ''}`} onClick={() => toggleFaq(idx)}>
                      <div className="faq-question">
                         <h4>{item.q}</h4>
@@ -421,7 +470,7 @@ const Home = () => {
       </section>
 
       {/* 🛡️ 11. WhatsApp FLOAT */}
-      <a href={`https://wa.me/${numarTelefonSuport}`} target="_blank" rel="noreferrer" className="whatsapp-float-btn">
+      <a href={`https://wa.me/${numarTelefonSuport}`} target="_blank" rel="noreferrer" className="whatsapp-float-btn" aria-label="Contactează-ne pe WhatsApp">
         <div className="wa-tooltip">Ai o întrebare? Scrie-ne!</div>
         <FaWhatsapp className="wa-icon-bomba" />
       </a>
