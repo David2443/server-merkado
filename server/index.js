@@ -150,6 +150,55 @@ const server = http.createServer(app);
 
 // --- 2. MIDDLEWARES (Configurare obligatorie înainte de rute!) ---
 
+// ==========================================
+// 🔐 RUTA REPARATĂ: RECUPERARE PAROLĂ (RESEND)
+// ==========================================
+app.post('/api/auth/forgot-password', publicLimiter, async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // 1. Căutăm userul
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ eroare: "Nu există un cont cu acest email în baza noastră de date." });
+    }
+
+    // 2. Generăm un token de resetare (valabil 1 oră)
+    const resetToken = jwt.sign(
+      { id: user._id }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: '1h' }
+    );
+
+    // 3. Construim link-ul (Modifică dacă ai altă structură pe frontend)
+    const resetLink = `https://www.merkado.ro/reset-password/${resetToken}`;
+
+    // 4. Pregătim mail-ul
+    const subiect = "Recuperare Parolă Merkado 🔐";
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #eee; padding: 20px;">
+        <h2 style="color: #1a1a1a; text-align: center;">Recuperare Parolă</h2>
+        <p>Salut, <strong>${user.nume || 'Utilizator'}</strong>!</p>
+        <p>Am primit o cerere de resetare a parolei pentru contul tău Merkado. Apasă pe butonul de mai jos pentru a alege o parolă nouă. Link-ul este valabil 60 de minute.</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetLink}" style="background: #1a1a1a; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold;">RESETEAZĂ PAROLA</a>
+        </div>
+        <p style="font-size: 12px; color: #888;">Dacă nu ai solicitat tu acest lucru, poți ignora acest email în siguranță.</p>
+      </div>
+    `;
+
+    // 5. Trimitem prin Resend (Fără blocaje de porturi!)
+    console.log(`🔑 Generat link recuperare pentru: ${email}`);
+    trimiteEmail(email, subiect, htmlContent);
+
+    res.json({ success: true, mesaj: "Verifică email-ul pentru link-ul de resetare!" });
+
+  } catch (err) {
+    console.error("❌ Eroare la recuperare parolă:", err);
+    res.status(500).json({ eroare: "A apărut o problemă la server. Încearcă din nou mai târziu." });
+  }
+});
+
 // 🛡️ BUNCĂRUL ANTI-HACKERI (Securitate Globală)
 app.use(helmet()); 
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); 
