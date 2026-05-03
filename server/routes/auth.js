@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User'); 
+
+// 🚀 IMPORTĂM RESEND (Înlocuim Nodemailer-ul care făcea figuri)
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Aducem paznicul din folderul middleware
 const { protect } = require('../middleware/auth');
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const EMAIL_USER = process.env.EMAIL_USER;
-const EMAIL_PASS = process.env.EMAIL_PASS;
-const FRONTEND_URL = process.env.VITE_API_URL || "http://localhost:3000";
 
 // ==========================================
 // 1. REGISTER
@@ -72,7 +72,7 @@ router.get('/me', protect, async (req, res) => {
 });
 
 // ==========================================
-// 4. FORGOT PASSWORD (Trimitere Email)
+// 4. FORGOT PASSWORD (TRIMIS PRIN RESEND 🔥)
 // ==========================================
 router.post('/forgot-password', async (req, res) => {
     try {
@@ -84,50 +84,47 @@ router.post('/forgot-password', async (req, res) => {
             return res.status(200).json({ mesaj: "Dacă adresa este corectă, vei primi un email." });
         }
 
+        // Generăm token-ul de resetare
         const token = crypto.randomBytes(20).toString('hex');
         user.resetPasswordToken = token;
-        user.resetPasswordExpires = Date.now() + 3600000; // 1 oră
+        user.resetPasswordExpires = Date.now() + 3600000; // Valabil 1 oră
         await user.save();
 
-        const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true, 
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
-        });
-
-        // 🛡️ FIX 2: Aici trebuie să fie URL-ul aplicației tale React (Frontend), nu API-ul de Node.
-        // Asigură-te că în fișierul .env ai o variabilă gen FRONTEND_URL=https://merkado.ro
+        // Construim link-ul pentru Frontend
         const appUrl = process.env.FRONTEND_URL || "http://localhost:5173"; 
         const resetLink = `${appUrl}/reset-password/${token}`;
 
-        console.log("📧 Se încearcă trimiterea mail-ului către:", user.email);
+        console.log("📧 Se încearcă trimiterea mail-ului de resetare către:", user.email);
 
-        await transporter.sendMail({
-            to: user.email,
-            // 🛡️ FIX 1: Actualizare la Merkado!
-            from: `"Merkado" <${process.env.EMAIL_USER}>`,
+        // 🚀 Trimitem mailul prin RESEND (Bulletproof pe orice server)
+        const { data, error } = await resend.emails.send({
+            from: 'Merkado <comenzi@merkado.ro>', // Asigură-te că domeniul e verificat în Resend
+            to: [user.email],
             subject: 'Resetare Parolă Cont - Merkado',
             html: `
-                <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee;">
-                    <h2>Salut, ${user.nume}!</h2>
-                    <p>Ai cerut resetarea parolei pentru contul tău Merkado.</p>
-                    <p>Click pe butonul de mai jos pentru a alege o parolă nouă. Link-ul este valabil 1 oră.</p>
-                    <a href="${resetLink}" style="background: #1a1a1a; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Resetează Parola</a>
-                    <p style="margin-top: 20px; color: #666; font-size: 12px;">Dacă nu ai cerut tu asta, poți ignora acest email.</p>
+                <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; max-width: 500px; margin: auto;">
+                    <h2 style="color: #333;">Salut, ${user.nume}!</h2>
+                    <p style="color: #555; line-height: 1.5;">Ai cerut resetarea parolei pentru contul tău Merkado.</p>
+                    <p style="color: #555; line-height: 1.5;">Click pe butonul de mai jos pentru a alege o parolă nouă. Link-ul este valabil 1 oră.</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${resetLink}" style="background: #1a1a1a; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Resetează Parola</a>
+                    </div>
+                    <p style="margin-top: 20px; color: #999; font-size: 12px; border-top: 1px solid #eee; padding-top: 10px;">Dacă nu ai cerut tu asta, poți ignora acest email în siguranță.</p>
                 </div>
             `
         });
 
-        console.log("✅ Email trimis cu succes!");
+        if (error) {
+            console.error("❌ Eroare Resend la resetare parolă:", error);
+            return res.status(500).json({ eroare: "Nu am putut trimite email-ul. Încearcă din nou." });
+        }
+
+        console.log("✅ Email de resetare trimis cu succes!");
         res.status(200).json({ mesaj: "Email-ul de resetare a fost trimis!" });
 
     } catch (err) {
-        console.error("❌ EROARE CRITICĂ NODEMAILER:", err.message);
-        res.status(500).json({ eroare: "Eroare la trimiterea mailului pe server." });
+        console.error("❌ EROARE CRITICĂ FORGOT PASSWORD:", err.message);
+        res.status(500).json({ eroare: "Eroare internă la procesarea cererii." });
     }
 });
 
@@ -148,7 +145,7 @@ router.post('/reset-password/:token', async (req, res) => {
         user.resetPasswordExpires = undefined;
         
         await user.save();
-        res.status(200).json({ mesaj: "Parola a fost schimbată!" });
+        res.status(200).json({ mesaj: "Parola a fost schimbată cu succes!" });
     } catch (err) {
         res.status(500).json({ eroare: "Eroare la resetare." });
     }
@@ -166,7 +163,7 @@ router.put('/update', protect, async (req, res) => {
 
         if (nume) user.nume = nume;
         if (email) user.email = email;
-        if (parolaNoua) user.parola = parolaNoua; // Presupunem că Mongoose are hook-ul "pre-save" pentru hashing!
+        if (parolaNoua) user.parola = parolaNoua; 
 
         await user.save();
 
@@ -175,7 +172,6 @@ router.put('/update', protect, async (req, res) => {
             user: { nume: user.nume, email: user.email } 
         });
     } catch (err) {
-        // 🛡️ FIX 3: Prindem eroarea în care omul pune un email folosit deja de altcineva
         if (err.code === 11000) {
             return res.status(400).json({ eroare: "Această adresă de email aparține deja altui cont!" });
         }
