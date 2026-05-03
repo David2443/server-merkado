@@ -22,6 +22,35 @@ const AdminComenzi = () => {
   const [formData, setFormData] = useState({});
   const [toast, setToast] = useState({ visible: false, message: '', type: 'success' });
 
+// Funcția de apelare
+const genereazaAWB = async (idComanda) => {
+  // Un mic pop-up de confirmare să nu apeși din greșeală
+  const confirmare = window.confirm("Ești sigur că vrei să generezi AWB-ul pentru această comandă?");
+  if (!confirmare) return;
+
+  try {
+    const response = await fetch(`http://localhost:5000/api/admin/comenzi/${idComanda}/awb`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Tokenul tău din localStorage
+      }
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert(`✅ SUCCES! AWB-ul a fost generat: ${data.awb}`);
+      // AICI PUI FUNCȚIA CARE ÎȚI REÎNCARCĂ COMENZILE (ex: fetchComenzi() )
+      // ca să apară noul status imediat în tabel
+    } else {
+      alert(`❌ EROARE: ${data.eroare}`);
+    }
+  } catch (err) {
+    alert(`❌ Eroare de rețea: ${err.message}`);
+  }
+};
+
   // 🛡️ FIX 1: URL Dinamic
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -345,6 +374,22 @@ const actualizeazaStatus = async (id, statusNou) => {
                       </select>
                     </td>
                   )}
+
+                  <td>
+        {!comanda.awb ? (
+          <button 
+            onClick={() => genereazaAWB(comanda._id)} 
+            className="btn-awb"
+            style={{ background: '#2563eb', color: 'white', padding: '8px 12px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+          >
+            📦 Generează AWB
+          </button>
+        ) : (
+          <span className="badge-awb" style={{ background: '#22c55e', color: 'white', padding: '5px 10px', borderRadius: '5px' }}>
+            AWB: {comanda.awb}
+          </span>
+        )}
+      </td>
                   
                   <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938' }}>
                     {item.total || item.totalComanda} Lei
