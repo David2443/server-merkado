@@ -989,15 +989,16 @@ app.patch('/api/comenzi/:id/status', verifyAdmin, async (req, res) => {
 
     // ✅ CAZ: CONFIRMATĂ
     if (statusNou === 'Confirmată' || statusNou === 'Confirmata') {
-      const msg = `Comanda ta a fost confirmată și este în curs de procesare. Te vom anunța imediat ce este predată curierului!`;
+      const msg = `Comanda ta a fost confirmată și este în curs de procesare.`;
       const html = genereazaEmailSuperProduse("Comandă Confirmată ✅", msg, comandaActualizata, imagineProdus);
-      await trimiteEmail(email, "Comanda ta a fost confirmată! ✅", html);
+      // FĂRĂ AWAIT AICI! Dăm comanda și mergem mai departe.
+      trimiteEmail(email, "Comanda ta a fost confirmată! ✅", html); 
     }
     // 📦 CAZ: EXPEDIATĂ / TRIMISĂ
-    else if (statusNou === 'Trimisă' || statusNou === 'Expediată' || statusNou === 'Trimisa' || statusNou === 'Expediata') {
-      const msg = `Pachetul tău a fost predat curierului și este în drum spre tine. Pregătește-te de livrare!`;
+    else if (statusNou === 'Trimisă' || statusNou === 'Expediată') {
+      const msg = `Pachetul tău a fost predat curierului.`;
       const html = genereazaEmailSuperProduse("Comandă Expediată! 🚚", msg, comandaActualizata, imagineProdus);
-      await trimiteEmail(email, "Vești bune! Comanda ta este pe drum 🚚", html);
+      trimiteEmail(email, "Vești bune! Comanda ta este pe drum 🚚", html);
     }
     // 🏠 CAZ: LIVRATĂ
     else if (statusNou === 'Livrată' || statusNou === 'Livrata') {
