@@ -438,6 +438,35 @@ const ProductPage = () => {
   // 7. RĂSPUNSUL PRINCIPAL
   return (
     <div className="shopify-page-wrapper">
+
+{/* 🚀 BREADCRUMBS SCHEMA PENTRU GOOGLE */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Acasă",
+                "item": window.location.origin
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Magazin",
+                "item": `${window.location.origin}/shop`
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": produs.nume,
+                "item": window.location.href
+              }
+            ]
+          })
+        }}></script>
+
       {/* 🚀 SEO BLOCK INCEPE AICI */}
       <Helmet>
         <title>{produs.nume} | Preț Special & Livrare 24h | MERKADO</title>
@@ -482,6 +511,26 @@ const ProductPage = () => {
         <div className="marquee-text">
           <span>🔴 TRANSPORT GRATUIT PENTRU COMENZI PESTE 200 LEI 🔴 LIVRARE RAPIDĂ ÎN 24H 🔴 RETUR GARANTAT ÎN 14 ZILE 🔴 STOC LIMITAT 🔴</span>
         </div>
+      </div>
+
+{/* 🧭 FIRUL ARIADNEI (BREADCRUMBS VIZUAL) */}
+      <div className="container">
+        <nav className="merkado-breadcrumbs" aria-label="breadcrumb">
+          <Link to="/">Acasă</Link>
+          <span className="bc-separator">/</span>
+          <Link to="/shop">Magazin</Link>
+          
+          {/* Dacă produsul are categorie, o afișăm și pe aia */}
+          {produs.categorie && (
+            <>
+              <span className="bc-separator">/</span>
+              <Link to={`/shop?cat=${produs.categorie}`}>{produs.categorie}</Link>
+            </>
+          )}
+          
+          <span className="bc-separator">/</span>
+          <span className="bc-current" aria-current="page">{produs.nume}</span>
+        </nav>
       </div>
 
       <div className="shopify-container" style={{ paddingBottom: '100px' }}>
