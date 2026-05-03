@@ -22,11 +22,8 @@
    🏠 STRUCTURA PAGINII
 ========================================= */
 .ac-container {
-  background-color: var(--ac-bg-main);
-  min-height: 100vh;
-  padding: 2rem;
-  font-family: var(--font-family);
-  color: var(--ac-text-dark);
+  padding: 2rem 1rem; /* Reducem padding-ul lateral ca să câștigi spațiu */
+  max-width: 100%;
 }
 
 .ac-header-bar {
@@ -137,7 +134,8 @@
   border-radius: var(--ac-radius-lg);
   box-shadow: var(--ac-shadow-soft);
   border: 1px solid rgba(226, 232, 240, 0.8);
-  max-width: 1400px;
+  /* 🚀 Lărgim containerul la maxim */
+  max-width: 98%; 
   margin: 0 auto;
   overflow: hidden;
 }
@@ -606,5 +604,42 @@
   
   td[data-label="Acțiuni"]::before {
     display: none; /* Ascundem cuvântul "Acțiuni" ca să avem loc de butoane */
+  }
+}
+@media (max-width: 1024px) {
+  .ac-table tr {
+    /* 🚀 Facem cardul să ocupe tot ecranul telefonului */
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 1rem 0.8rem;
+    box-sizing: border-box;
+  }
+
+  .ac-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    /* 🚀 Scoatem padding-ul fix și lăsăm elementele să respire flexibil */
+    padding-left: 0; 
+    text-align: right;
+    gap: 10px; /* Spațiu între etichetă și conținut */
+  }
+
+  /* Statusul - îl facem să nu mai iasă din ecran */
+  .ac-status-select {
+    /* 🚀 Reducem lățimea minimă pe mobil ca să nu mai împingă marginea */
+    min-width: 120px !important; 
+    max-width: 160px;
+    font-size: 0.75rem !important;
+    padding: 0.4rem 1.8rem 0.4rem 0.6rem !important;
+  }
+
+  .ac-table td::before {
+    /* 🚀 Eticheta nu mai stă "absolute", ci face parte din flux */
+    position: static; 
+    width: auto;
+    margin-bottom: 0;
   }
 }
