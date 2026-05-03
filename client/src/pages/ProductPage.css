@@ -1722,3 +1722,74 @@
     margin-bottom: 20px;
   }
 }
+/* ==========================================
+   🚀 17. REPARAȚII: OPȚIUNI SUPLIMENTARE & ANULARE STICKY
+   ========================================== */
+
+/* --- Design Premium pentru Livrare Urgentă (Upsell) --- */
+.upsell-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #ffffff;
+  border: 2px solid #E2E8F0;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 700;
+  color: var(--mk-navy);
+  margin-top: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+}
+
+.upsell-label:hover {
+  border-color: var(--mk-blue);
+  background: #F0F9FF;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 163, 255, 0.1);
+}
+
+.upsell-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Stilizarea Checkbox-ului */
+.upsell-left input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--mk-orange); /* Se face portocaliu când îl bifezi */
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.upsell-left input[type="checkbox"]:active {
+  transform: scale(0.9);
+}
+
+.upsell-left svg {
+  font-size: 1.4rem;
+  color: var(--mk-blue);
+}
+
+.upsell-label span {
+  color: var(--mk-orange);
+  font-weight: 900;
+  font-size: 1.05rem;
+}
+
+/* --- OMOARĂ EFECTUL DE STICKY PE BUTONUL DE FINALIZARE --- */
+@media (max-width: 768px) {
+  .btn-finalize {
+    position: relative !important; /* Forțăm anularea sticky-ului care făcea probleme */
+    bottom: auto !important;
+    margin-top: 20px;
+    z-index: 10;
+  }
+  
+  .checkout-modal-wrapper {
+    padding: 25px 20px 40px 20px !important; /* Am scos padding-ul uriaș de jos care era lăsat pentru butonul sticky */
+  }
+}
