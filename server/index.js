@@ -229,7 +229,7 @@ const trimiteInEawb = async (comanda) => {
       observations: "Comanda de pe site" // Poți adăuga note aici
     };
 
-const urlEawb = 'https://eawb.ro/api/v1/orders';
+const urlEawb = 'https://eawb.ro/api/orders';
     const raspuns = await fetch(url, {
       method: 'POST',
       headers: {
@@ -570,15 +570,16 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     console.log("Trimitem către eAWB datele:", payloadEAWB);
 
     // 3. Facem cererea securizată către eAWB
-const urlEawb = 'https://eawb.ro/api/v1/orders';
+const urlEawb = 'https://eawb.ro/api/orders';
     const raspunsEawb = await fetch(urlEawb, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.EAWB_API_KEY}` // Cheia ta stă ascunsă aici
-      },
-      body: JSON.stringify(payloadEAWB)
-    });
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json', // 👈 Obligatoriu!
+    'Accept': 'application/json',       // 👈 Adaugă și linia asta, îi spune lui eAWB "Vreau JSON, nu HTML!"
+    'Authorization': `Bearer ${process.env.EAWB_API_KEY}`
+  },
+  body: JSON.stringify(payloadEAWB)
+});
 
     const dateAwb = await raspunsEawb.json();
 
