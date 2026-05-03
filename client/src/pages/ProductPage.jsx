@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { io } from 'socket.io-client';
 import { Helmet } from 'react-helmet-async';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Elements, CardNumberElement, CardExpiryElement, CardCvcElement,
   useStripe, useElements
