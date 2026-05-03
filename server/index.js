@@ -34,7 +34,7 @@ const trimiteEmail = async (to, subject, htmlContent) => {
   if (!to || !to.includes('@')) return;
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Merkado <onboarding@resend.dev>', // ⚠️ Vei schimba asta după ce verifici domeniul tău
+      from: 'Merkado <comenzi@merkado.ro>',
       to: [to],
       subject: subject,
       html: htmlContent,
