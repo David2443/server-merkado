@@ -1793,3 +1793,56 @@
     padding: 25px 20px 40px 20px !important; /* Am scos padding-ul uriaș de jos care era lăsat pentru butonul sticky */
   }
 }
+/* ==========================================
+   🌟 18. REDESIGN TOTAL CHECKOUT MODAL (Full-Screen Mobil / Centrat Desktop)
+   ========================================== */
+
+/* Centram fereastra perfect pe mijloc (Desktop) */
+.checkout-modal-overlay {
+  align-items: center !important; 
+  padding: 20px;
+}
+
+/* Redesign fereastră pe Desktop */
+.checkout-modal-wrapper {
+  max-height: 90vh !important;
+  border-radius: 24px !important; /* Rotunjit absolut peste tot */
+  animation: zoomInModal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+}
+
+@keyframes zoomInModal {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================
+   📱 MAGIA PENTRU MOBIL: FULL-SCREEN NATIV
+   ========================================== */
+@media (max-width: 768px) {
+  .checkout-modal-overlay {
+    padding: 0 !important; /* Scoatem spațiile de pe margini pe telefon */
+  }
+
+  .checkout-modal-wrapper {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important; /* Îl facem plat ca să acopere tot ecranul */
+    padding: 30px 20px 40px 20px !important;
+    animation: slideInFromRight 0.3s ease-out !important; /* Intră din dreapta, fin, ca pe iOS */
+  }
+
+  @keyframes slideInFromRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  /* Butonul de închidere pe varianta Full-Screen */
+  .close-checkout-absolute-btn {
+    top: 15px !important;
+    right: 15px !important;
+    background: #F8FAFC !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
+  }
+}
