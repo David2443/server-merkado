@@ -157,25 +157,46 @@ const AdminComenzi = () => {
   };
 const actualizeazaStatus = async (id, statusNou) => {
     const token = localStorage.getItem('adminToken');
+    console.log(`🚀 1. Începem! Trimitem noul status: [${statusNou}] pentru comanda: ${id}`);
     
-    // 🔥 1. OPTIMISTIC UPDATE: Schimbăm statusul vizual pe ecran instantaneu!
+    // 🔥 OPTIMISTIC UPDATE: Schimbăm vizual pe ecran INSTANT ca să nu mai dai F5!
     setComenzi(prevComenzi => 
       prevComenzi.map(c => c._id === id ? { ...c, status: statusNou } : c)
     );
 
     try {
+      console.log(`📡 2. Se apelează URL-ul: ${API_URL}/api/comenzi/${id}/status`);
+      
       const res = await fetch(`${API_URL}/api/comenzi/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status: statusNou })
       });
-      
-      if (res.status === 401 || res.status === 403) { delogareSilentioasa(); return; }
-      
-      // Lăsăm fetchData să ruleze în fundal silențios
+
+      console.log(`📥 3. Răspuns primit de la server. Cod de status: ${res.status}`);
+
+      if (res.status === 401 || res.status === 403) { 
+        console.error("❌ EROARE: Token-ul tău de admin a expirat sau este invalid. Te va deloga.");
+        delogareSilentioasa(); 
+        return; 
+      }
+
+      // Încercăm să citim ce a răspuns efectiv backend-ul
+      const data = await res.json();
+
+      if (res.ok) {
+        console.log("✅ 4. SUCCES! Comanda s-a modificat pe backend. Datele primite:", data);
+        showToast("Status actualizat cu succes!", "success");
+      } else {
+        console.error("❌ 4. BACKEND-UL A DAT EROARE:", data);
+        showToast("Eroare de la server: " + (data.eroare || "Eroare necunoscută"), "error");
+      }
+
+      // Lăsăm fetch-ul original să sincronizeze liniștit în fundal
       fetchData(); 
     } catch (err) { 
-      showToast("Eroare status!", "error"); 
+      console.error("❌ EROARE FATALĂ DE CONEXIUNE (A picat netul sau serverul e oprit):", err.message);
+      showToast("Eroare gravă de rețea!", "error"); 
     }
   };
 
