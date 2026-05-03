@@ -13,17 +13,21 @@
 }
 
 html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  
+  /* AICI AM FĂCUT MAGIA: */
+  overflow-x: clip; /* Folosim 'clip' în loc de 'hidden'. Taie marginile, dar nu blochează refresh-ul! */
+  overscroll-behavior-y: auto; /* Forțează telefonul să îți permită pull-to-refresh */
+}
   
   /* 🔥 FORȚĂM FONTUL PE TOT SITE-UL */
   font-family: 'Montserrat', system-ui, -apple-system, sans-serif !important;
   -webkit-font-smoothing: antialiased; /* Face textul mai fin pe ecrane Apple */
   -moz-osx-font-smoothing: grayscale;
   
-  /* Oprește „elasticul” alb de pe mobil la scroll up */
-  overscroll-behavior-y: none !important; 
   background-color: #ffffff;
   color: #1e293b; /* Un text ușor mai blând decât negrul pur, e mai elegant */
 }
