@@ -155,18 +155,28 @@ const AdminComenzi = () => {
       }
     } catch (err) { showToast("Eroare conexiune server", "error"); }
   };
-
-  const actualizeazaStatus = async (id, statusNou) => {
+const actualizeazaStatus = async (id, statusNou) => {
     const token = localStorage.getItem('adminToken');
+    
+    // 🔥 1. OPTIMISTIC UPDATE: Schimbăm statusul vizual pe ecran instantaneu!
+    setComenzi(prevComenzi => 
+      prevComenzi.map(c => c._id === id ? { ...c, status: statusNou } : c)
+    );
+
     try {
       const res = await fetch(`${API_URL}/api/comenzi/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status: statusNou })
       });
+      
       if (res.status === 401 || res.status === 403) { delogareSilentioasa(); return; }
-      fetchData();
-    } catch (err) { showToast("Eroare status!", "error"); }
+      
+      // Lăsăm fetchData să ruleze în fundal silențios
+      fetchData(); 
+    } catch (err) { 
+      showToast("Eroare status!", "error"); 
+    }
   };
 
   const executeAnulare = async () => {
