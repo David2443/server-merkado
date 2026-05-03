@@ -960,57 +960,64 @@ app.get('/api/recenzii/produs/:id', async (req, res) => {
   try { res.json(await Recenzie.find({ produsId: req.params.id, status: 'aprobata' }).sort({ createdAt: -1 })); } 
   catch (err) { res.status(500).json({ eroare: err.message }); }
 });
-
-// 🚀 RUTA ADMIN: ACTUALIZARE STATUS (Acum trimite email și pentru Confirmată)
+// 🚀 RUTA ADMIN: ACTUALIZARE STATUS (Fortificată pentru Email-uri)
 app.patch('/api/comenzi/:id/status', verifyAdmin, async (req, res) => {
-  try { 
-    // Folosim .populate('produsId') pentru a avea acces la imaginea produsului în email
-    const comandaActualizata = await Comanda.findByIdAndUpdate(
-      req.params.id, 
-      { status: req.body.status }, 
-      { returnDocument: 'after' }
-    ).populate('produsId'); 
+  try { 
+    // 🛡️ FIX 1: Folosim { new: true } în Mongoose pentru a returna 100% noile date
+    const comandaActualizata = await Comanda.findByIdAndUpdate(
+      req.params.id, 
+      { status: req.body.status }, 
+      { new: true } 
+    ).populate('produsId'); 
 
-    const statusNou = req.body.status;
-    const email = comandaActualizata.email;
-    const imagineProdus = comandaActualizata.produsId ? comandaActualizata.produsId.imaginePrincipala : null;
-
-    if (!email) return res.json(comandaActualizata); // Dacă n-are email, doar actualizăm în DB și gata
-
-    // ✅ CAZ NOU: CONFIRMATĂ (Acesta lipsea!)
-    if (statusNou === 'Confirmată' || statusNou === 'Confirmata') {
-      const msg = `Comanda ta a fost confirmată și este în curs de procesare. Te vom anunța imediat ce este predată curierului!`;
-      const html = genereazaEmailSuperProduse("Comandă Confirmată ✅", msg, comandaActualizata, imagineProdus);
-      await trimiteEmail(email, "Comanda ta a fost confirmată! ✅", html);
+    if (!comandaActualizata) {
+      return res.status(404).json({ eroare: "Comanda nu a fost găsită" });
     }
 
-    // 📦 CAZ 1: EXPEDIATĂ / TRIMISĂ
-    if (statusNou === 'Trimisă' || statusNou === 'Expediată' || statusNou === 'Trimisa' || statusNou === 'Expediata') {
-      const msg = `Pachetul tău a fost predat curierului și este în drum spre tine. Pregătește-te de livrare!`;
-      const html = genereazaEmailSuperProduse("Comandă Expediată! 🚚", msg, comandaActualizata, imagineProdus);
-      await trimiteEmail(email, "Vești bune! Comanda ta este pe drum 🚚", html);
+    const statusNou = req.body.status;
+    const email = comandaActualizata.email;
+    const imagineProdus = comandaActualizata.produsId ? comandaActualizata.produsId.imaginePrincipala : null;
+
+    // 🛡️ FIX 2: Afișăm în terminal ca să vedem clar pe server ce se întâmplă
+    console.log(`[Admin] Se schimbă comanda ${comandaActualizata._id.toString().slice(-6)} în "${statusNou}". Email client: ${email || 'LIPSĂ'}`);
+
+    // Dacă n-are email sau e pus la mișto, doar actualizăm în DB și gata
+    if (!email || !email.includes('@')) {
+      console.log('⚠️ Fără email valid. Se salvează doar statusul în baza de date.');
+      return res.json(comandaActualizata); 
     }
 
-    // 🏠 CAZ 2: LIVRATĂ
-    if (statusNou === 'Livrată' || statusNou === 'Livrata') {
-      const msg = `Comanda ta a fost marcată ca livrată. Sperăm să te bucuri de produs! Nu ezita să ne lași o recenzie pe site dacă ești mulțumit de achiziție.`;
-      const html = genereazaEmailSuperProduse("Comandă Livrată cu succes! 📦", msg, comandaActualizata, imagineProdus);
-      await trimiteEmail(email, "Comanda ta a ajuns! 📦", html);
-    }
+    // ✅ CAZ: CONFIRMATĂ
+    if (statusNou === 'Confirmată' || statusNou === 'Confirmata') {
+      const msg = `Comanda ta a fost confirmată și este în curs de procesare. Te vom anunța imediat ce este predată curierului!`;
+      const html = genereazaEmailSuperProduse("Comandă Confirmată ✅", msg, comandaActualizata, imagineProdus);
+      await trimiteEmail(email, "Comanda ta a fost confirmată! ✅", html);
+    }
+    // 📦 CAZ: EXPEDIATĂ / TRIMISĂ
+    else if (statusNou === 'Trimisă' || statusNou === 'Expediată' || statusNou === 'Trimisa' || statusNou === 'Expediata') {
+      const msg = `Pachetul tău a fost predat curierului și este în drum spre tine. Pregătește-te de livrare!`;
+      const html = genereazaEmailSuperProduse("Comandă Expediată! 🚚", msg, comandaActualizata, imagineProdus);
+      await trimiteEmail(email, "Vești bune! Comanda ta este pe drum 🚚", html);
+    }
+    // 🏠 CAZ: LIVRATĂ
+    else if (statusNou === 'Livrată' || statusNou === 'Livrata') {
+      const msg = `Comanda ta a fost marcată ca livrată. Sperăm să te bucuri de produs! Nu ezita să ne lași o recenzie pe site dacă ești mulțumit de achiziție.`;
+      const html = genereazaEmailSuperProduse("Comandă Livrată cu succes! 📦", msg, comandaActualizata, imagineProdus);
+      await trimiteEmail(email, "Comanda ta a ajuns! 📦", html);
+    }
+    // ❌ CAZ: ANULATĂ / RETURNATĂ
+    else if (statusNou === 'Anulată' || statusNou === 'Returnată' || statusNou === 'Anulata' || statusNou === 'Returnata') {
+      const msg = `Acest mesaj este o notificare pentru a te anunța că statusul comenzii tale a fost modificat în <strong>${statusNou}</strong>. Dacă ai întrebări, te rugăm să ne contactezi telefonic.`;
+      const html = genereazaEmailSuperProduse(`Comandă ${statusNou}`, msg, comandaActualizata, imagineProdus);
+      await trimiteEmail(email, `Actualizare Comandă: ${statusNou}`, html);
+    }
 
-    // ❌ CAZ 3: ANULATĂ / RETURNATĂ
-    if (statusNou === 'Anulată' || statusNou === 'Returnată' || statusNou === 'Anulata' || statusNou === 'Returnata') {
-      const msg = `Acest mesaj este o notificare pentru a te anunța că statusul comenzii tale a fost modificat în <strong>${statusNou}</strong>. Dacă ai întrebări, te rugăm să ne contactezi telefonic.`;
-      const html = genereazaEmailSuperProduse(`Comandă ${statusNou}`, msg, comandaActualizata, imagineProdus);
-      await trimiteEmail(email, `Actualizare Comandă: ${statusNou}`, html);
-    }
-
-    res.json(comandaActualizata); 
-  } 
-  catch (err) { 
-    console.error("Eroare update status:", err);
-    res.status(500).json({ eroare: err.message }); 
-  }
+    res.json(comandaActualizata); 
+  } 
+  catch (err) { 
+    console.error("❌ Eroare update status:", err);
+    res.status(500).json({ eroare: err.message }); 
+  }
 });
 
 app.delete('/api/comenzi/:id', verifyAdmin, async (req, res) => {
