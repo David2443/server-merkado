@@ -332,7 +332,7 @@ const actualizeazaStatus = async (id, statusNou) => {
               </tr>
             </thead>
             <tbody>
-              {listaFiltrata.map((item) => (
+             {listaFiltrata.map((comanda) => (
                 <tr key={item._id} className={item.status === 'Anulată' ? 'ac-row-cancelled' : ''}>
                   <td data-label="Dată">
                     {new Date(item.createdAt || item.updatedAt).toLocaleDateString('ro-RO')}
