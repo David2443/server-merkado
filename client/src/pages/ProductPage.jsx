@@ -720,24 +720,7 @@ const ProductPage = () => {
             ))}
           </div>
 
-<div className="stele-container" style={{ display: 'flex', gap: '5px', marginBottom: '15px' }}>
-  {[1, 2, 3, 4, 5].map((starIndex) => (
-    <span
-      key={starIndex}
-      onClick={() => setRating(starIndex)}
-      onMouseEnter={() => setHoverRating(starIndex)}
-      onMouseLeave={() => setHoverRating(0)}
-      style={{
-        cursor: 'pointer',
-        fontSize: '30px',
-        color: starIndex <= (hoverRating || rating) ? '#ffc107' : '#e4e5e9', // Galben pentru bifate, gri pentru restul
-        transition: 'color 0.2s'
-      }}
-    >
-      ★
-    </span>
-  ))}
-</div>
+
 
          <div className="add-review-box">
             <h3>Părerea ta contează!</h3>
