@@ -1622,3 +1622,103 @@
     z-index: 100;
   }
 }
+/* ==========================================
+   🚚 15. ACORDEON (Informații Transport)
+   ========================================== */
+
+.accordion-wrap {
+  background: white;
+  border: 2px solid #E2E8F0;
+  border-radius: 16px;
+  margin-bottom: 25px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.accordion-wrap:hover {
+  border-color: var(--mk-blue);
+  box-shadow: 0 8px 20px rgba(0, 163, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Titlul pe care dai click */
+.acc-header {
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--mk-navy);
+  font-size: 1.05rem;
+  transition: background 0.3s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent; /* Scoate flash-ul urât de pe butoanele de telefon */
+}
+
+.acc-header:active {
+  background: #F8FAFC;
+}
+
+.acc-header span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.3px;
+}
+
+/* Săgeata din dreapta (Chevron) */
+.acc-header svg {
+  font-size: 1.4rem;
+  color: var(--mk-gray);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.accordion-wrap:hover .acc-header svg {
+  color: var(--mk-blue);
+}
+
+/* Textul care apare când deschizi acordeonul */
+.acc-content {
+  margin: 0 20px 20px 20px;
+  padding: 16px 20px;
+  background: #F0F9FF; /* Un albastru extrem de deschis, odihnitor */
+  border-radius: 12px;
+  border-left: 4px solid var(--mk-blue); /* Linia oficială din stânga */
+  color: var(--mk-navy);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  font-weight: 600;
+  animation: slideDownAcc 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top center;
+}
+
+/* Animația de glisare a textului */
+@keyframes slideDownAcc {
+  from { 
+    opacity: 0; 
+    transform: scaleY(0.95) translateY(-10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scaleY(1) translateY(0); 
+  }
+}
+/* ==========================================
+   🔄 16. SUMAR COMANDĂ LA FINAL (Dedesubtul formularelor)
+   ========================================== */
+
+/* Pentru ecrane mici (Telefon / Tabletă) îl trimitem la final */
+@media (max-width: 768px) {
+  .checkout-main-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .checkout-summary-side {
+    order: 2 !important; /* Magia aici: îl forțăm să stea DUPĂ formular! */
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+}
