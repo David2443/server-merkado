@@ -1,5 +1,4 @@
 import React, { useState, useEffect,useRef} from 'react';
-
 import { useParams, useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { io } from 'socket.io-client'; 
@@ -117,10 +116,11 @@ const StripePaymentForm = ({ total, onPaymentSuccess, dateClient, validateForm, 
     </form>
   );
 };
-
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  
+  // 1. TOATE HOOK-URILE DE STATE
   const [optiuniTransport, setOptiuniTransport] = useState([]);
   const [loadingComanda, setLoadingComanda] = useState(false);
   const [loadingReview, setLoadingReview] = useState(false);
@@ -129,29 +129,33 @@ const ProductPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [transportDeschis, setTransportDeschis] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
+  
+  // 2. HOOK-URILE REF
   const fbSectionRef = useRef(null);
+  
+  // Mai multe state-uri...
   const [formRecenzie, setFormRecenzie] = useState({ numeClient: '', text: '', rating: 5 });
   const [mesajForm, setMesajForm] = useState('');
-
   const [vizitatoriLive, setVizitatoriLive] = useState(14);
   const [timp, setTimp] = useState({ ore: 0, minute: 7, secunde: 43 });
-  
   const [salesPopup, setSalesPopup] = useState({ vizibil: false, nume: '', timp: '' });
+  
+  // Fake data
   const numeFake = ['Andrei M.', 'Daniel P.', 'Marius T.', 'Florin V.'];
   const timpiFake = ['chiar acum', 'acum 2 minute', 'acum 5 minute'];
 
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [comandaTrimisa, setComandaTrimisa] = useState(false);
-  
   const [pachet, setPachet] = useState({ qty: 1, pret: 69 }); 
   const [extra, setExtra] = useState({ livrare: 0, cadou: 0, asigurare: 0 });
   const [dateClient, setDateClient] = useState({ nume: '', email: '', telefon: '', adresa: '', localitate: '', judet: '' });
-  
   const [metodaPlata, setMetodaPlata] = useState('cash'); 
   const [tipLivrare, setTipLivrare] = useState('curier'); 
   const [lockerSelectat, setLockerSelectat] = useState(null);
   const [errors, setErrors] = useState({});
+  const [socketClient, setSocketClient] = useState(null);
 
+  // 3. VARIABILE CALCULATE DIN STATE
   const metodaCurenta = optiuniTransport.find(m => m.tip === tipLivrare);
   const transportBase = metodaCurenta ? Number(metodaCurenta.pret) : 19; 
   const subtotal = Number(pachet.pret || 0) + Number(extra.livrare || 0) + Number(extra.cadou || 0) + Number(extra.asigurare || 0) + transportBase;
@@ -161,12 +165,12 @@ const ProductPage = () => {
   const pretCurier = optiuniTransport.find(m => m.tip === 'curier')?.pret || 19;
   const pretLocker = optiuniTransport.find(m => m.tip === 'locker')?.pret || 14.99;
 
-  const [socketClient, setSocketClient] = useState(null);
+  // 4. TOATE USEEFFECT-URILE (Laolaltă)
 
-  // 🛡️ FIX
+  // 4.a) Socket.IO Connection
   useEffect(() => {
     const conexiuneNoua = io(API_URL, {
-      transports: ['websocket', 'polling'] // 👈 Linia asta e vitală!
+      transports: ['websocket', 'polling']
     });
     setSocketClient(conexiuneNoua);
 
@@ -180,10 +184,9 @@ const ProductPage = () => {
     };
   }, []);
 
-  // 🛡️ FIX 3: Reducem spam-ul de emitere Socket.io
+  // 4.b) Debounce Typed Events
   useEffect(() => {
     if (socketClient && isCheckoutOpen && dateClient.nume.length > 2) {
-      // Un mic debounce intern ca să nu trimită la absolut fiecare literă instant
       const timer = setTimeout(() => {
         socketClient.emit('client_typing', {
           nume: dateClient.nume,
@@ -196,6 +199,20 @@ const ProductPage = () => {
     }
   }, [dateClient.nume, dateClient.telefon, totalCheckout, pachet.qty, isCheckoutOpen, produs?.nume, socketClient]);
 
+  // 4.c) Scroll Listener
+  useEffect(() => {
+    const handleScroll = () => {
+      if (fbSectionRef.current) {
+        setShowStickyBar(window.scrollY > (fbSectionRef.current.offsetTop - window.innerHeight / 2));
+      } else {
+        setShowStickyBar(window.scrollY > 800);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 4.d) Data Fetching & Timers
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -238,20 +255,6 @@ const ProductPage = () => {
       });
     }, 1000);
 
-useEffect(() => {
-    const handleScroll = () => {
-      // Dacă există secțiunea de Facebook pe pagină, măsurăm distanța ei
-      if (fbSectionRef.current) {
-        // Butonul apare doar după ce am dat scroll dincolo de marginea de sus a secțiunii Facebook
-        setShowStickyBar(window.scrollY > (fbSectionRef.current.offsetTop - window.innerHeight / 2));
-      } else {
-        setShowStickyBar(window.scrollY > 800);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
     const popupInterval = setInterval(() => {
       setSalesPopup({ 
         vizibil: true, 
@@ -261,9 +264,13 @@ useEffect(() => {
       setTimeout(() => setSalesPopup(prev => ({ ...prev, vizibil: false })), 5000);
     }, 18000);
 
-   
+    return () => {
+      clearInterval(intervalTimp);
+      clearInterval(popupInterval);
+    };
   }, [id]);
 
+  // 4.e) Abandoned Cart Silently Update
   useEffect(() => {
     if (dateClient.telefon.length >= 10 && dateClient.nume.length >= 3) {
       const salvareCos = setTimeout(() => {
@@ -282,13 +289,14 @@ useEffect(() => {
     }
   }, [dateClient.telefon, dateClient.nume, totalCheckout]);
 
+  // 5. METODE ȘI LOGICĂ (Formulare, Validări)
   const renderStele = (rating, interactive = false) => {
     return [...Array(5)].map((_, i) => (
       <FiStar key={i} className={`star-icon ${i < rating ? 'filled' : ''} ${interactive ? 'interactive' : ''}`} onClick={() => interactive && setFormRecenzie({...formRecenzie, rating: i + 1})} />
     ));
   };
 
- const trimiteRecenzie = async (e) => {
+  const trimiteRecenzie = async (e) => {
     e.preventDefault();
     if(!formRecenzie.numeClient || !formRecenzie.text) return setMesajForm('Completează toate câmpurile!');
     
@@ -393,6 +401,8 @@ useEffect(() => {
     setErrors({...errors, locker: null});
   };
 
+  // 🛑 6. LA FINAL DE TOT: RETURN-URILE DE LOADING ȘI PRODUS LIPSĂ
+  // Acum React nu se mai supără, pentru că nu mai este niciun hook deasupra lor!
   if (isLoading) return <div className="loading-screen">Se încarcă...</div>;
   if (!produs) return <div className="loading-screen">Produsul nu a fost găsit.</div>;
 
@@ -412,6 +422,7 @@ useEffect(() => {
 
   const metaDescription = produs.sectiuniLanding?.[0]?.text || `Cumpără acum ${produs.nume} la cel mai bun preț. Livrare rapidă și plată ramburs.`;
 
+  // 7. RĂSPUNSUL PRINCIPAL
   return (
     <div className="shopify-page-wrapper">
       <Helmet>
