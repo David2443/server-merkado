@@ -74,52 +74,69 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 🚀 2. HERO SECTION (Split Layout) */}
-      <section className="hero-split-section">
-        <div className="container hero-split-grid">
-          <div className="hero-left">
-            <div className="badge-new-collection">
-              <FiTrendingUp /> Colecția Premium 2026
-            </div>
-            <h1 className="hero-mega-title">
-              Cumpărături inteligente.<br /><span>Prețuri corecte.</span>
-            </h1>
-            <p className="hero-mega-desc">
-              Am adus la un loc cele mai dorite produse. De la electronice de top până la accesorii auto, toate cu livrare rapidă.
-            </p>
-            <div className="hero-actions-row">
-              <a href="#produse-noi" className="btn-shop-mega">Explorează Oferta</a>
-              <div className="hero-social-proof">
-                <div className="avatars-group">
-                  <img src="https://i.pravatar.cc/100?img=1" alt="user" />
-                  <img src="https://i.pravatar.cc/100?img=2" alt="user" />
-                  <img src="https://i.pravatar.cc/100?img=3" alt="user" />
-                </div>
-                <div className="proof-text">
-                  <div className="stars-ecom"><FiStar/><FiStar/><FiStar/><FiStar/><FiStar/></div>
-                  <span>10.000+ clienți</span>
-                </div>
-              </div>
-            </div>
+    {/* 🚀 2. HERO SECTION (MERKADO ELITE LAYOUT) */}
+<section className="hero-split-section">
+  <div className="container hero-split-grid">
+    <div className="hero-left">
+      <div className="badge-exclusive">
+        <FiTrendingUp /> <span>CALITATE PREMIUM GARANTATĂ</span>
+      </div>
+      <h1 className="hero-mega-title">
+        Tot ce îți dorești,<br />
+        <span>Într-un singur loc.</span>
+      </h1>
+      <p className="hero-mega-desc">
+        Descoperă universul MERKADO: selecții riguroase de produse, prețuri imbatabile și o experiență de shopping creată special pentru tine. 
+      </p>
+      
+      <div className="hero-actions-row">
+        <a href="#produse" className="btn-shop-mega">
+          Explorează Magazinul <FiArrowRight />
+        </a>
+        
+        <div className="hero-social-proof">
+          <div className="avatars-group">
+            <img src="https://i.pravatar.cc/100?img=12" alt="user" />
+            <img src="https://i.pravatar.cc/100?img=45" alt="user" />
+            <img src="https://i.pravatar.cc/100?img=33" alt="user" />
+            <div className="avatar-plus">+10k</div>
           </div>
-          <div className="hero-right">
-            <div className="hero-image-composition">
-              <img 
-                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop" 
-                alt="Produse Premium" 
-                className="main-hero-img"
-              />
-              <div className="floating-glass-card">
-                <div className="glass-icon">🏆</div>
-                <div>
-                  <strong>Produsul Anului</strong>
-                  <p>Ales de clienți</p>
-                </div>
-              </div>
-            </div>
+          <div className="proof-text">
+            <div className="stars-ecom"><FiStar/><FiStar/><FiStar/><FiStar/><FiStar/></div>
+            <span>Clienți Fericiți</span>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+
+    <div className="hero-right">
+      <div className="hero-image-composition">
+        {/* Imagine noua: Setup modern, curat, care sugerează calitate */}
+        <img 
+          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop" 
+          alt="Premium Gadget Merkado" 
+          className="main-hero-img"
+        />
+        
+        {/* Card plutitor nou: LIVRARE FULGER */}
+        <div className="floating-benefit-card">
+          <div className="benefit-icon-circle">
+            <FiTruck />
+          </div>
+          <div className="benefit-info">
+            <strong>Livrare Fulger</strong>
+            <p>24h în toată țara</p>
+          </div>
+        </div>
+
+        {/* Al doilea element: Mesaj de încredere */}
+        <div className="trust-mini-tag">
+          <FiShield /> Plată 100% Securizată
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* 🏁 3. BANDA DE AUTORITATE */}
       <div className="authority-band-section">
