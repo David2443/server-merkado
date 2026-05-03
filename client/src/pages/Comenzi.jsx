@@ -138,47 +138,48 @@ const genereazaAWB = async (idComanda) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
- const handleSave = async () => {
+const handleSave = async () => {
     const token = localStorage.getItem('adminToken');
     const isCreare = editModal.type === 'creare';
     
     const method = isCreare ? 'POST' : 'PUT';
-    
-    // 💡 FIX: Am corectat URL-ul pentru comanda nouă adăugând "/noua" la final
     const endpoint = isCreare 
       ? `${API_URL}/api/comenzi/noua` 
       : (editModal.type === 'comanda' 
           ? `${API_URL}/api/comenzi/${formData._id}`
           : `${API_URL}/api/comenzi/abandonat/${formData._id}`);
 
+    // 🕵️‍♂️ TRUC: Creăm un pachet de date care să mulțumească backend-ul!
+    // Dacă backend-ul cere 'produs', noi îi dăm 'produs'. Dacă cere 'nume', îi dăm 'nume'.
+    const payloadCorectat = {
+      ...formData,
+      produs: formData.numeProdus || formData.produs,
+      nume: formData.numeClient || formData.nume,
+      pret: formData.total || formData.totalComanda || formData.pret,
+    };
+
     try {
       const res = await fetch(endpoint, {
         method: method,
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify(formData)
+        // 👇 Aici trimitem payload-ul corectat, nu formData simplu
+        body: JSON.stringify(payloadCorectat)
       });
 
       if (res.status === 401 || res.status === 403) { delogareSilentioasa(); return; }
 
-      // Încercăm să citim răspunsul de la server indiferent de status
       let data = {};
-      try {
-        data = await res.json();
-      } catch (e) {
-        console.log("Nu s-a putut citi răspunsul JSON");
-      }
+      try { data = await res.json(); } catch (e) { console.log("Eroare parsare JSON"); }
 
       if(res.ok) {
         showToast(isCreare ? "Comandă creată!" : "Date salvate!");
         setEditModal({ isOpen: false, type: '', item: null });
         fetchData();
       } else {
-        // 🚨 FIX: Acum dacă crapă, îți afișează EXACT de ce a crăpat!
         console.error("❌ EROARE BACKEND:", data);
-        showToast(data.eroare || data.message || "Eroare la salvare. Vezi consola (F12)", "error");
+        showToast(data.eroare || data.message || "Eroare la salvare", "error");
       }
     } catch (err) { 
-      console.error(err);
       showToast("Eroare server. A picat netul?", "error"); 
     }
   };
