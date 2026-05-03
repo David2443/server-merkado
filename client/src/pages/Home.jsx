@@ -10,14 +10,16 @@ import './Home.css';
 
 const Home = () => {
   const navigate = useNavigate();
-  // Folosim useSearchParams doar dacă e nevoie, deși filtrarea principală se face în ShopPage.
   const [searchParams] = useSearchParams(); 
   
   const [produse, setProduse] = useState([]);
   const [timeLeft, setTimeLeft] = useState(13500); 
   const [activeFaq, setActiveFaq] = useState(null);
 
+  // Toate referințele tale originale
   const productsRef = useRef(null);
+  const reviewsRef = useRef(null);
+  const categoriesRef = useRef(null);
 
   const numarTelefonSuport = import.meta.env.VITE_PHONE_NUMBER || "40723717438"; 
 
@@ -45,7 +47,7 @@ const Home = () => {
       .catch(err => console.error("Eroare la încărcare produse:", err));
   }, []);
 
-  // 3. Helper Slider
+  // 3. Control Slider Produse
   const scrollSlider = (ref, direction) => {
     if (ref.current) {
       const scrollAmount = direction === 'left' ? -350 : 350;
@@ -53,23 +55,24 @@ const Home = () => {
     }
   };
 
+  // 4. Adăugare în Coș
   const handleAddToCart = (e, produsId) => {
     e.preventDefault();
     e.stopPropagation(); 
     console.log("Produs adăugat în coș:", produsId);
   };
 
-  // 4. Finalizarea funcției Toggle FAQ
+  // 5. Toggle pentru FAQ
   const toggleFaq = (index) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
 
+  // Datele pentru FAQ (necesare în JSX)
   const faqData = [
     { q: "În cât timp ajunge comanda?", a: "Comenzile plasate până în ora 15:00 sunt expediate în aceeași zi și ajung la tine în 24-48 de ore prin curier rapid." },
     { q: "Pot returna un produs?", a: "Absolut! Ai la dispoziție 14 zile calendaristice pentru a returna orice produs, fără a fi nevoie să justifici decizia." },
     { q: "Sunt plățile sigure?", a: "Da, folosim procesatorul Stripe cu criptare SSL de nivel bancar. Datele cardului tău nu ajung niciodată pe serverele noastre." }
   ];
-
   return (
     <div className="general-ecom-wrapper">
       
