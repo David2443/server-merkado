@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { 
   FiMonitor, FiHome, FiTool, FiShoppingCart, FiStar, FiHeart, FiShield, FiAward, 
   FiHeadphones, FiChevronLeft, FiChevronRight, FiTrendingUp, 
@@ -7,20 +7,21 @@ import {
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import './Home.css';
-import React from 'react';
 
 const Home = () => {
   const navigate = useNavigate();
+  // Folosim useSearchParams doar dacă e nevoie, deși filtrarea principală se face în ShopPage.
+  const [searchParams] = useSearchParams(); 
+  
   const [produse, setProduse] = useState([]);
   const [timeLeft, setTimeLeft] = useState(13500); 
   const [activeFaq, setActiveFaq] = useState(null);
 
   const productsRef = useRef(null);
-  const reviewsRef = useRef(null);
-  const categoriesRef = useRef(null);
 
   const numarTelefonSuport = import.meta.env.VITE_PHONE_NUMBER || "40723717438"; 
 
+  // 1. Timer Recurent
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
@@ -35,6 +36,7 @@ const Home = () => {
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
+  // 2. Fetch Produse și Scroll la Top
   useEffect(() => {
     window.scrollTo(0, 0);
     fetch('https://merkado-backend.onrender.com/api/produse')
@@ -43,6 +45,7 @@ const Home = () => {
       .catch(err => console.error("Eroare la încărcare produse:", err));
   }, []);
 
+  // 3. Helper Slider
   const scrollSlider = (ref, direction) => {
     if (ref.current) {
       const scrollAmount = direction === 'left' ? -350 : 350;
@@ -56,9 +59,16 @@ const Home = () => {
     console.log("Produs adăugat în coș:", produsId);
   };
 
+  // 4. Finalizarea funcției Toggle FAQ
   const toggleFaq = (index) => {
     setActiveFaq(activeFaq === index ? null : index);
   };
+
+  const faqData = [
+    { q: "În cât timp ajunge comanda?", a: "Comenzile plasate până în ora 15:00 sunt expediate în aceeași zi și ajung la tine în 24-48 de ore prin curier rapid." },
+    { q: "Pot returna un produs?", a: "Absolut! Ai la dispoziție 14 zile calendaristice pentru a returna orice produs, fără a fi nevoie să justifici decizia." },
+    { q: "Sunt plățile sigure?", a: "Da, folosim procesatorul Stripe cu criptare SSL de nivel bancar. Datele cardului tău nu ajung niciodată pe serverele noastre." }
+  ];
 
   return (
     <div className="general-ecom-wrapper">
@@ -90,9 +100,9 @@ const Home = () => {
       </p>
       
       <div className="hero-actions-row">
-        <a href="#produse" className="btn-shop-mega">
+     <button onClick={() => navigate('/shop')} className="btn-shop-mega" style={{ border: 'none', cursor: 'pointer' }}>
           Explorează Magazinul <FiArrowRight />
-        </a>
+        </button>
         
         <div className="hero-social-proof">
           <div className="avatars-group">
