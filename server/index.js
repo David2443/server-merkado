@@ -211,6 +211,47 @@ const trimiteEmail = async (to, subject, htmlContent) => {
   }
 };
 
+// ==========================================
+// 📦 FUNCȚIE TRIMITERE COMENZI ÎN EAWB
+// ==========================================
+const trimiteInEawb = async (comanda) => {
+  try {
+    // Aici mapăm datele tale ca să le înțeleagă eAWB
+    const payloadEAWB = {
+      name: comanda.numeClient,
+      phone: comanda.telefon,
+      county: comanda.judet,
+      city: comanda.oras,
+      address: comanda.adresa,
+      cash_on_delivery: comanda.total, // Valoarea rambursului
+      weight: 1, // 1 kg standard
+      contents: comanda.numeProdus,
+      observations: "Comanda de pe site" // Poți adăuga note aici
+    };
+
+    const url = 'https://api.eawb.ro/api/v1/orders'; // Endpoint-ul lor standard
+
+    const raspuns = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.EAWB_API_KEY}`
+      },
+      body: JSON.stringify(payloadEAWB)
+    });
+
+    const rezultat = await raspuns.json();
+
+    if (raspuns.ok) {
+      console.log(`🚀 Comandă trimisă cu succes în eAWB pentru: ${comanda.numeClient}`);
+    } else {
+      console.error(`❌ Eroare de la eAWB:`, rezultat);
+    }
+  } catch (eroare) {
+    console.error("❌ Eroare la conexiunea cu eAWB:", eroare.message);
+  }
+};
+
 const trimiteTelegram = async (mesaj) => {
   const token = process.env.TELEGRAM_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -422,8 +463,12 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
 💳 <b>Plată:</b> ${nouaComanda.metodaPlata}
 <a href="https://merkado.ro/admin/dashboard">👉 Deschide Dashboard-ul</a>`;
 
-    trimiteTelegram(textMesaj);
+    await trimiteTelegram(textMesaj);
+   await trimiteInEawb(nouaComanda);
+
     await CosAbandonat.findOneAndDelete({ telefon: payloadComanda.telefon });
+
+
 
     if (nouaComanda.email) {
       const msgEmail = `Comanda ta a fost preluată și urmează să fie pregătită pentru expediere.`;
