@@ -728,28 +728,26 @@ const ProductPage = () => {
             
             <form onSubmit={trimiteRecenzie}>
               
-              {/* Sistemul Interactiv de Stele (Legat corect la formRecenzie) */}
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', justifyContent: 'center' }}>
-                {[1, 2, 3, 4, 5].map((starIndex) => (
-                  <span
-                    key={starIndex}
-                    onClick={() => setFormRecenzie({ ...formRecenzie, rating: starIndex })}
-                    onMouseEnter={() => setHoverRating(starIndex)}
-                    onMouseLeave={() => setHoverRating(0)}
-                    style={{
-                      cursor: 'pointer',
-                      fontSize: '36px',
-                      lineHeight: '1',
-                      color: starIndex <= (hoverRating || formRecenzie.rating) ? '#ffc107' : '#e4e5e9',
-                      transition: 'color 0.2s, transform 0.1s'
-                    }}
-                    onMouseDown={(e) => e.target.style.transform = 'scale(0.9)'}
-                    onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
+              {/* Sistemul Interactiv de Stele Premium */}
+<div className="stele-interactive-container">
+  {[1, 2, 3, 4, 5].map((starIndex) => {
+    const isActive = starIndex <= (hoverRating || formRecenzie.rating);
+    return (
+      <span
+        key={starIndex}
+        className={`stea-item ${isActive ? 'activa' : ''}`}
+        onClick={() => setFormRecenzie({ ...formRecenzie, rating: starIndex })}
+        onMouseEnter={() => setHoverRating(starIndex)}
+        onMouseLeave={() => setHoverRating(0)}
+      >
+        ★
+      </span>
+    );
+  })}
+</div>
+
+{/* Dacă vrei un text mic dedesubt să îi zici omului să dea click, poți adăuga linia asta (opțional): */}
+{formRecenzie.rating === 0 && <p style={{textAlign: 'center', fontSize: '0.85rem', color: '#64748b', marginTop: '-15px', marginBottom: '15px'}}>Alege numărul de stele</p>}
 
               <input 
                 type="text" 
