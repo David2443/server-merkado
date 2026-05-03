@@ -143,14 +143,15 @@ const handleSave = async () => {
     const isCreare = editModal.type === 'creare';
     
     const method = isCreare ? 'POST' : 'PUT';
+    
+    // 🚪 FIX: Revenim la ruta de ADMIN (/api/comenzi), care te lasă să introduci ce vrei tu!
     const endpoint = isCreare 
-      ? `${API_URL}/api/comenzi/noua` 
+      ? `${API_URL}/api/comenzi` 
       : (editModal.type === 'comanda' 
           ? `${API_URL}/api/comenzi/${formData._id}`
           : `${API_URL}/api/comenzi/abandonat/${formData._id}`);
 
-    // 🕵️‍♂️ TRUC: Creăm un pachet de date care să mulțumească backend-ul!
-    // Dacă backend-ul cere 'produs', noi îi dăm 'produs'. Dacă cere 'nume', îi dăm 'nume'.
+    // Păstrăm translatorul, doar pentru siguranță
     const payloadCorectat = {
       ...formData,
       produs: formData.numeProdus || formData.produs,
@@ -162,7 +163,6 @@ const handleSave = async () => {
       const res = await fetch(endpoint, {
         method: method,
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        // 👇 Aici trimitem payload-ul corectat, nu formData simplu
         body: JSON.stringify(payloadCorectat)
       });
 
