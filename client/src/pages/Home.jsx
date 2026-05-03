@@ -76,7 +76,7 @@ const Home = () => {
 
     {/* 🚀 2. HERO SECTION (MERKADO ELITE LAYOUT) */}
 <section className="hero-split-section">
-  <div className="container hero-split-grid">
+  <div className="hero-container-premium hero-split-grid">
     <div className="hero-left">
       <div className="badge-exclusive">
         <FiTrendingUp /> <span>CALITATE PREMIUM GARANTATĂ</span>

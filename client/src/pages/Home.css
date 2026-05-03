@@ -54,69 +54,59 @@
 }
 
 /* ==========================================
-   💥 HERO SECTION INSANE (NEXT-GEN MERKADO)
+   💥 HERO SECTION (AERISIT & RAFINAT)
    ========================================== */
 
 .hero-split-section {
   position: relative;
-  padding: 100px 0 120px 0;
+  padding: 80px 0 100px 0;
   background: #ffffff;
   overflow: hidden;
-  /* Un fundal subtil cu zgomot/textură pentru un aer super premium */
-  background-image: radial-gradient(circle at 100% 0%, rgba(0, 163, 255, 0.05) 0%, transparent 40%),
-                    radial-gradient(circle at 0% 100%, rgba(255, 90, 0, 0.05) 0%, transparent 40%);
+  background-image: radial-gradient(circle at 100% 0%, rgba(0, 163, 255, 0.04) 0%, transparent 40%),
+                    radial-gradient(circle at 0% 100%, rgba(255, 90, 0, 0.04) 0%, transparent 40%);
+}
+
+/* 🛡️ Aici am băgat aerul! Containerul ține elementele departe de margini */
+.hero-container-premium {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px; /* Spațiu garantat stânga-dreapta */
 }
 
 .hero-split-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  gap: 80px;
+  gap: 60px; /* Suficient aer între text și imagine pe desktop */
   position: relative;
   z-index: 2;
 }
 
-/* --- ELEMENTELE DIN STÂNGA (TEXT & ACTIUNI) --- */
-.hero-left {
-  position: relative;
-}
-
-/* Badge-ul Exclusiv - Efect de Neón */
+/* --- ELEMENTELE DIN STÂNGA --- */
 .badge-exclusive {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   background: rgba(0, 163, 255, 0.08);
   color: #00A3FF;
-  padding: 10px 20px;
+  padding: 8px 18px;
   border-radius: 50px;
   font-weight: 800;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 30px;
-  border: 1px solid rgba(0, 163, 255, 0.2);
-  box-shadow: 0 0 20px rgba(0, 163, 255, 0.1);
+  letter-spacing: 1px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(0, 163, 255, 0.15);
 }
 
-.badge-exclusive svg {
-  font-size: 1.1rem;
-  animation: pulse-icon 2s infinite;
-}
-
-@keyframes pulse-icon {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.7; }
-}
-
-/* Titlul Mega - Tipografie Brută și Gradient */
+/* Dimensiuni mai umane pentru titlu */
 .hero-mega-title {
-  font-size: clamp(3.5rem, 5vw, 5.5rem); /* Se ajustează perfect la ecran */
+  font-size: clamp(2.4rem, 4vw, 4.2rem); 
   font-weight: 900;
-  color: #0F172A; /* Slate foarte închis */
-  line-height: 1.05;
-  margin-bottom: 30px;
-  letter-spacing: -2px;
+  color: #0F172A;
+  line-height: 1.1;
+  margin-bottom: 25px;
+  letter-spacing: -1px;
 }
 
 .hero-mega-title span {
@@ -124,68 +114,40 @@
   background: linear-gradient(135deg, #FF5A00 0%, #FF8A00 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  position: relative;
 }
 
-/* Liniar subtil sub textul portocaliu */
-.hero-mega-title span::after {
-  content: '';
-  position: absolute;
-  bottom: 10%;
-  left: 0;
-  width: 100%;
-  height: 15px;
-  background: rgba(255, 90, 0, 0.15);
-  z-index: -1;
-  transform: skewX(-15deg);
-}
-
+/* Descrierea mai scurtă și elegantă */
 .hero-mega-desc {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   color: #475569;
-  line-height: 1.7;
+  line-height: 1.6;
   max-width: 90%;
-  margin-bottom: 45px;
+  margin-bottom: 40px;
   font-weight: 500;
 }
 
-/* Butonul de Acțiune - Glowing Effect */
+/* Buton rafinat, nu uriaș */
 .btn-shop-mega {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 15px;
-  background: #1E293B; /* Buton dark pentru contrast maxim */
+  justify-content: center;
+  gap: 12px;
+  background: #1E293B;
   color: white;
   text-decoration: none;
-  padding: 22px 45px;
-  border-radius: 20px;
-  font-size: 1.15rem;
+  padding: 18px 36px;
+  border-radius: 16px;
+  font-size: 1.05rem;
   font-weight: 800;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-  box-shadow: 0 20px 40px rgba(30, 41, 59, 0.25);
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.btn-shop-mega::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: all 0.6s;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 15px 30px rgba(30, 41, 59, 0.2);
 }
 
 .btn-shop-mega:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 25px 50px rgba(0, 163, 255, 0.3);
-  background: #00A3FF; /* Se face albastru intens la hover */
-  border-color: #00A3FF;
-}
-
-.btn-shop-mega:hover::before {
-  left: 100%;
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 163, 255, 0.25);
+  background: #00A3FF;
 }
 
 .btn-shop-mega svg {
@@ -193,139 +155,119 @@
 }
 
 .btn-shop-mega:hover svg {
-  transform: translateX(5px);
+  transform: translateX(4px);
 }
 
-/* --- ZONA DREAPTĂ (IMAGINE & CARDURI FLOTANTE) --- */
+/* --- ZONA DREAPTĂ (Imagine) --- */
 .hero-image-composition {
   position: relative;
-  perspective: 1000px;
+  /* Îi dăm padding intern ca să nu taie umbrele */
+  padding: 20px;
 }
 
-/* Imaginea Principală - Efect 3D și Umbră Colorată */
 .main-hero-img {
   width: 100%;
-  border-radius: 40px;
+  border-radius: 24px; /* Curbură mai elegantă */
   object-fit: cover;
-  box-shadow: 
-    0 40px 80px -20px rgba(0, 163, 255, 0.4),
-    0 0 0 1px rgba(255,255,255,0.5) inset;
-  transform: rotateY(-5deg) rotateX(2deg);
-  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 30px 60px -15px rgba(0, 163, 255, 0.2);
+  transform: rotateY(-3deg) rotateX(2deg);
+  transition: all 0.5s ease;
 }
 
 .hero-image-composition:hover .main-hero-img {
-  transform: rotateY(0deg) rotateX(0deg) scale(1.02);
-  box-shadow: 0 50px 100px -20px rgba(255, 90, 0, 0.3);
+  transform: rotateY(0deg) rotateX(0deg) scale(1.01);
 }
 
-/* Cardul de Livrare - Glassmorphism Suprem */
+/* Cardul Plutitor făcut mai finuț */
 .floating-benefit-card {
   position: absolute;
-  bottom: -20px;
-  left: -50px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 20px 30px;
-  border-radius: 24px;
+  bottom: 0px;
+  left: 0px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  padding: 16px 24px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
-  gap: 18px;
-  box-shadow: 
-    0 25px 50px rgba(0,0,0,0.1),
-    0 0 0 2px rgba(255,255,255,0.6) inset;
-  animation: float-super-smooth 6s ease-in-out infinite;
+  gap: 14px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  animation: float-super-smooth 5s ease-in-out infinite;
   z-index: 10;
 }
 
 .benefit-icon-circle {
-  width: 55px;
-  height: 55px;
+  width: 44px;
+  height: 44px;
   background: linear-gradient(135deg, #FF5A00 0%, #FF8A00 100%);
   color: white;
-  border-radius: 16px; /* Pătrat rotunjit în loc de cerc, arată mai tech */
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  box-shadow: 0 10px 20px rgba(255, 90, 0, 0.3);
+  font-size: 1.2rem;
 }
 
 .benefit-info strong {
   display: block;
   color: #0F172A;
-  font-size: 1.1rem;
-  font-weight: 900;
-  letter-spacing: -0.5px;
+  font-size: 1rem;
+  font-weight: 800;
 }
 
 .benefit-info p {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #64748B;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Tag-ul de Securitate */
 .trust-mini-tag {
   position: absolute;
-  top: 50px;
-  right: -30px;
+  top: 40px;
+  right: -10px;
   background: #ffffff;
-  padding: 12px 25px;
-  border-radius: 100px;
-  font-weight: 800;
-  font-size: 0.95rem;
-  color: #10B981; /* Verde pentru încredere */
-  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #10B981;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
   display: flex;
   align-items: center;
-  gap: 10px;
-  animation: float-super-smooth 5s ease-in-out infinite reverse;
+  gap: 8px;
+  animation: float-super-smooth 4s ease-in-out infinite reverse;
 }
 
-.trust-mini-tag svg {
-  font-size: 1.2rem;
-}
-
-/* Animație de plutire hiper-fluidă */
 @keyframes float-super-smooth {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-15px) rotate(1deg); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 /* --- DOVADA SOCIALĂ LÂNGĂ BUTON --- */
 .hero-actions-row {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 25px;
   flex-wrap: wrap;
 }
 
 .hero-social-proof {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
-.avatars-group {
-  display: flex;
-}
+.avatars-group { display: flex; }
 
 .avatars-group img, .avatar-plus {
-  width: 48px;
-  height: 48px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  border: 4px solid #ffffff;
-  margin-left: -18px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-.avatars-group img:hover {
-  transform: translateY(-5px) scale(1.1);
-  z-index: 10;
+  border: 3px solid #ffffff;
+  margin-left: -14px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
 
 .avatars-group img:first-child { margin-left: 0; }
@@ -336,94 +278,82 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 900;
+  font-size: 0.75rem;
+  font-weight: 800;
   z-index: 1;
 }
 
-.proof-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.stars-ecom {
-  color: #F59E0B;
-  font-size: 1.1rem;
-  display: flex;
-  gap: 2px;
-}
-
-.proof-text span {
-  font-weight: 800;
-  color: #0F172A;
-  font-size: 0.95rem;
-}
+.stars-ecom { color: #F59E0B; font-size: 1rem; display: flex; gap: 2px; }
+.proof-text span { font-weight: 700; color: #0F172A; font-size: 0.85rem; }
 
 /* ==========================================
-   📱 RESPONSIVITATE EXTREMĂ
+   📱 TELEFON & TABLETĂ (AERISIT LA MAXIM)
    ========================================== */
-@media (max-width: 1200px) {
-  .hero-split-grid { gap: 40px; }
-  .floating-benefit-card { left: -20px; }
-  .trust-mini-tag { right: -10px; }
-}
-
 @media (max-width: 992px) {
-  .hero-split-section { padding: 80px 0; }
   .hero-split-grid {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: 40px;
   }
   
   .hero-mega-desc {
-    margin: 0 auto 40px auto;
+    margin: 0 auto 35px auto;
   }
   
   .hero-actions-row {
-    justify-content: center;
+    flex-direction: column; /* Pe tabletă le punem una sub alta elegant */
+    align-items: center;
+    gap: 20px;
   }
   
-  .badge-exclusive {
-    margin: 0 auto 30px auto;
-  }
-
-  .main-hero-img {
-    transform: none; /* Anulăm efectul 3D pe mobil să nu facă urât */
-  }
-
-  .floating-benefit-card {
-    left: 10px;
-    bottom: -30px;
-    padding: 15px 20px;
-  }
-  
-  .hero-image-composition {
-    margin-top: 60px;
-  }
+  .badge-exclusive { margin: 0 auto 25px auto; }
 }
 
 @media (max-width: 576px) {
+  .hero-split-section {
+    padding: 50px 0 70px 0;
+  }
+
+  .hero-container-premium {
+    padding: 0 24px; /* Aici e secretul: 24px stânga/dreapta garantat mereu! */
+  }
+
   .hero-mega-title {
-    font-size: 2.8rem;
-    letter-spacing: -1px;
+    font-size: 2.3rem; /* Nu mai țipă, arată luxos */
+    letter-spacing: -0.5px;
   }
-  
+
+  /* Butonul nu se mai întinde pe tot ecranul! */
   .btn-shop-mega {
-    width: 100%;
-    justify-content: center;
+    width: auto;
+    padding: 16px 32px;
+    display: inline-flex;
+    font-size: 1rem;
   }
-  
+
+  /* Imaginea e strânsă și aerisită */
+  .hero-image-composition {
+    padding: 10px;
+  }
+
+  .main-hero-img {
+    border-radius: 20px;
+    transform: none; /* Anulăm efectul 3D pe mobil */
+  }
+
+  /* Cardul plutitor e centrat frumos, nu mai taie marginile */
   .floating-benefit-card {
-    width: calc(100% - 40px);
-    left: 20px;
-    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%); /* Îl centrează perfect orizontal */
+    bottom: -15px;
+    width: max-content;
+    max-width: 90%; /* Siguranță să nu atingă marginile */
+    padding: 12px 20px;
+    animation: none; /* Oprim mișcarea pe mobil să nu distragă */
   }
-  
+
   .trust-mini-tag {
-    top: 20px;
-    right: 10px;
-    padding: 8px 15px;
-    font-size: 0.85rem;
+    display: none; /* Ascundem tag-ul ăsta mic pe mobil ca să fie mai aerisit */
   }
 }
 
