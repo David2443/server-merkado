@@ -1003,3 +1003,93 @@ body {
     font-size: 1.05rem; 
   }
 }
+/* ========================================== */
+/* 📱 STILURI EXCLUSIVE PENTRU MOBIL (ADMIN)  */
+/* ========================================== */
+
+@media (max-width: 768px) {
+  
+  /* 1. HEADER-UL MOBIL (Bara de sus) */
+  .mobile-nav-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px; /* Înălțime fixă pentru a calcula spațiul de sub el */
+    background: #1e293b; /* Ajustează cu culoarea ta de brand */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1000;
+    box-sizing: border-box;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 2. REPARAREA SUPRAPUNERII (Aici era buba) */
+  .admin-content {
+    /* Împingem tot conținutul în jos exact cu înălțimea header-ului + puțin spațiu */
+    padding-top: 90px !important; 
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box;
+    min-height: 100vh;
+  }
+
+  /* 3. MENIUL LATERAL (Sidebar-ul care apare când apeși pe hamburger) */
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%; /* Ascuns implicit în afara ecranului */
+    width: 260px;
+    height: 100vh;
+    background: #0f172a;
+    z-index: 1002; /* Peste header și overlay */
+    transition: left 0.3s ease-in-out; /* Animație fină de glisare */
+    overflow-y: auto; /* Ca să poți da scroll dacă ai multe butoane */
+  }
+
+  .admin-sidebar.open {
+    left: 0; /* Când are clasa 'open', vine în ecran */
+  }
+
+  /* 4. OVERLAY-UL (Fundalul negru transparent din spatele meniului) */
+  .mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1001;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .mobile-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* 5. TABELE, RECENZII ȘI REZOLVAREA LĂȚIMII */
+  /* Forțăm tabelele să nu rupă design-ul pe mobil, ci să permită swipe stânga-dreapta */
+  .admin-content table {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important; /* Salvarea supremă pentru tabele pe mobil */
+    white-space: nowrap; /* Nu lasă textul să se înghesuie urât */
+  }
+
+  /* Forțăm cardurile/recenziile să ocupe tot spațiul disponibil */
+  .admin-content .card, 
+  .admin-content .recenzie-item {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box;
+  }
+}
