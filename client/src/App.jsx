@@ -30,8 +30,18 @@ import ResetPassword from './pages/ResetPassword';
 import Admin from './pages/Admin';
 
 function App() {
-  const location = useLocation();
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sursa = params.get('utm_source'); // Căutăm "utm_source" în link
+    
+    if (sursa) {
+      // Dacă a venit din reclamă, îi salvăm sursa în browser (chiar dacă închide tab-ul azi și cumpără mâine!)
+      localStorage.setItem('sursa_trafic', sursa.toLowerCase());
+    }
+  }, []);
+  const location = useLocation();
+  
   // Verificăm dacă suntem pe Admin
   const isAdminPage = location.pathname.startsWith('/admin');
 

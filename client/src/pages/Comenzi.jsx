@@ -326,6 +326,7 @@ const actualizeazaStatus = async (id, statusNou) => {
                 <th>Comandă</th>
                 <th>Plată & Livrare</th>
                 {activeTab === 'comenzi' && <th>Status</th>}
+                <th>Sursă Trafic 🎯</th>
                 <th>Total</th>
                 <th className="text-right">Acțiuni</th>
               </tr>
@@ -349,6 +350,12 @@ const actualizeazaStatus = async (id, statusNou) => {
                       x{item.cantitate || 1} buc
                     </span>
                   </td>
+
+                  <td>
+        <span className="badge-sursa">
+          {comanda.sursa ? comanda.sursa : 'Organic / Direct'}
+        </span>
+      </td>
 
                   <td data-label="Plată & Livrare">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.9rem', color: '#0f172a', fontWeight: '500' }}>

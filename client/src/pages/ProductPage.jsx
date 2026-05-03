@@ -388,15 +388,25 @@ const ProductPage = () => {
     extraOptions: extra
   });
 
-  const handleFinalizeCash = async () => {
+ const handleFinalizeCash = async () => {
     if (!validateForm()) return;
     setLoadingComanda(true);
+
+    // 🕵️‍♂️ 1. EXTRAGEM SURSA
+    const sursaTrafic = localStorage.getItem('sursa_trafic') || 'Organic / Direct';
+
     try {
       const res = await fetch(`${API_URL}/api/comenzi/noua`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(genereazaPayload('Ramburs'))
+        // 👇 2. ADĂUGĂM SURSA LA PACHETUL DE DATE
+        body: JSON.stringify({ ...genereazaPayload('Ramburs'), sursa: sursaTrafic })
       });
-      if (res.ok) setComandaTrimisa(true);
+      
+      if (res.ok) {
+        setComandaTrimisa(true);
+        // 🧹 3. CURĂȚĂM SURSA DUPĂ CE COMANDA E GATA
+        localStorage.removeItem('sursa_trafic');
+      }
       else throw new Error("Eroare server");
     } catch (err) {
       alert("Eroare la trimiterea comenzii spre server.");
@@ -406,12 +416,21 @@ const ProductPage = () => {
   };
 
   const handlePaymentSuccess = async (paymentId) => {
+    // 🕵️‍♂️ 1. EXTRAGEM SURSA ȘI AICI
+    const sursaTrafic = localStorage.getItem('sursa_trafic') || 'Organic / Direct';
+
     try {
       const res = await fetch(`${API_URL}/api/comenzi/noua`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(genereazaPayload('Plătit cu Cardul', paymentId))
+        // 👇 2. ADĂUGĂM SURSA LA PACHETUL DE DATE
+        body: JSON.stringify({ ...genereazaPayload('Plătit cu Cardul', paymentId), sursa: sursaTrafic })
       });
-      if (res.ok) setComandaTrimisa(true);
+      
+      if (res.ok) {
+        setComandaTrimisa(true);
+        // 🧹 3. CURĂȚĂM SURSA DUPĂ CE COMANDA E GATA
+        localStorage.removeItem('sursa_trafic');
+      }
     } catch (err) { alert("Eroare salvare plată în dashboard."); }
   };
 
