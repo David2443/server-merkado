@@ -25,19 +25,27 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// 💌 ROBOTUL DE EMAIL
+// ✉️ CONFIGURARE NOUĂ: ROBOTUL RESEND
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+// 💌 ROBOTUL DE EMAIL REPARAT (FĂRĂ PORTURI BLOCATE)
 const trimiteEmail = async (to, subject, htmlContent) => {
   if (!to || !to.includes('@')) return;
   try {
-    await transporter.sendMail({
-      from: `"Super Produse" <${process.env.EMAIL_USER}>`,
-      to: to,
+    const { data, error } = await resend.emails.send({
+      from: 'Merkado <onboarding@resend.dev>', // ⚠️ Vei schimba asta după ce verifici domeniul tău
+      to: [to],
       subject: subject,
-      html: htmlContent
+      html: htmlContent,
     });
-    console.log(`✅ Email trimis cu succes către: ${to}`);
+
+    if (error) {
+       return console.error("❌ Eroare Resend:", error);
+    }
+    console.log(`✅ Email trimis prin Resend către: ${to}`);
   } catch (error) {
-    console.error(`❌ Eroare trimitere email către ${to}:`, error);
+    console.error(`❌ Eroare conexiune Resend către ${to}:`, error);
   }
 };
 
