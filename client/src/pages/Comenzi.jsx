@@ -36,7 +36,7 @@ const genereazaAWB = async (idComanda) => {
 
   try {
     // 3. REPARAT: Folosim API_URL în loc de localhost
-    const response = await fetch(`${API_URL}/api/admin/comenzi/${idComanda}/awb`, {
+    const response = await fetch(`${VITE_API_URL}/api/admin/comenzi/${idComanda}/awb`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
