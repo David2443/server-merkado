@@ -14,16 +14,15 @@ const moment = require('moment-timezone');
 // ✉️ CONFIGURARE SERVICIU EMAIL
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
+  port: 587,         // 👉 SCHIMBĂM PORTUL AICI
+  secure: false,     // 👉 OBLIGATORIU FALSE PENTRU 587
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
   tls: {
     rejectUnauthorized: false
-  },
-  family: 4 // 🛡️ MAGIA AICI: Interzice complet folosirea rețelei IPv6!
+  }
 });
 
 // 💌 ROBOTUL DE EMAIL
