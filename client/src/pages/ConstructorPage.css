@@ -488,3 +488,110 @@ input:focus, textarea:focus, select:focus {
     .off-col { width: 100% !important; }
     .btn-remove-offer { width: 100%; margin-top: 5px; }
 }
+/* =======================================================
+   📱 ULTIMATE MOBILE OPTIMIZATION (600px & Down)
+   ======================================================= */
+@media (max-width: 600px) {
+  /* 1. Reset general pentru margini și padding-uri */
+  .admin-builder-view {
+    padding: 10px; /* Reducem padding-ul exterior */
+  }
+
+  .editor-col, .block-card {
+    padding: 15px; /* Spațiu interior mai mic în carduri */
+    border-radius: 15px;
+  }
+
+  /* 2. Header & Navigarea (Tab-urile) */
+  .builder-header {
+    padding: 12px;
+    margin-bottom: 20px;
+    top: 5px;
+  }
+
+  .tab-nav {
+    flex-wrap: wrap; /* Permitem tab-urilor să treacă pe rândul următor */
+    gap: 5px;
+    padding: 4px;
+  }
+
+  .tab-nav button {
+    padding: 10px 12px;
+    font-size: 0.85rem; /* Text puțin mai mic */
+    flex: 1 1 45%; /* Două tab-uri pe rând pe telefoane mici */
+    justify-content: center;
+  }
+
+  /* 3. Forțăm TOATE rândurile să fie verticale */
+  .row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .row input, .row select {
+    width: 100% !important; /* Ne asigurăm că ocupă tot lățimea */
+  }
+
+  /* 4. Toolbar - butoanele de adăugare module */
+  .toolbar {
+    gap: 10px;
+  }
+
+  .toolbar button {
+    min-width: 100%; /* Un buton sub altul pentru click ușor */
+    padding: 14px;
+  }
+
+  /* 5. Ajustări Tabel Edit & Module */
+  .table-row-edit {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .table-row-edit button {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  /* 6. Fix pentru Drop Zones */
+  .drop-zone {
+    height: 140px; /* Puțin mai scund pe mobil */
+  }
+
+  /* 7. Blocuri de titlu și Badge-uri */
+  .block-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .block-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .block-actions button {
+    flex: 1; /* Butoanele de acțiune ocupă spațiu egal */
+  }
+
+  /* 8. Fix pentru input-uri și texte care ies afară */
+  input, textarea, select {
+    font-size: 16px; /* Previne auto-zoom-ul pe iPhone la focus */
+    padding: 12px;
+  }
+
+  h3 {
+    font-size: 1rem;
+  }
+
+  /* 9. Oferte Dinamice (Ajustare finală) */
+  .offer-row-item {
+    padding: 12px;
+  }
+  
+  .off-col.small, .off-col.medium {
+    width: 100% !important;
+  }
+}
