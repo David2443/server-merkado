@@ -138,13 +138,15 @@ const genereazaAWB = async (idComanda) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSave = async () => {
+ const handleSave = async () => {
     const token = localStorage.getItem('adminToken');
     const isCreare = editModal.type === 'creare';
     
     const method = isCreare ? 'POST' : 'PUT';
+    
+    // 💡 FIX: Am corectat URL-ul pentru comanda nouă adăugând "/noua" la final
     const endpoint = isCreare 
-      ? `${API_URL}/api/comenzi` 
+      ? `${API_URL}/api/comenzi/noua` 
       : (editModal.type === 'comanda' 
           ? `${API_URL}/api/comenzi/${formData._id}`
           : `${API_URL}/api/comenzi/abandonat/${formData._id}`);
@@ -158,14 +160,27 @@ const genereazaAWB = async (idComanda) => {
 
       if (res.status === 401 || res.status === 403) { delogareSilentioasa(); return; }
 
+      // Încercăm să citim răspunsul de la server indiferent de status
+      let data = {};
+      try {
+        data = await res.json();
+      } catch (e) {
+        console.log("Nu s-a putut citi răspunsul JSON");
+      }
+
       if(res.ok) {
         showToast(isCreare ? "Comandă creată!" : "Date salvate!");
         setEditModal({ isOpen: false, type: '', item: null });
         fetchData();
       } else {
-        showToast("Eroare la salvare", "error");
+        // 🚨 FIX: Acum dacă crapă, îți afișează EXACT de ce a crăpat!
+        console.error("❌ EROARE BACKEND:", data);
+        showToast(data.eroare || data.message || "Eroare la salvare. Vezi consola (F12)", "error");
       }
-    } catch (err) { showToast("Eroare server", "error"); }
+    } catch (err) { 
+      console.error(err);
+      showToast("Eroare server. A picat netul?", "error"); 
+    }
   };
 
   const handlePlasareComandaDinDraft = async () => {
