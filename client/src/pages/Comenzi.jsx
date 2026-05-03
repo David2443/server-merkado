@@ -331,19 +331,24 @@ const actualizeazaStatus = async (id, statusNou) => {
                 <th className="text-right">Acțiuni</th>
               </tr>
             </thead>
-       <tbody>
+       
+      <tbody>
              {listaFiltrata.map((item) => (
                 <tr key={item._id} className={item.status === 'Anulată' ? 'ac-row-cancelled' : ''}>
+                  
+                  {/* 1. DATĂ */}
                   <td data-label="Dată">
                     {new Date(item.createdAt || item.updatedAt).toLocaleDateString('ro-RO')}
                   </td>
                   
+                  {/* 2. CLIENT */}
                   <td data-label="Client">
                     <div className="ac-truncate ac-fw-medium">{item.numeClient || '-'}</div>
                     <div style={{ color: '#475569', fontSize: '0.85rem' }}>{item.telefon}</div>
                     {item.email && <div className="ac-truncate" style={{ color: '#64748b', fontSize: '0.8rem' }}>{item.email}</div>}
                   </td>
                   
+                  {/* 3. COMANDĂ */}
                   <td data-label="Comandă">
                     <div className="ac-truncate ac-fw-medium">{item.numeProdus || 'Produs Magazin'}</div>
                     <span style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', color: '#475569', fontWeight: 'bold' }}>
@@ -351,12 +356,7 @@ const actualizeazaStatus = async (id, statusNou) => {
                     </span>
                   </td>
 
-                  <td>
-                    <span className="badge-sursa">
-                      {item.sursa ? item.sursa : 'Organic / Direct'}
-                    </span>
-                  </td>
-
+                  {/* 4. PLATĂ & LIVRARE */}
                   <td data-label="Plată & Livrare">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.9rem', color: '#0f172a', fontWeight: '500' }}>
                       {item.metodaPlata?.toLowerCase().includes('card') ? <FiCreditCard style={{color: '#10b981'}}/> : <FiTruck style={{color: '#3b82f6'}}/>}
@@ -367,6 +367,7 @@ const actualizeazaStatus = async (id, statusNou) => {
                     </div>
                   </td>
 
+                  {/* 5. STATUS (Doar în tab-ul comenzi) */}
                   {activeTab === 'comenzi' && (
                     <td data-label="Status">
                       <select 
@@ -389,34 +390,42 @@ const actualizeazaStatus = async (id, statusNou) => {
                     </td>
                   )}
 
-                  <td>
-                    {!item.awb ? (
-                      <button 
-                        onClick={() => genereazaAWB(item._id)} 
-                        className="btn-awb-bomba"
-                      >
-                        📦 Generează AWB
-                      </button>
-                    ) : (
-                      <span className="badge-awb-bomba">
-                        ✅ AWB: {item.awb}
-                      </span>
-                    )}
+                  {/* 6. SURSĂ TRAFIC 🎯 (Aici trebuia să stea de fapt) */}
+                  <td data-label="Sursă Trafic">
+                    <span className="badge-sursa" style={{ background: '#f3f4f6', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', border: '1px solid #e5e7eb', color: '#374151' }}>
+                      {item.sursa ? item.sursa : 'Organic / Direct'}
+                    </span>
                   </td>
-                  
-                  <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938' }}>
+
+                  {/* 7. TOTAL */}
+                  <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938', fontWeight: 'bold' }}>
                     {item.total || item.totalComanda} Lei
                   </td>
                   
-                  <td data-label="Acțiuni" className="text-right">
+                  {/* 8. ACȚIUNI (Am unit AWB-ul cu Editează pe aceeași coloană) */}
+                  <td data-label="Acțiuni" className="text-right" style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                    
+                    {/* Buton AWB */}
+                    {!item.awb ? (
+                      <button onClick={() => genereazaAWB(item._id)} style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        📦 AWB
+                      </button>
+                    ) : (
+                      <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '6px 10px', borderRadius: '6px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        ✅ {item.awb}
+                      </span>
+                    )}
+
+                    {/* Buton Edit */}
                     <button onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')} className="ac-btn-edit">
-                      <FiEdit2 /> Editează
+                      <FiEdit2 />
                     </button>
+                    
                   </td>
                 </tr>
               ))}
               {listaFiltrata.length === 0 && (
-                <tr><td colSpan="9" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>Nicio comandă găsită.</td></tr>
+                <tr><td colSpan="8" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>Nicio comandă găsită.</td></tr>
               )}
             </tbody>
           </table>
