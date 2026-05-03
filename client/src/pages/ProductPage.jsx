@@ -4,6 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { io } from 'socket.io-client';
 import { Helmet } from 'react-helmet-async';
 
+
 import {
   Elements, CardNumberElement, CardExpiryElement, CardCvcElement,
   useStripe, useElements
@@ -137,6 +138,7 @@ const ProductPage = () => {
 
   // Mai multe state-uri...
   const [formRecenzie, setFormRecenzie] = useState({ numeClient: '', text: '', rating: 5 });
+  const [hoverRating, setHoverRating] = useState(0);
   const [mesajForm, setMesajForm] = useState('');
   const [vizitatoriLive, setVizitatoriLive] = useState(14);
   const [timp, setTimp] = useState({ ore: 0, minute: 7, secunde: 43 });
@@ -718,13 +720,68 @@ const ProductPage = () => {
             ))}
           </div>
 
-          <div className="add-review-box">
+<div className="stele-container" style={{ display: 'flex', gap: '5px', marginBottom: '15px' }}>
+  {[1, 2, 3, 4, 5].map((starIndex) => (
+    <span
+      key={starIndex}
+      onClick={() => setRating(starIndex)}
+      onMouseEnter={() => setHoverRating(starIndex)}
+      onMouseLeave={() => setHoverRating(0)}
+      style={{
+        cursor: 'pointer',
+        fontSize: '30px',
+        color: starIndex <= (hoverRating || rating) ? '#ffc107' : '#e4e5e9', // Galben pentru bifate, gri pentru restul
+        transition: 'color 0.2s'
+      }}
+    >
+      ★
+    </span>
+  ))}
+</div>
+
+         <div className="add-review-box">
             <h3>Părerea ta contează!</h3>
             {mesajForm && <p className="form-msg">{mesajForm}</p>}
+            
             <form onSubmit={trimiteRecenzie}>
-              <div className="stars-select">{renderStele(formRecenzie.rating, true)}</div>
-              <input type="text" placeholder="Numele tău" value={formRecenzie.numeClient} onChange={e => setFormRecenzie({ ...formRecenzie, numeClient: e.target.value })} required />
-              <textarea placeholder="Scrie recenzia ta aici..." rows="3" value={formRecenzie.text} onChange={e => setFormRecenzie({ ...formRecenzie, text: e.target.value })} required></textarea>
+              
+              {/* Sistemul Interactiv de Stele (Legat corect la formRecenzie) */}
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', justifyContent: 'center' }}>
+                {[1, 2, 3, 4, 5].map((starIndex) => (
+                  <span
+                    key={starIndex}
+                    onClick={() => setFormRecenzie({ ...formRecenzie, rating: starIndex })}
+                    onMouseEnter={() => setHoverRating(starIndex)}
+                    onMouseLeave={() => setHoverRating(0)}
+                    style={{
+                      cursor: 'pointer',
+                      fontSize: '36px',
+                      lineHeight: '1',
+                      color: starIndex <= (hoverRating || formRecenzie.rating) ? '#ffc107' : '#e4e5e9',
+                      transition: 'color 0.2s, transform 0.1s'
+                    }}
+                    onMouseDown={(e) => e.target.style.transform = 'scale(0.9)'}
+                    onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+
+              <input 
+                type="text" 
+                placeholder="Numele tău" 
+                value={formRecenzie.numeClient} 
+                onChange={e => setFormRecenzie({ ...formRecenzie, numeClient: e.target.value })} 
+                required 
+              />
+              <textarea 
+                placeholder="Scrie recenzia ta aici..." 
+                rows="3" 
+                value={formRecenzie.text} 
+                onChange={e => setFormRecenzie({ ...formRecenzie, text: e.target.value })} 
+                required
+              ></textarea>
               <button type="submit" className="btn-red">Trimite Recenzia</button>
             </form>
           </div>
