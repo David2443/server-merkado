@@ -1,7 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
-import sitemap from './sitemap.xml';
 // Componente Globale
 import Navbar from './components/Navbar';
 import Footer from './components/Footer'; 
@@ -53,9 +52,7 @@ function App() {
             <Route path="/shop" element={<Shop />} />
             <Route path="/produs/:id" element={<ProductPage />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/sitemap.xml" element={
-  <iframe src={sitemap} title="sitemap" style={{ display: 'none' }} />
-} />
+     
             {/* ✅ REPARAT: Am modificat din /despre-noi în /about ca să se pupe cu Footer-ul */}
             <Route path="/about" element={<About />} />
             
