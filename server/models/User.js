@@ -51,18 +51,15 @@ const UserSchema = new mongoose.Schema({
 // ==========================================
 // 🔒 "SCUTUL INVIZIBIL": Criptăm parola automat înainte de salvare
 // ==========================================
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function() {
+  // Dacă parola NU a fost modificată, ieșim din funcție direct
   if (!this.isModified('parola')) {
-    return next(); 
+    return; 
   }
   
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.parola = await bcrypt.hash(this.parola, salt);
-    next(); 
-  } catch (error) {
-    next(error);
-  }
+  // Dacă a fost modificată (la creare cont sau resetare), o criptăm
+  const salt = await bcrypt.genSalt(10);
+  this.parola = await bcrypt.hash(this.parola, salt);
 });
 
 // ==========================================

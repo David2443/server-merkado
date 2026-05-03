@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User'); 
 
-// 🚀 IMPORTĂM RESEND (Înlocuim Nodemailer-ul care făcea figuri)
+// 🚀 IMPORTĂM RESEND
 const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -72,7 +72,7 @@ router.get('/me', protect, async (req, res) => {
 });
 
 // ==========================================
-// 4. FORGOT PASSWORD (TRIMIS PRIN RESEND 🔥)
+// 4. FORGOT PASSWORD (BOMBĂ, FĂRĂ ERORI)
 // ==========================================
 router.post('/forgot-password', async (req, res) => {
     try {
@@ -86,9 +86,18 @@ router.post('/forgot-password', async (req, res) => {
 
         // Generăm token-ul de resetare
         const token = crypto.randomBytes(20).toString('hex');
-        user.resetPasswordToken = token;
-        user.resetPasswordExpires = Date.now() + 3600000; // Valabil 1 oră
-        await user.save();
+        const expireTime = Date.now() + 3600000; // Valabil 1 oră
+
+        // 🛡️ FIX: Folosim updateOne ca să ocolim user.save() care crapă din cauza "next is not a function"
+        await User.updateOne(
+            { _id: user._id },
+            { 
+                $set: { 
+                    resetPasswordToken: token, 
+                    resetPasswordExpires: expireTime 
+                } 
+            }
+        );
 
         // Construim link-ul pentru Frontend
         const appUrl = process.env.FRONTEND_URL || "http://localhost:5173"; 
@@ -96,9 +105,9 @@ router.post('/forgot-password', async (req, res) => {
 
         console.log("📧 Se încearcă trimiterea mail-ului de resetare către:", user.email);
 
-        // 🚀 Trimitem mailul prin RESEND (Bulletproof pe orice server)
-        const { data, error } = await resend.emails.send({
-            from: 'Merkado <comenzi@merkado.ro>', // Asigură-te că domeniul e verificat în Resend
+        // Trimitem mailul prin RESEND
+        const { error } = await resend.emails.send({
+            from: 'Merkado <comenzi@merkado.ro>',
             to: [user.email],
             subject: 'Resetare Parolă Cont - Merkado',
             html: `
@@ -147,6 +156,7 @@ router.post('/reset-password/:token', async (req, res) => {
         await user.save();
         res.status(200).json({ mesaj: "Parola a fost schimbată cu succes!" });
     } catch (err) {
+        console.error("❌ EROARE LA RESETARE:", err.message);
         res.status(500).json({ eroare: "Eroare la resetare." });
     }
 });
