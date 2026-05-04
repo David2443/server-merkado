@@ -178,6 +178,8 @@ const ProductPage = () => {
     };
   }, []);
 
+
+
   useEffect(() => {
     if (socketClient && isCheckoutOpen && dateClient.nume.length > 2) {
       const timer = setTimeout(() => {
@@ -314,6 +316,54 @@ const ProductPage = () => {
     }
   };
 
+// 🗺️ HOOK NOU: ÎNCĂRCARE HARTĂ EASYBOX
+  useEffect(() => {
+    // 1. Inserăm script-ul oficial de hartă în pagină
+    const script = document.createElement('script');
+    // Folosim widget-ul oficial Sameday (sau poți pune link-ul de la Europarcel dacă ți-au dat unul specific)
+    script.src = "https://cdn.sameday.ro/locker-plugin/lockerpluginsameday.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    // 2. Ascultăm mesajul pe care îl trimite harta când clientul dă click pe "Alege acest Easybox"
+    const handleLockerSelect = (event) => {
+      // Verificăm dacă mesajul primit conține date de locker
+      if (typeof event.data === 'object' && event.data !== null) {
+        if (event.data.lockerId) {
+          console.log("📦 Clientul a ales Locker-ul:", event.data);
+          
+          // Salvăm datele fix cum le vrea serverul tău
+          setLockerSelectat({
+            id: event.data.lockerId,
+            name: event.data.name,
+            address: event.data.address,
+            city: event.data.city,
+            county: event.data.county
+          });
+          
+          // Ștergem eroarea roșie din formular (dacă exista)
+          setErrors((prev) => ({ ...prev, locker: null }));
+          
+          // Închidem fereastra hărții
+          if (window.LockerPlugin) {
+            window.LockerPlugin.getInstance().close();
+          }
+        }
+      }
+    };
+
+    // Activăm "ascultătorul"
+    window.addEventListener('message', handleLockerSelect);
+
+    return () => {
+      // Curățăm memoria când omul iese de pe pagină
+      window.removeEventListener('message', handleLockerSelect);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
   // 🛡️ FIX 1: VALIDARE SMART PENTRU LOCKER VS CURIER
   const validateForm = () => {
     let newErrors = {};
@@ -409,18 +459,21 @@ const ProductPage = () => {
     } catch (err) { alert("Eroare salvare plată în dashboard."); }
   };
 
-  const openLockerMap = () => {
-    // Aici vei integra widget-ul real (Sameday/Fan)
-    // Deocamdată am făcut un mock perfect funcțional pentru test
-    alert("Se deschide harta Easybox...");
-    setLockerSelectat({ 
-      id: "12345", // Un ID fictiv de test (În producție vei primi ID-ul real de la widget)
-      name: "Easybox Mega Image", 
-      address: "Strada de Test, Nr. 10", 
-      city: "București", 
-      county: "București" 
-    });
-    setErrors({ ...errors, locker: null });
+ const openLockerMap = () => {
+    if (window.LockerPlugin) {
+      // Harta e gata, o inițializăm și o deschidem pe ecran!
+      window.LockerPlugin.init({
+        clientId: 'aici_pui_client_id', // ⚠️ Daca Europarcel sau Sameday ti-a dat un Client ID, il pui aici. Daca nu, uneori merge si fara pe modul public.
+        country: 'RO',
+        language: 'ro',
+        // Dacă clientul a scris deja orașul în formular, centrăm harta direct pe orașul lui!
+        city: dateClient.localitate || 'Bucuresti' 
+      });
+      
+      window.LockerPlugin.getInstance().open();
+    } else {
+      alert("Harta se încarcă în fundal... Te rugăm să mai aștepți 2 secunde și să apeși din nou!");
+    }
   };
 
   if (isLoading) return (
