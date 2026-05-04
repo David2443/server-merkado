@@ -422,21 +422,7 @@ app.use('/api/contact', contactRoute);
 // === 11. RUTE PUBLICE (Clienți) ===
 // ============================================================================
 
-app.get('/api/afla-id-facturare', async (req, res) => {
-  try {
-    const raspuns = await fetch('https://api.europarcel.com/api/public/addresses/billing', {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'X-API-Key': 'pk_fbcnwwwc_a0QlpUFqLMJbwOqFnqL9nTwDTRqwroiq' 
-      }
-    });
-    const date = await raspuns.json();
-    res.json(date); 
-  } catch (err) {
-    res.status(500).json({ eroare: err.message });
-  }
-});
+
 
 app.get('/api/produse', async (req, res) => {
   try { res.json(await Produs.find().sort({ createdAt: -1 })); } 
@@ -636,9 +622,7 @@ app.post('/api/admin/login', loginLimiter, (req, res) => {
   }
 });
 
-// ==========================================
-// 📦 2. GENERARE MANUALĂ AWB DIN ADMIN (EUROPARCEL OFICIAL)
-// ==========================================
+
 // ==========================================
 // 📦 2. GENERARE MANUALĂ AWB DIN ADMIN (EUROPARCEL OFICIAL)
 // ==========================================
@@ -709,6 +693,8 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
 
     const urlEawb = 'https://api.europarcel.com/api/public/orders';
 
+    console.log("📦 PAYLOAD-UL CARE PLEACĂ ESTE:", JSON.stringify(payloadEAWB, null, 2));
+    
     const raspunsEawb = await fetch(urlEawb, {
       method: 'POST',
       headers: {
