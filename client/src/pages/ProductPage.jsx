@@ -982,7 +982,14 @@ const ProductPage = () => {
                       {/* JUDEȚUL ȘI LOCALITATEA ACUM APAR PESTE TOT */}
                       <div className="input-row" style={{ marginTop: '15px' }}>
                         <div className="input-group-wrapper" style={{ flex: 1 }}>
-                          <select 
+                          <select className={`checkout-input ${errors.judet ? 'input-error' : ''}`} value={dateClient.judet} onChange={e => { setDateClient({ ...dateClient, judet: e.target.value }); setErrors({ ...errors, judet: null }); }}>
+                            <option value="">Alege Județul...</option>
+                            {listaJudete.map(judet => <option key={judet} value={judet}>{judet}</option>)}
+                          </select>
+                          {errors.judet && <span className="error-text">{errors.judet}</span>}
+                        </div>
+                        <div className="input-group-wrapper" style={{ flex: 1 }}>
+   <select 
   className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} 
   value={dateClient.localitate} 
   onChange={e => setDateClient({ ...dateClient, localitate: e.target.value })}
@@ -993,24 +1000,6 @@ const ProductPage = () => {
     <option key={idx} value={loc.name}>{loc.name}</option>
   ))}
 </select>
-                          {errors.judet && <span className="error-text">{errors.judet}</span>}
-                        </div>
-                        <div className="input-group-wrapper" style={{ flex: 1 }}>
-    <select 
-      className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} 
-      value={dateClient.localitate} 
-      onChange={e => { 
-        setDateClient({ ...dateClient, localitate: e.target.value }); 
-        setErrors({ ...errors, localitate: null }); 
-        setLockereDisponibile([]); // Forțăm să caute din nou lockerele pentru noul oraș
-      }}
-      disabled={!dateClient.judet || listaLocalitatiFiltrate.length === 0}
-    >
-      <option value="">Alege Localitatea...</option>
-      {listaLocalitatiFiltrate.map((loc, idx) => (
-        <option key={idx} value={loc.nume}>{loc.nume}</option>
-      ))}
-    </select>
     {errors.localitate && <span className="error-text">{errors.localitate}</span>}
   </div>
                       </div>
