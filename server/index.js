@@ -230,6 +230,7 @@ const trimiteInEawb = async (comanda) => {
     };
 
 const urlEawb = 'https://eawb.ro/api/orders';
+
     const raspuns = await fetch(url, {
       method: 'POST',
       headers: {
@@ -578,7 +579,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     console.log("👉 Trimitem către eAWB datele:", payloadEAWB);
 
     // 4. Facem cererea către eAWB
-    const urlEawb = 'https://eawb.ro/api/v1/orders'; // 👈 Atenție la URL-ul corect! Adesea e /v1/
+    const urlEawb = 'https://eawb.ro/api/orders';
     
     // Asigură-te că cheia e luată din .env
     const apiKey = process.env.EAWB_API_KEY; 
