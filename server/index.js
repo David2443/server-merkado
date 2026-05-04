@@ -664,7 +664,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     console.log("👉 Trimitem Europarcel payload-ul:", JSON.stringify(payloadEAWB, null, 2));
 
     // 🔥 URL-ul lor mega ciudat din documentație
-    const urlEawb = 'https://api.apieuroparcel.com.ro/api.public/orders'; 
+const urlEawb = 'https://api.europarcel.com/api/public/orders';
 
     const raspunsEawb = await fetch(urlEawb, {
       method: 'POST',
