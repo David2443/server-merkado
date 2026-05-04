@@ -216,19 +216,61 @@ const trimiteEmail = async (to, subject, htmlContent) => {
 // ==========================================
 const trimiteInEawb = async (comanda) => {
   try {
+    const isPlataCard = comanda.metodaPlata && comanda.metodaPlata.toLowerCase().includes('card');
+    const rambursDeIncasat = isPlataCard ? 0 : (Number(comanda.total) || 0);
+
     const payloadEAWB = {
-      name: comanda.numeClient,
-      phone: comanda.telefon,
-      county: comanda.judet,
-      city: comanda.localitate || comanda.oras,
-      address: comanda.adresa,
-      cash_on_delivery: comanda.metodaPlata.toLowerCase().includes('card') ? 0 : comanda.total,
-      weight: 1,
-      contents: comanda.numeProdus,
-      observations: "Comanda de pe site"
+      carrier_id: 1, 
+      service_id: 1, 
+      billing_to: {
+        contact: "Merkado SRL",
+        email: "contact@merkado.ro",
+        phone: "0700000000",
+        country_code: "RO",
+        locality_name: "Bucuresti",
+        county_name: "Bucuresti",
+        street_name: "Strada ta nr 1" 
+      },
+      address_from: {
+        email: "contact@merkado.ro", 
+        phone: "0700000000",       
+        contact: "Merkado", 
+        country_code: "RO",
+        locality_id: 10241, // ⚠️ ID Bucuresti. Schimbă dacă expediezi din alt oraș!
+        street_name: "Strada ta",
+        street_number: "1"
+      },
+      address_to: {
+        email: comanda.email || "no-reply@client.ro",
+        phone: comanda.telefon || "0000000000",
+        contact: comanda.numeClient || "Client",
+        country_code: "RO",
+        postal_code: "000000", 
+        locality_name: comanda.localitate || "Bucuresti",
+        county_name: comanda.judet || "Bucuresti",
+        street_name: comanda.adresa || "-",
+        street_number: "-"
+      },
+      content: {
+        envelopes_count: 0,
+        pallets_count: 0,
+        parcels_count: 1,
+        total_weight: 1,
+        parcels: [
+          { sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }
+        ]
+      },
+      extra: {
+        parcel_content: comanda.numeProdus || "Produse",
+        sms_recipient: true
+      }
     };
 
-    // 🔥 AICI E URL-UL CORECT
+    if (rambursDeIncasat > 0) {
+      payloadEAWB.extra.bank_repayment_amount = rambursDeIncasat;
+      payloadEAWB.extra.bank_repayment_currency = "RON";
+    }
+
     const urlEawb = 'https://api.europarcel.com/api/public/orders'; 
 
     const raspuns = await fetch(urlEawb, {
@@ -236,8 +278,8 @@ const trimiteInEawb = async (comanda) => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        // 🔥 Aici am reparat apiKey-ul! Îl luăm direct din mediul serverului:
-        'Authorization': `Bearer ${process.env.EAWB_API_KEY}` 
+        // 🔥 CHEIA NOUA AICI!
+        'Authorization': 'Bearer pk_fbcnwwwc_a0QlpUFqLMJbwOqFnqL9nTwDTRqwroiq' 
       },
       body: JSON.stringify(payloadEAWB)
     });
@@ -245,7 +287,7 @@ const trimiteInEawb = async (comanda) => {
     const rezultat = await raspuns.json();
 
     if (raspuns.ok) {
-      console.log(`🚀 Comandă trimisă automat cu succes în eAWB pentru: ${comanda.numeClient}`);
+      console.log(`🚀 Comandă trimisă automat cu succes în eAWB!`);
     } else {
       console.error(`❌ Eroare de la eAWB (Automat):`, rezultat);
     }
@@ -587,6 +629,9 @@ app.post('/api/admin/login', loginLimiter, (req, res) => {
 // ==========================================
 // 📦 2. GENERARE MANUALĂ AWB DIN ADMIN (EUROPARCEL OFICIAL)
 // ==========================================
+// ==========================================
+// 📦 2. GENERARE MANUALĂ AWB DIN ADMIN (EUROPARCEL OFICIAL)
+// ==========================================
 app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
   try {
     const idComanda = req.params.id;
@@ -597,80 +642,69 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       return res.status(400).json({ eroare: `Această comandă are deja AWB-ul: ${comanda.awb}` });
     }
 
-    // Calculăm suma de plată pentru curier (Ramburs)
     const isPlataCard = comanda.metodaPlata && comanda.metodaPlata.toLowerCase().includes('card');
     const rambursDeIncasat = isPlataCard ? 0 : Number(comanda.total);
 
-    // 🔥 PAYLOAD MILIMETRIC EUROPARCEL
     const payloadEAWB = {
-      carrier_id: 1, // 1 = FAN Courier (probabil). Verifică în tabelul lor de Carriers.
-      service_id: 1, // 1 = Door to Door.
-      
-      // ⚠️ TREBUIE SĂ AFLI BILLING ID-ul TĂU DIN CONTUL LOR
+      carrier_id: 1, 
+      service_id: 1, 
       billing_to: {
-        billing_address_id: 123 // 👈 SCHIMBĂ CU ID-ul TĂU REAL DE FACTURARE!
+        contact: "Merkado SRL",
+        email: "contact@merkado.ro",
+        phone: "0700000000",
+        country_code: "RO",
+        locality_name: "Bucuresti",
+        county_name: "Bucuresti",
+        street_name: "Strada ta nr 1" 
       },
-      
       address_from: {
         email: "contact@merkado.ro", 
-        phone: "0700000000",       // Pune telefonul tău real
+        phone: "0700000000",       
         contact: "Merkado", 
         country_code: "RO",
-        locality_id: 10241,        // ⚠️ Pune ID-ul orașului tău (ex: 10241 pt București)
+        locality_id: 10241, // ⚠️ Schimbă id-ul dacă nu ești din București
         street_name: "Strada ta",
         street_number: "1"
       },
-      
       address_to: {
         email: comanda.email || "no-reply@client.ro",
         phone: comanda.telefon || "0000000000",
         contact: comanda.numeClient || "Client",
         country_code: "RO",
-        postal_code: "000000", // Din păcate cer cod poștal sau ID. Punem un fallback.
+        postal_code: "000000",
         locality_name: comanda.localitate || "Bucuresti",
         county_name: comanda.judet || "Bucuresti",
         street_name: comanda.adresa || "-",
         street_number: "-"
       },
-      
       content: {
         envelopes_count: 0,
         pallets_count: 0,
         parcels_count: 1,
         total_weight: 1,
         parcels: [
-          {
-            sequence_no: 1,
-            size: { weight: 1, width: 20, height: 20, length: 20 }
-          }
+          { sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }
         ]
       },
-      
       extra: {
         parcel_content: comanda.numeProdus || "Produse",
         sms_recipient: true
       }
     };
 
-    // Dacă are ramburs, Europarcel obligă să le dăm și moneda
     if (rambursDeIncasat > 0) {
       payloadEAWB.extra.bank_repayment_amount = rambursDeIncasat;
       payloadEAWB.extra.bank_repayment_currency = "RON";
-      // Documentația zice că dacă ai IBAN setat în contul Europarcel e ok, dacă nu, trebuie adăugat aici:
-      // payloadEAWB.extra.bank_iban = "ROXXBTRL..."; 
-      // payloadEAWB.extra.bank_holder = "Nume Firma SRL";
     }
 
-    console.log("👉 Trimitem Europarcel payload-ul:", JSON.stringify(payloadEAWB, null, 2));
+    const urlEawb = 'https://api.europarcel.com/api/public/orders';
 
-    // 🔥 URL-ul lor mega ciudat din documentație
-const urlEawb = 'https://api.europarcel.com/api/public/orders';
-console.log("🕵️‍♂️ CHEIA TRIMISA ESTE:", process.env.EAWB_API_KEY);
     const raspunsEawb = await fetch(urlEawb, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer pk_jalnco85_nmDIohLlk0qXiCoun4aCNrhH3gOdvwQU'
+        // 🔥 CHEIA NOUA AICI! Fără ea pica garantat.
+        'Authorization': 'Bearer pk_fbcnwwwc_a0QlpUFqLMJbwOqFnqL9nTwDTRqwroiq'
       },
       body: JSON.stringify(payloadEAWB)
     });
@@ -678,20 +712,15 @@ console.log("🕵️‍♂️ CHEIA TRIMISA ESTE:", process.env.EAWB_API_KEY);
     const textRaspuns = await raspunsEawb.text(); 
     
     let dateAwb;
-    try {
-      dateAwb = JSON.parse(textRaspuns);
-    } catch (e) {
-      console.error("❌ Europarcel a returnat HTML la manual:", textRaspuns.substring(0, 150));
-      return res.status(500).json({ eroare: "Eroare HTML la Europarcel." });
-    }
+    try { dateAwb = JSON.parse(textRaspuns); } 
+    catch (e) { return res.status(500).json({ eroare: "Eroare HTML la Europarcel." }); }
 
     if (!raspunsEawb.ok) {
-      console.error("❌ Europarcel a respins cererea manuală:", dateAwb);
+      console.error("❌ Europarcel a respins cererea:", dateAwb);
       const motiv = dateAwb.errors ? JSON.stringify(dateAwb.errors) : dateAwb.message;
       return res.status(400).json({ eroare: "Refuzat: " + motiv });
     }
 
-    // Conform documentației, răspunsul de succes arată așa: { "data": { "awb_number": "AWB123" } }
     const numarAWBGenerat = dateAwb.data?.awb_number || "AWB_GENERAT"; 
     
     comanda.awb = numarAWBGenerat;
@@ -701,8 +730,8 @@ console.log("🕵️‍♂️ CHEIA TRIMISA ESTE:", process.env.EAWB_API_KEY);
     res.json({ success: true, awb: numarAWBGenerat, mesaj: "AWB Generat cu succes!" });
 
   } catch (err) {
-    console.error("❌ Eroare server fatală la AWB manual:", err);
-    res.status(500).json({ eroare: "Eroare internă server: " + err.message });
+    console.error("❌ Eroare server fatală la AWB:", err);
+    res.status(500).json({ eroare: err.message });
   }
 });
 
