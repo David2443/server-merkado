@@ -437,7 +437,7 @@ app.use('/api/contact', contactRoute);
 // ============================================================================
 
 // ==========================================
-// 📍 RUTA NOUĂ: CAUTĂ LOCKERE EUROPARCEL
+// 📍 RUTA NOUĂ: CAUTĂ DOAR LOCKERE FANBOX
 // ==========================================
 app.get('/api/lockers', async (req, res) => {
   try {
@@ -447,7 +447,9 @@ app.get('/api/lockers', async (req, res) => {
       return res.status(400).json({ eroare: "Avem nevoie de județ și localitate pentru a căuta lockere." });
     }
 
-    const url = `https://api.europarcel.com/api/public/locations/fixedlocations/RO?county_name=${encodeURIComponent(judet)}&locality_name=${encodeURIComponent(localitate)}`;
+    // 🔥 MAGIA AICI: Am adăugat &carrier_id=3 la finalul link-ului!
+    // Asta forțează serverul Europarcel să ne trimită EXCLUSIV FANbox-uri.
+    const url = `https://api.europarcel.com/api/public/locations/fixedlocations/RO?county_name=${encodeURIComponent(judet)}&locality_name=${encodeURIComponent(localitate)}&carrier_id=3`;
 
     const raspuns = await fetch(url, {
       method: 'GET',
@@ -458,25 +460,23 @@ app.get('/api/lockers', async (req, res) => {
     });
 
     if (!raspuns.ok) {
-      // Dacă Europarcel dă 404 (localitate negăsită) sau 401 (lipsă cheie)
-      return res.status(400).json({ eroare: "Nu am găsit lockere pentru acest oraș." });
+      return res.status(400).json({ eroare: "Nu am găsit niciun FANbox în această localitate." });
     }
 
     const dateLockere = await raspuns.json();
 
-    // 🔥 AICI ERA GREȘEALA: Europarcel returnează DIRECT array-ul, nu folosește ".data"
     if (!Array.isArray(dateLockere)) {
       return res.status(500).json({ eroare: "Curierul a returnat un format necunoscut." });
     }
 
-    // Filtrăm doar lockerele (eliminăm punctele de sediu sau altele)
-    const lockereAdevărate = dateLockere.filter(loc => loc.fixed_location_type === 'locker');
+    // Dublă verificare: Ne asigurăm că e locker ȘI că e FAN Courier (carrier 3)
+    const fanboxuri = dateLockere.filter(loc => loc.fixed_location_type === 'locker' && loc.carrier_id === 3);
 
-    res.json(lockereAdevărate);
+    res.json(fanboxuri);
 
   } catch (err) {
-    console.error("❌ Eroare la citirea lockerelor:", err.message);
-    res.status(500).json({ eroare: "Eroare la conectarea cu rețeaua de lockere." });
+    console.error("❌ Eroare la citirea FANbox-urilor:", err.message);
+    res.status(500).json({ eroare: "Eroare la conectarea cu rețeaua FANbox." });
   }
 });
 

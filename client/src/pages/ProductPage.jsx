@@ -119,7 +119,7 @@ const StripePaymentForm = ({ total, onPaymentSuccess, dateClient, validateForm, 
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const [listaLocalitatiFiltrate, setListaLocalitatiFiltrate] = useState([]);
   const [optiuniTransport, setOptiuniTransport] = useState([]);
   const [loadingComanda, setLoadingComanda] = useState(false);
   const [loadingReview, setLoadingReview] = useState(false);
@@ -344,6 +344,36 @@ const ProductPage = () => {
     }
     setLoadingLockers(false);
   };
+
+// 🇷🇴 HOOK PENTRU LOCALITĂȚI DIN ROMÂNIA
+  useEffect(() => {
+    // Când clientul schimbă județul, golim localitatea veche
+    setDateClient(prev => ({ ...prev, localitate: '' }));
+    setLockereDisponibile([]); // Golim și lockerele vechi
+    
+    if (!dateClient.judet) {
+      setListaLocalitatiFiltrate([]);
+      return;
+    }
+
+    // Aici facem fetch către baza ta de date de localități sau către un API RO.
+    // Presupunând că ai transformat Excel-ul tău într-un fișier localitati.json pe server:
+    const fetchLocalitati = async () => {
+      try {
+        // Exemplu: Tragi dintr-un JSON local sau dintr-un API pe care îl faci tu din acel Excel
+        const res = await fetch(`/date/localitati.json`); 
+        const toateLocalitatile = await res.json();
+        
+        // Filtrăm doar localitățile din județul selectat
+        const filtrat = toateLocalitatile.filter(loc => loc.judet === dateClient.judet);
+        setListaLocalitatiFiltrate(filtrat);
+      } catch (err) {
+        console.error("Eroare la încărcarea localităților:", err);
+      }
+    };
+
+    fetchLocalitati();
+  }, [dateClient.judet]);
 
 // 🗺️ HOOK NOU: ÎNCĂRCARE HARTĂ EASYBOX
   useEffect(() => {
@@ -935,9 +965,23 @@ const ProductPage = () => {
                           {errors.judet && <span className="error-text">{errors.judet}</span>}
                         </div>
                         <div className="input-group-wrapper" style={{ flex: 1 }}>
-                          <input type="text" className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} placeholder="Localitate / Oraș" value={dateClient.localitate} onChange={e => { setDateClient({ ...dateClient, localitate: e.target.value }); setErrors({ ...errors, localitate: null }); }} />
-                          {errors.localitate && <span className="error-text">{errors.localitate}</span>}
-                        </div>
+    <select 
+      className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} 
+      value={dateClient.localitate} 
+      onChange={e => { 
+        setDateClient({ ...dateClient, localitate: e.target.value }); 
+        setErrors({ ...errors, localitate: null }); 
+        setLockereDisponibile([]); // Forțăm să caute din nou lockerele pentru noul oraș
+      }}
+      disabled={!dateClient.judet || listaLocalitatiFiltrate.length === 0}
+    >
+      <option value="">Alege Localitatea...</option>
+      {listaLocalitatiFiltrate.map((loc, idx) => (
+        <option key={idx} value={loc.nume}>{loc.nume}</option>
+      ))}
+    </select>
+    {errors.localitate && <span className="error-text">{errors.localitate}</span>}
+  </div>
                       </div>
 
                       {/* ZONA SPECIFICĂ DE CURIER (Doar Adresa Stradală) */}

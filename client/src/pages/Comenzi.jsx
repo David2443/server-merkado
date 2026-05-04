@@ -22,16 +22,7 @@ const AdminComenzi = () => {
   const [formData, setFormData] = useState({});
   const [toast, setToast] = useState({ visible: false, message: '', type: 'success' });
 
-// 🛎️ Sistem de Notificări (Toasts)
-  const [toast, setToast] = useState(null);
 
-  const arataToast = (tip, mesaj) => {
-    setToast({ tip, mesaj });
-    // Ascundem notificarea după 6 secunde automat
-    setTimeout(() => {
-      setToast(null);
-    }, 6000);
-  };
 
 // Funcția de apelare REPARATĂ + SMART TOASTS
 const genereazaAWB = async (idComanda) => {
@@ -349,6 +340,19 @@ const actualizeazaStatus = async (id, statusNou) => {
     // Dacă nu e Facebook sau Creată de admin, presupunem că e Organic/Google
     return { text: 'Organic / Google', bg: '#dcfce7', color: '#16a34a', border: '#bbf7d0' }; // Verde
   };
+
+
+// 🛎️ Sistem de Notificări (Toasts)
+  const [toast, setToast] = useState(null);
+
+  const arataToast = (tip, mesaj) => {
+    setToast({ tip, mesaj });
+    // Ascundem notificarea după 6 secunde automat
+    setTimeout(() => {
+      setToast(null);
+    }, 6000);
+  };
+
 
   return (
     <div className="ac-container">
@@ -684,7 +688,7 @@ const actualizeazaStatus = async (id, statusNou) => {
           </div>
         </div>
       )}
-      
+
     </div>
   );
 };
