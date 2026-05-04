@@ -229,7 +229,7 @@ const trimiteInEawb = async (comanda) => {
       observations: "Comanda de pe site" // Poți adăuga note aici
     };
 
-const urlEawb = 'https://eawb.ro/api/orders';
+const urlEawb = 'https://api.europarcel.com/api/public';
 
     const raspuns = await fetch(url, {
       method: 'POST',
@@ -579,7 +579,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     console.log("👉 Trimitem către eAWB datele:", payloadEAWB);
 
     // 4. Facem cererea către eAWB
-    const urlEawb = 'https://eawb.ro/api/orders';
+    const urlEawb = 'https://api.europarcel.com/api/public';
     
     // Asigură-te că cheia e luată din .env
     const apiKey = process.env.EAWB_API_KEY; 
