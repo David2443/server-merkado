@@ -358,19 +358,43 @@ const ProductPage = () => {
 
     // Aici facem fetch către baza ta de date de localități sau către un API RO.
     // Presupunând că ai transformat Excel-ul tău într-un fișier localitati.json pe server:
+   // 🇷🇴 HOOK PENTRU LOCALITĂȚI (Adaptat la JSON-ul tău)
+  useEffect(() => {
+    setDateClient(prev => ({ ...prev, localitate: '' }));
+    setLockereDisponibile([]); 
+    
+    if (!dateClient.judet) {
+      setListaLocalitatiFiltrate([]);
+      return;
+    }
+
     const fetchLocalitati = async () => {
       try {
-        // Exemplu: Tragi dintr-un JSON local sau dintr-un API pe care îl faci tu din acel Excel
-        const res = await fetch(`/date/localitati.json`); 
+        // Punem un timestamp la final ca să fim siguri că nu e citit din cache-ul vechi de browser
+        const res = await fetch(`/localitati.json?t=${new Date().getTime()}`); 
+        
+        if (!res.ok) throw new Error("Serverul nu a găsit fișierul localitati.json");
+        
         const toateLocalitatile = await res.json();
         
-        // Filtrăm doar localitățile din județul selectat
-        const filtrat = toateLocalitatile.filter(loc => loc.judet === dateClient.judet);
-        setListaLocalitatiFiltrate(filtrat);
+        // 🔥 FILTRARE: Folosim cheile "county_name" și "name" din JSON-ul tău
+        const filtrate = toateLocalitatile.filter(loc => {
+          const judetDinDate = loc.county_name || '';
+          return judetDinDate.toLowerCase() === dateClient.judet.toLowerCase();
+        });
+        
+        // Sortăm alfabetic localitățile ca să fie ușor de găsit
+        filtrate.sort((a, b) => a.name.localeCompare(b.name));
+        
+        setListaLocalitatiFiltrate(filtrate);
+
       } catch (err) {
-        console.error("Eroare la încărcarea localităților:", err);
+        console.error("❌ Eroare la încărcarea localităților:", err.message);
       }
     };
+
+    fetchLocalitati();
+  }, [dateClient.judet]);
 
     fetchLocalitati();
   }, [dateClient.judet]);
@@ -958,10 +982,17 @@ const ProductPage = () => {
                       {/* JUDEȚUL ȘI LOCALITATEA ACUM APAR PESTE TOT */}
                       <div className="input-row" style={{ marginTop: '15px' }}>
                         <div className="input-group-wrapper" style={{ flex: 1 }}>
-                          <select className={`checkout-input ${errors.judet ? 'input-error' : ''}`} value={dateClient.judet} onChange={e => { setDateClient({ ...dateClient, judet: e.target.value }); setErrors({ ...errors, judet: null }); }}>
-                            <option value="">Alege Județul...</option>
-                            {listaJudete.map(judet => <option key={judet} value={judet}>{judet}</option>)}
-                          </select>
+                          <select 
+  className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} 
+  value={dateClient.localitate} 
+  onChange={e => setDateClient({ ...dateClient, localitate: e.target.value })}
+  disabled={!dateClient.judet}
+>
+  <option value="">Alege Localitatea...</option>
+  {listaLocalitatiFiltrate.map((loc, idx) => (
+    <option key={idx} value={loc.name}>{loc.name}</option>
+  ))}
+</select>
                           {errors.judet && <span className="error-text">{errors.judet}</span>}
                         </div>
                         <div className="input-group-wrapper" style={{ flex: 1 }}>
