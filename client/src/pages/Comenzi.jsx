@@ -13,7 +13,7 @@ const AdminComenzi = () => {
   const [comenzi, setComenzi] = useState([]);
   const [drafts, setDrafts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [produse, setProduse] = useState([]); // 🔥 State pentru produse
+  const [produse, setProduse] = useState([]); 
   const [searchTerm, setSearchTerm] = useState('');
   const [range, setRange] = useState('last30'); 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -21,8 +21,8 @@ const AdminComenzi = () => {
   const [editModal, setEditModal] = useState({ isOpen: false, type: '', item: null });
   const [formData, setFormData] = useState({});
 
-
-const [toast, setToast] = useState(null);
+  // 🛎️ UNICUL Sistem de Notificări Smart (Toast)
+  const [toast, setToast] = useState(null);
 
   const arataToast = (tip, mesaj) => {
     setToast({ tip, mesaj });
@@ -31,55 +31,10 @@ const [toast, setToast] = useState(null);
     }, 6000);
   };
 
-// Funcția de apelare REPARATĂ + SMART TOASTS
-const genereazaAWB = async (idComanda) => {
-  const confirmare = window.confirm("Ești sigur că vrei să generezi AWB-ul pentru această comandă?");
-  if (!confirmare) return;
-
-  const token = localStorage.getItem('adminToken');
-
-  // 🚀 1. Afișăm Pop-up-ul albastru de încărcare imediat ce a dat click
-  arataToast('loading', '⏳ Comunicăm cu Europarcel... Se generează AWB-ul!');
-  
-  console.log(`🚀 Încerc să generez AWB pentru comanda: ${idComanda}`);
-
-  try {
-    const response = await fetch(`${API_URL}/api/admin/comenzi/${idComanda}/awb`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
-      }
-    });
-
-    const data = await response.json();
-    console.log("📦 Date primite de la server:", data);
-
-    if (response.ok && data.success) {
-      // ✅ 2. SUCCES! Pop-up Verde
-      arataToast('success', `🎉 BOMBĂ! AWB generat cu succes: ${data.awb}`);
-      fetchData(); // Reîncărcăm tabelul instant
-    } else {
-      // ❌ 3. EROARE DE LA EUROPARCEL! Pop-up Roșu
-      arataToast('error', `❌ EROARE CURIER: ${data.eroare || data.message || 'Eroare necunoscută'}`);
-    }
-  } catch (err) {
-    console.error("💥 EROARE CRITICĂ CATCH:", err);
-    // ❌ 4. EROARE DE REȚEA! Pop-up Roșu
-    arataToast('error', `❌ Eroare gravă de conexiune: ${err.message}`);
-  }
-};
-
-  // 🛡️ FIX 1: URL Dinamic
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const rangeLabels = {
     today: 'Azi', yesterday: 'Ieri', last7: 'Ultimele 7 zile', last30: 'Ultimele 30 de zile'
-  };
-
-  const showToast = (message, type = 'success') => {
-    setToast({ visible: true, message, type });
-    setTimeout(() => setToast({ visible: false, message: '', type: 'success' }), 3000);
   };
 
   const delogareSilentioasa = () => {
@@ -98,7 +53,7 @@ const genereazaAWB = async (idComanda) => {
     }
 
     try {
-      // 📦 1. Tragem Comenzile și Draft-urile (Coșurile abandonate)
+      // 📦 1. Tragem Comenzile și Draft-urile
       const resComenzi = await fetch(`${API_URL}/api/dashboard?range=${range}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -116,16 +71,14 @@ const genereazaAWB = async (idComanda) => {
 
       // 🛒 2. Tragem Produsele pentru Dropdown-ul din Modal
       try {
-        // Dacă ai deja ruta de produse pe backend, asta o va apela:
         const resProduse = await fetch(`${API_URL}/api/produse`, {
-          headers: { 'Authorization': `Bearer ${token}` } // Dacă e protejată ruta
+          headers: { 'Authorization': `Bearer ${token}` }
         });
         
         if (resProduse.ok) {
           const dataProduse = await resProduse.json();
           setProduse(dataProduse || []);
         } else {
-          // Dacă ruta nu există încă sau dă eroare, băgăm unele de test ca să nu crape:
           setProduse([
             { _id: 'test1', nume: 'Tricou Super Bombă' },
             { _id: 'test2', nume: 'Adidași Premium' },
@@ -134,7 +87,6 @@ const genereazaAWB = async (idComanda) => {
         }
       } catch (errProduse) {
         console.error("Eroare la fetch produse:", errProduse);
-        // Dacă a picat complet apelul de produse, punem fallback-ul de test:
         setProduse([
           { _id: 'test1', nume: 'Tricou Super Bombă' },
           { _id: 'test2', nume: 'Adidași Premium' },
@@ -149,12 +101,10 @@ const genereazaAWB = async (idComanda) => {
     setIsLoading(false);
   };
 
-  // Se apelează automat la încărcarea paginii și când schimbi filtrul de date (Azi, Ultimele 7 zile etc.)
+  // Efect apelat automat la încărcarea paginii sau schimbarea datei
   useEffect(() => { 
     fetchData(); 
   }, [range]);
-
-  useEffect(() => { fetchData(); }, [range]);
 
   useEffect(() => {
     const idDeDeschis = localStorage.getItem('autoOpenOrder');
@@ -167,6 +117,36 @@ const genereazaAWB = async (idComanda) => {
       }
     }
   }, [comenzi]);
+
+  // Funcția de generare AWB
+  const genereazaAWB = async (idComanda) => {
+    const confirmare = window.confirm("Ești sigur că vrei să generezi AWB-ul pentru această comandă?");
+    if (!confirmare) return;
+
+    const token = localStorage.getItem('adminToken');
+    arataToast('loading', '⏳ Comunicăm cu Europarcel... Se generează AWB-ul!');
+
+    try {
+      const response = await fetch(`${API_URL}/api/admin/comenzi/${idComanda}/awb`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        arataToast('success', `🎉 BOMBĂ! AWB generat cu succes: ${data.awb}`);
+        fetchData();
+      } else {
+        arataToast('error', `❌ EROARE CURIER: ${data.eroare || data.message || 'Eroare necunoscută'}`);
+      }
+    } catch (err) {
+      arataToast('error', `❌ Eroare gravă de conexiune: ${err.message}`);
+    }
+  };
 
   const listaFiltrata = (activeTab === 'comenzi' ? comenzi : drafts).filter(item => {
     const term = searchTerm.toLowerCase();
@@ -187,20 +167,17 @@ const genereazaAWB = async (idComanda) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-const handleSave = async () => {
+  const handleSave = async () => {
     const token = localStorage.getItem('adminToken');
     const isCreare = editModal.type === 'creare';
-    
     const method = isCreare ? 'POST' : 'PUT';
     
-    // 🚪 FIX: Revenim la ruta de ADMIN (/api/comenzi), care te lasă să introduci ce vrei tu!
     const endpoint = isCreare 
       ? `${API_URL}/api/comenzi` 
       : (editModal.type === 'comanda' 
           ? `${API_URL}/api/comenzi/${formData._id}`
           : `${API_URL}/api/comenzi/abandonat/${formData._id}`);
 
-    // Păstrăm translatorul, doar pentru siguranță
     const payloadCorectat = {
       ...formData,
       produs: formData.numeProdus || formData.produs,
@@ -221,21 +198,19 @@ const handleSave = async () => {
       try { data = await res.json(); } catch (e) { console.log("Eroare parsare JSON"); }
 
       if(res.ok) {
-        showToast(isCreare ? "Comandă creată!" : "Date salvate!");
+        arataToast('success', isCreare ? "Comandă creată!" : "Date salvate!");
         setEditModal({ isOpen: false, type: '', item: null });
         fetchData();
       } else {
-        console.error("❌ EROARE BACKEND:", data);
-        showToast(data.eroare || data.message || "Eroare la salvare", "error");
+        arataToast('error', data.eroare || data.message || "Eroare la salvare");
       }
     } catch (err) { 
-      showToast("Eroare server. A picat netul?", "error"); 
+      arataToast('error', "Eroare server. A picat netul?");
     }
   };
 
   const handlePlasareComandaDinDraft = async () => {
     const token = localStorage.getItem('adminToken');
-    
     try {
       const res = await fetch(`${API_URL}/api/comenzi/convert-draft/${formData._id}`, {
         method: 'POST',
@@ -246,58 +221,49 @@ const handleSave = async () => {
       if (res.status === 401 || res.status === 403) { delogareSilentioasa(); return; }
 
       if(res.ok) {
-        showToast("Comandă plasată cu succes!");
+        arataToast('success', "Comandă plasată cu succes!");
         setEditModal({ isOpen: false, type: '', item: null });
         setActiveTab('comenzi'); 
         fetchData();
       } else {
         const errorData = await res.json();
-        showToast(errorData.eroare || "Eroare la plasarea comenzii", "error");
+        arataToast('error', errorData.eroare || "Eroare la plasarea comenzii");
       }
-    } catch (err) { showToast("Eroare conexiune server", "error"); }
+    } catch (err) { 
+      arataToast('error', "Eroare conexiune server"); 
+    }
   };
-const actualizeazaStatus = async (id, statusNou) => {
+
+  const actualizeazaStatus = async (id, statusNou) => {
     const token = localStorage.getItem('adminToken');
-    console.log(`🚀 1. Începem! Trimitem noul status: [${statusNou}] pentru comanda: ${id}`);
     
-    // 🔥 OPTIMISTIC UPDATE: Schimbăm vizual pe ecran INSTANT ca să nu mai dai F5!
+    // UPDATE OPTIMIST (schimbare instantanee vizuală)
     setComenzi(prevComenzi => 
       prevComenzi.map(c => c._id === id ? { ...c, status: statusNou } : c)
     );
 
     try {
-      console.log(`📡 2. Se apelează URL-ul: ${API_URL}/api/comenzi/${id}/status`);
-      
       const res = await fetch(`${API_URL}/api/comenzi/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ status: statusNou })
       });
 
-      console.log(`📥 3. Răspuns primit de la server. Cod de status: ${res.status}`);
-
       if (res.status === 401 || res.status === 403) { 
-        console.error("❌ EROARE: Token-ul tău de admin a expirat sau este invalid. Te va deloga.");
         delogareSilentioasa(); 
         return; 
       }
 
-      // Încercăm să citim ce a răspuns efectiv backend-ul
       const data = await res.json();
 
       if (res.ok) {
-        console.log("✅ 4. SUCCES! Comanda s-a modificat pe backend. Datele primite:", data);
-        showToast("Status actualizat cu succes!", "success");
+        arataToast('success', "Status actualizat cu succes!");
       } else {
-        console.error("❌ 4. BACKEND-UL A DAT EROARE:", data);
-        showToast("Eroare de la server: " + (data.eroare || "Eroare necunoscută"), "error");
+        arataToast('error', "Eroare de la server: " + (data.eroare || "Eroare necunoscută"));
       }
-
-      // Lăsăm fetch-ul original să sincronizeze liniștit în fundal
       fetchData(); 
     } catch (err) { 
-      console.error("❌ EROARE FATALĂ DE CONEXIUNE (A picat netul sau serverul e oprit):", err.message);
-      showToast("Eroare gravă de rețea!", "error"); 
+      arataToast('error', "Eroare gravă de rețea!");
     }
   };
 
@@ -311,12 +277,14 @@ const actualizeazaStatus = async (id, statusNou) => {
       });
       if (res.status === 401 || res.status === 403) { delogareSilentioasa(); return; }
       if(res.ok) {
-        showToast("Comandă anulată cu succes!", "success");
+        arataToast('success', "Comandă anulată cu succes!");
         setConfirmModal({ isOpen: false, id: null });
         setEditModal({ isOpen: false, type: '', item: null });
         fetchData();
       }
-    } catch (err) { showToast("Eroare server!", "error"); }
+    } catch (err) { 
+      arataToast('error', "Eroare server la anulare!"); 
+    }
   };
 
   const getStatusStyle = (status) => {
@@ -331,27 +299,19 @@ const actualizeazaStatus = async (id, statusNou) => {
     }
   };
 
-  if (isLoading) return <div className="ac-loader"><div className="ac-spinner"></div></div>;
-
-// Funcția care decide cum arată badge-ul de trafic
   const getSursaBadge = (sursa) => {
     const s = sursa ? sursa.toLowerCase() : '';
-    
     if (s.includes('facebook')) {
-      return { text: 'Facebook', bg: '#dbeafe', color: '#2563eb', border: '#bfdbfe' }; // Albastru
+      return { text: 'Facebook', bg: '#dbeafe', color: '#2563eb', border: '#bfdbfe' };
     }
     if (s.includes('tine') || s.includes('admin')) {
-      return { text: 'Creată de tine', bg: '#f3e8ff', color: '#9333ea', border: '#e9d5ff' }; // Mov
+      return { text: 'Creată de tine', bg: '#f3e8ff', color: '#9333ea', border: '#e9d5ff' };
     }
-    
-    // Dacă nu e Facebook sau Creată de admin, presupunem că e Organic/Google
-    return { text: 'Organic / Google', bg: '#dcfce7', color: '#16a34a', border: '#bbf7d0' }; // Verde
+    return { text: 'Organic / Google', bg: '#dcfce7', color: '#16a34a', border: '#bbf7d0' };
   };
 
+  if (isLoading) return <div className="ac-loader"><div className="ac-spinner"></div></div>;
 
-
-
-  
   return (
     <div className="ac-container">
       
@@ -359,17 +319,17 @@ const actualizeazaStatus = async (id, statusNou) => {
         <div className="ac-header-left">
           <h1 className="ac-page-title">Gestionare Comenzi</h1>
           <button 
-    className="ac-btn-new-order" 
-    onClick={() => openEditModal({ 
-      cantitate: 1, 
-      metodaPlata: 'Ramburs', 
-      tipLivrare: 'curier', 
-      sursa: 'Creată de tine', // 🔥 Aici forțăm sursa pentru comenzile manuale
-      numeProdus: '' 
-    }, 'creare')}
-  >
-    <FiPlusSquare /> Comandă Nouă
-  </button>
+            className="ac-btn-new-order" 
+            onClick={() => openEditModal({ 
+              cantitate: 1, 
+              metodaPlata: 'Ramburs', 
+              tipLivrare: 'curier', 
+              sursa: 'Creată de tine', 
+              numeProdus: '' 
+            }, 'creare')}
+          >
+            <FiPlusSquare /> Comandă Nouă
+          </button>
         </div>
         
         <div className="ac-header-right">
@@ -425,8 +385,8 @@ const actualizeazaStatus = async (id, statusNou) => {
               </tr>
             </thead>
        
-      <tbody>
-             {listaFiltrata.map((item) => (
+            <tbody>
+              {listaFiltrata.map((item) => (
                 <tr key={item._id} className={item.status === 'Anulată' ? 'ac-row-cancelled' : ''}>
                   
                   {/* 1. DATĂ */}
@@ -460,7 +420,7 @@ const actualizeazaStatus = async (id, statusNou) => {
                     </div>
                   </td>
 
-                  {/* 5. STATUS (Doar în tab-ul comenzi) */}
+                  {/* 5. STATUS */}
                   {activeTab === 'comenzi' && (
                     <td data-label="Status">
                       <select 
@@ -483,37 +443,35 @@ const actualizeazaStatus = async (id, statusNou) => {
                     </td>
                   )}
 
-                  {/* 6. SURSĂ TRAFIC 🎯 (Aici trebuia să stea de fapt) */}
-                  {/* 6. SURSĂ TRAFIC 🎯 */}
-  <td data-label="Sursă Trafic">
-    {(() => {
-      const stilSursa = getSursaBadge(item.sursa);
-      return (
-        <span style={{ 
-          background: stilSursa.bg, 
-          color: stilSursa.color, 
-          border: `1px solid ${stilSursa.border}`, 
-          padding: '4px 8px', 
-          borderRadius: '6px', 
-          fontSize: '0.8rem', 
-          fontWeight: 'bold',
-          display: 'inline-block' 
-        }}>
-          {stilSursa.text}
-        </span>
-      );
-    })()}
-  </td>
+                  {/* 6. SURSĂ TRAFIC */}
+                  <td data-label="Sursă Trafic">
+                    {(() => {
+                      const stilSursa = getSursaBadge(item.sursa);
+                      return (
+                        <span style={{ 
+                          background: stilSursa.bg, 
+                          color: stilSursa.color, 
+                          border: `1px solid ${stilSursa.border}`, 
+                          padding: '4px 8px', 
+                          borderRadius: '6px', 
+                          fontSize: '0.8rem', 
+                          fontWeight: 'bold',
+                          display: 'inline-block' 
+                        }}>
+                          {stilSursa.text}
+                        </span>
+                      );
+                    })()}
+                  </td>
 
                   {/* 7. TOTAL */}
                   <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938', fontWeight: 'bold' }}>
                     {item.total || item.totalComanda} Lei
                   </td>
                   
-                  {/* 8. ACȚIUNI (Am unit AWB-ul cu Editează pe aceeași coloană) */}
+                  {/* 8. ACȚIUNI */}
                   <td data-label="Acțiuni" className="text-right" style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
                     
-                    {/* Buton AWB */}
                     {!item.awb ? (
                       <button onClick={() => genereazaAWB(item._id)} style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
                         📦 AWB
@@ -524,7 +482,6 @@ const actualizeazaStatus = async (id, statusNou) => {
                       </span>
                     )}
 
-                    {/* Buton Edit */}
                     <button onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')} className="ac-btn-edit">
                       <FiEdit2 />
                     </button>
@@ -550,23 +507,23 @@ const actualizeazaStatus = async (id, statusNou) => {
             
             <div className="ac-modal-body">
               <div className="ac-form-group">
-    <label>Selectează Produsul</label>
-    <select 
-      name="numeProdus" 
-      value={formData.numeProdus || ''} 
-      onChange={handleInputChange}
-    >
-      <option value="">-- Alege un produs --</option>
-      {/* 🔥 FIX: Verificăm dacă există produse înainte să dăm map! */}
-      {produse && produse.length > 0 ? (
-        produse.map((p) => (
-          <option key={p._id} value={p.nume}>{p.nume}</option>
-        ))
-      ) : (
-        <option value="" disabled>Se încarcă produsele...</option>
-      )}
-    </select>
-  </div>
+                <label>Selectează Produsul</label>
+                <select 
+                  name="numeProdus" 
+                  value={formData.numeProdus || ''} 
+                  onChange={handleInputChange}
+                >
+                  <option value="">-- Alege un produs --</option>
+                  {produse && produse.length > 0 ? (
+                    produse.map((p) => (
+                      <option key={p._id} value={p.nume}>{p.nume}</option>
+                    ))
+                  ) : (
+                    <option value="" disabled>Se încarcă produsele...</option>
+                  )}
+                </select>
+              </div>
+
               <div className="ac-form-row">
                 <div className="ac-form-group">
                   <label>Cantitate (Bucăți)</label>
@@ -620,6 +577,7 @@ const actualizeazaStatus = async (id, statusNou) => {
                 <label>Adresă Livrare / Detalii Easybox</label>
                 <input type="text" name="adresa" value={formData.adresa || ''} onChange={handleInputChange} />
               </div>
+              
               <div className="ac-form-row">
                 <input type="text" name="localitate" value={formData.localitate || ''} onChange={handleInputChange} placeholder="Oraș" />
                 <input type="text" name="judet" value={formData.judet || ''} onChange={handleInputChange} placeholder="Județ" />
@@ -669,13 +627,7 @@ const actualizeazaStatus = async (id, statusNou) => {
         </div>
       )}
 
-      {toast.visible && (
-        <div className={`ac-toast ${toast.type}`}>
-          {toast.message}
-        </div>
-      )}
-
-      {/* 🛎️ RENDER NOTIFICĂRI SMART */}
+      {/* 🛎️ RENDER UNIC NOTIFICĂRI SMART */}
       {toast && (
         <div className="admin-toast-container">
           <div className={`admin-toast ${toast.tip}`}>
