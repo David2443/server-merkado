@@ -279,7 +279,7 @@ const trimiteInEawb = async (comanda) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         // 🔥 CHEIA NOUA AICI!
-        'Authorization': 'Bearer pk_fbcnwwwc_a0QlpUFqLMJbwOqFnqL9nTwDTRqwroiq' 
+        'X-API-Key': 'pk_fbcnwwwc_a0QlpUFqLMJbwOqFnqL9nTwDTRqwroiq' 
       },
       body: JSON.stringify(payloadEAWB)
     });
@@ -704,7 +704,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       headers: {
         'Content-Type': 'application/json',
         // 🔥 CHEIA NOUA AICI! Fără ea pica garantat.
-        'Authorization': 'Bearer pk_fbcnwwwc_a0QlpUFqLMJbwOqFnqL9nTwDTRqwroiq'
+        'X-API-Key': 'pk_fbcnwwwc_a0QlpUFqLMJbwOqFnqL9nTwDTRqwroiq'
       },
       body: JSON.stringify(payloadEAWB)
     });
@@ -733,7 +733,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     console.error("❌ Eroare server fatală la AWB:", err);
     res.status(500).json({ eroare: err.message });
   }
-});
+});+
 
 app.get('/api/dashboard', verifyAdmin, async (req, res) => {
   try {
