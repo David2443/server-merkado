@@ -432,31 +432,34 @@ app.get('/api/lockers', async (req, res) => {
   try {
     const { judet, localitate } = req.query;
 
-    // Dacă nu avem județ sau localitate, nu facem cererea la ei ca să nu ne dea eroare 400
     if (!judet || !localitate) {
       return res.status(400).json({ eroare: "Avem nevoie de județ și localitate pentru a căuta lockere." });
     }
 
-    // Facem request către Europarcel (Folosim RO standard)
     const url = `https://api.europarcel.com/api/public/locations/fixedlocations/RO?county_name=${encodeURIComponent(judet)}&locality_name=${encodeURIComponent(localitate)}`;
 
     const raspuns = await fetch(url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
-        // Folosim parola ascunsă din server!
         'X-API-Key': process.env.EUROPARCEL_API_KEY 
       }
     });
 
-    const dateLockere = await raspuns.json();
-
     if (!raspuns.ok) {
-      return res.status(400).json({ eroare: "Nu am găsit lockere pentru această zonă." });
+      // Dacă Europarcel dă 404 (localitate negăsită) sau 401 (lipsă cheie)
+      return res.status(400).json({ eroare: "Nu am găsit lockere pentru acest oraș." });
     }
 
-    // Europarcel returnează și alte chestii, dar noi le filtrăm doar pe cele de tip "locker"
-    const lockereAdevărate = dateLockere.data.filter(loc => loc.fixed_location_type === 'locker');
+    const dateLockere = await raspuns.json();
+
+    // 🔥 AICI ERA GREȘEALA: Europarcel returnează DIRECT array-ul, nu folosește ".data"
+    if (!Array.isArray(dateLockere)) {
+      return res.status(500).json({ eroare: "Curierul a returnat un format necunoscut." });
+    }
+
+    // Filtrăm doar lockerele (eliminăm punctele de sediu sau altele)
+    const lockereAdevărate = dateLockere.filter(loc => loc.fixed_location_type === 'locker');
 
     res.json(lockereAdevărate);
 
