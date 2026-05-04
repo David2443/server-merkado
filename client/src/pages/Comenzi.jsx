@@ -20,9 +20,16 @@ const AdminComenzi = () => {
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, id: null });
   const [editModal, setEditModal] = useState({ isOpen: false, type: '', item: null });
   const [formData, setFormData] = useState({});
-  const [toast, setToast] = useState({ visible: false, message: '', type: 'success' });
 
 
+const [toast, setToast] = useState(null);
+
+  const arataToast = (tip, mesaj) => {
+    setToast({ tip, mesaj });
+    setTimeout(() => {
+      setToast(null);
+    }, 6000);
+  };
 
 // Funcția de apelare REPARATĂ + SMART TOASTS
 const genereazaAWB = async (idComanda) => {
@@ -342,18 +349,9 @@ const actualizeazaStatus = async (id, statusNou) => {
   };
 
 
-// 🛎️ Sistem de Notificări (Toasts)
-  const [toast, setToast] = useState(null);
-
-  const arataToast = (tip, mesaj) => {
-    setToast({ tip, mesaj });
-    // Ascundem notificarea după 6 secunde automat
-    setTimeout(() => {
-      setToast(null);
-    }, 6000);
-  };
 
 
+  
   return (
     <div className="ac-container">
       
