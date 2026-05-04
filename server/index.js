@@ -666,6 +666,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     // 🔥 URL-ul lor mega ciudat din documentație
 const urlEawb = 'https://api.europarcel.com/api/public/orders';
 
+console.log("🕵️‍♂️ CHEIA TRIMISA ESTE:", process.env.EAWB_API_KEY);
     const raspunsEawb = await fetch(urlEawb, {
       method: 'POST',
       headers: {
