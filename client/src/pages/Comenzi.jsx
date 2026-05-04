@@ -13,7 +13,7 @@ const AdminComenzi = () => {
   const [comenzi, setComenzi] = useState([]);
   const [drafts, setDrafts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+  const [produse, setProduse] = useState([]); // 🔥 State pentru produse
   const [searchTerm, setSearchTerm] = useState('');
   const [range, setRange] = useState('last30'); 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -30,12 +30,12 @@ const genereazaAWB = async (idComanda) => {
   if (!confirmare) return;
 
   const token = localStorage.getItem('adminToken');
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; 
 
-  // 1. Definim API_URL corect folosind import.meta.env (Așa citește Vite variabilele)
-  const API_URL = import.meta.env.VITE_API_URL || 'https://merkado-backend.onrender.com'; 
+  console.log(`🚀 1. Încerc să generez AWB pentru comanda: ${idComanda}`);
+  console.log(`🔗 2. URL-ul apelat este: ${API_URL}/api/admin/comenzi/${idComanda}/awb`);
 
   try {
-    // 2. Aici folosim API_URL, NU VITE_API_URL
     const response = await fetch(`${API_URL}/api/admin/comenzi/${idComanda}/awb`, {
       method: 'POST',
       headers: {
@@ -44,17 +44,21 @@ const genereazaAWB = async (idComanda) => {
       }
     });
 
+    console.log(`📥 3. Răspuns primit de la server. HTTP Status: ${response.status}`);
+
     const data = await response.json();
+    console.log("📦 4. Date primite în JSON:", data);
 
     if (response.ok && data.success) {
-      alert(`✅ SUCCES! AWB-ul a fost generat: ${data.awb}`);
-      // Reîncărcăm tabelul ca să apară pastila verde!
-      fetchData(); 
+      showToast(`✅ SUCCES! AWB generat: ${data.awb}`, 'success');
+      fetchData(); // Reîncărcăm tabelul
     } else {
-      alert(`❌ EROARE: ${data.eroare}`);
+      // Dacă backend-ul zice că e o problemă
+      alert(`❌ EROARE DE LA SERVER: ${data.eroare || data.message || 'Eroare necunoscută'}`);
     }
   } catch (err) {
-    alert(`❌ Eroare de rețea: ${err.message}`);
+    console.error("💥 EROARE CRITICĂ CATCH:", err);
+    alert(`❌ Eroare gravă (A picat backend-ul sau ai greșit ruta?): ${err.message}`);
   }
 };
 
@@ -78,7 +82,6 @@ const genereazaAWB = async (idComanda) => {
 
   const fetchData = async () => {
     setIsLoading(true);
-    // 🛡️ FIX 2: Folosim STRICT adminToken pentru rutele de administrare
     const token = localStorage.getItem('adminToken');
     
     if (!token) {
@@ -87,23 +90,61 @@ const genereazaAWB = async (idComanda) => {
     }
 
     try {
-      const res = await fetch(`${API_URL}/api/dashboard?range=${range}`, {
+      // 📦 1. Tragem Comenzile și Draft-urile (Coșurile abandonate)
+      const resComenzi = await fetch(`${API_URL}/api/dashboard?range=${range}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      if (res.status === 401 || res.status === 403) {
+      if (resComenzi.status === 401 || resComenzi.status === 403) {
         delogareSilentioasa();
         return;
       }
 
-      const data = await res.json();
-      if (res.ok) {
-        setComenzi(data.comenziRecente || []);
-        setDrafts(data.cosuriAbandonate || []);
+      const dataComenzi = await resComenzi.json();
+      if (resComenzi.ok) {
+        setComenzi(dataComenzi.comenziRecente || []);
+        setDrafts(dataComenzi.cosuriAbandonate || []);
       }
-    } catch (err) { console.error("Eroare fetch:", err); }
+
+      // 🛒 2. Tragem Produsele pentru Dropdown-ul din Modal
+      try {
+        // Dacă ai deja ruta de produse pe backend, asta o va apela:
+        const resProduse = await fetch(`${API_URL}/api/produse`, {
+          headers: { 'Authorization': `Bearer ${token}` } // Dacă e protejată ruta
+        });
+        
+        if (resProduse.ok) {
+          const dataProduse = await resProduse.json();
+          setProduse(dataProduse || []);
+        } else {
+          // Dacă ruta nu există încă sau dă eroare, băgăm unele de test ca să nu crape:
+          setProduse([
+            { _id: 'test1', nume: 'Tricou Super Bombă' },
+            { _id: 'test2', nume: 'Adidași Premium' },
+            { _id: 'test3', nume: 'Ceas Șmecher' }
+          ]);
+        }
+      } catch (errProduse) {
+        console.error("Eroare la fetch produse:", errProduse);
+        // Dacă a picat complet apelul de produse, punem fallback-ul de test:
+        setProduse([
+          { _id: 'test1', nume: 'Tricou Super Bombă' },
+          { _id: 'test2', nume: 'Adidași Premium' },
+          { _id: 'test3', nume: 'Ceas Șmecher' }
+        ]);
+      }
+
+    } catch (err) { 
+      console.error("Eroare fetch principal:", err); 
+    }
+    
     setIsLoading(false);
   };
+
+  // Se apelează automat la încărcarea paginii și când schimbi filtrul de date (Azi, Ultimele 7 zile etc.)
+  useEffect(() => { 
+    fetchData(); 
+  }, [range]);
 
   useEffect(() => { fetchData(); }, [range]);
 
@@ -284,15 +325,39 @@ const actualizeazaStatus = async (id, statusNou) => {
 
   if (isLoading) return <div className="ac-loader"><div className="ac-spinner"></div></div>;
 
+// Funcția care decide cum arată badge-ul de trafic
+  const getSursaBadge = (sursa) => {
+    const s = sursa ? sursa.toLowerCase() : '';
+    
+    if (s.includes('facebook')) {
+      return { text: 'Facebook', bg: '#dbeafe', color: '#2563eb', border: '#bfdbfe' }; // Albastru
+    }
+    if (s.includes('tine') || s.includes('admin')) {
+      return { text: 'Creată de tine', bg: '#f3e8ff', color: '#9333ea', border: '#e9d5ff' }; // Mov
+    }
+    
+    // Dacă nu e Facebook sau Creată de admin, presupunem că e Organic/Google
+    return { text: 'Organic / Google', bg: '#dcfce7', color: '#16a34a', border: '#bbf7d0' }; // Verde
+  };
+
   return (
     <div className="ac-container">
       
       <div className="ac-header-bar">
         <div className="ac-header-left">
           <h1 className="ac-page-title">Gestionare Comenzi</h1>
-          <button className="ac-btn-new-order" onClick={() => openEditModal({ cantitate: 1, metodaPlata: 'Ramburs', tipLivrare: 'curier', sursa: 'Creată de Admin' }, 'creare')}>
-  <FiPlusSquare /> Comandă Nouă
-</button>
+          <button 
+    className="ac-btn-new-order" 
+    onClick={() => openEditModal({ 
+      cantitate: 1, 
+      metodaPlata: 'Ramburs', 
+      tipLivrare: 'curier', 
+      sursa: 'Creată de tine', // 🔥 Aici forțăm sursa pentru comenzile manuale
+      numeProdus: '' 
+    }, 'creare')}
+  >
+    <FiPlusSquare /> Comandă Nouă
+  </button>
         </div>
         
         <div className="ac-header-right">
@@ -407,11 +472,26 @@ const actualizeazaStatus = async (id, statusNou) => {
                   )}
 
                   {/* 6. SURSĂ TRAFIC 🎯 (Aici trebuia să stea de fapt) */}
-                  <td data-label="Sursă Trafic">
-                    <span className="badge-sursa" style={{ background: '#f3f4f6', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', border: '1px solid #e5e7eb', color: '#374151' }}>
-                      {item.sursa ? item.sursa : 'Organic / Direct'}
-                    </span>
-                  </td>
+                  {/* 6. SURSĂ TRAFIC 🎯 */}
+  <td data-label="Sursă Trafic">
+    {(() => {
+      const stilSursa = getSursaBadge(item.sursa);
+      return (
+        <span style={{ 
+          background: stilSursa.bg, 
+          color: stilSursa.color, 
+          border: `1px solid ${stilSursa.border}`, 
+          padding: '4px 8px', 
+          borderRadius: '6px', 
+          fontSize: '0.8rem', 
+          fontWeight: 'bold',
+          display: 'inline-block' 
+        }}>
+          {stilSursa.text}
+        </span>
+      );
+    })()}
+  </td>
 
                   {/* 7. TOTAL */}
                   <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938', fontWeight: 'bold' }}>
@@ -458,8 +538,17 @@ const actualizeazaStatus = async (id, statusNou) => {
             
             <div className="ac-modal-body">
               <div className="ac-form-group">
-                <label>Nume Produs</label>
-                <input type="text" name="numeProdus" value={formData.numeProdus || ''} onChange={handleInputChange} placeholder="Ex: Produs Premium" />
+                <label>Selectează Produsul</label>
+    <select 
+      name="numeProdus" 
+      value={formData.numeProdus || ''} 
+      onChange={handleInputChange}
+    >
+      <option value="">-- Alege un produs --</option>
+      {produse.map((p) => (
+        <option key={p._id} value={p.nume}>{p.nume}</option>
+      ))}
+    </select>
               </div>
               <div className="ac-form-row">
                 <div className="ac-form-group">
