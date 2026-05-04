@@ -433,24 +433,68 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
     const produsCumparat = await Produs.findById(d.produsId);
     const imagineProdus = produsCumparat ? produsCumparat.imaginePrincipala : null;
 
-    const payloadComanda = {
-      produsId: d.produsId,
-      numeProdus: d.numeProdus,
-      numeClient: d.numeClient,
-      email: d.email,
-      telefon: d.telefonClient || d.telefon,
-      adresa: d.adresaLivrare || d.adresa,
-      localitate: d.localitate,
-      judet: d.judet,
-      total: totalReal,
-      metodaPlata: d.metodaPlata,
-      paymentId: d.paymentId,
-      tipLivrare: d.tipLivrare,
-      samedayLockerId: d.samedayLockerId,
-      cantitate: d.qty || d.cantitate || 1,
-      extraOptions: d.extraOptions,
-      status: 'Nouă'
+ // 🔥 PAYLOAD MILIMETRIC eAWB DIRECT
+    const payloadEAWB = {
+      carrier_id: 1, // 1 = FAN Courier (Dacă folosești Sameday, verifică id-ul lor)
+      service_id: 1, // 1 = Standard / Door to Door
+      
+      // ✅ REZOLVAREA BUBEI: Datele de facturare puse "pe direct", fără ID!
+      billing_to: {
+        contact: "Merkado SRL", // Numele firmei tale sau al tău
+        email: "contact@merkado.ro", // Adresa ta
+        phone: "0700000000", // Telefonul tău
+        country_code: "RO",
+        locality_name: "Bucuresti", // Orașul tău
+        county_name: "Bucuresti", // Județul tău
+        street_name: "Strada ta nr 1" 
+        // Poți pune opțional și: company: "Nume Firma SRL", vat_number: "RO123456"
+      },
+      
+      // De unde pleacă coletul
+      address_from: {
+        email: "contact@merkado.ro", 
+        phone: "0700000000",       
+        contact: "Merkado", 
+        country_code: "RO",
+        locality_id: 10241, // ⚠️ ID-ul orașului tău (lasă-l așa de test dacă ești din Buc)
+        street_name: "Strada ta",
+        street_number: "1"
+      },
+      
+      // Unde ajunge coletul
+      address_to: {
+        email: comanda.email || "no-reply@client.ro",
+        phone: comanda.telefon || "0000000000",
+        contact: comanda.numeClient || "Client",
+        country_code: "RO",
+        postal_code: "000000", 
+        locality_name: comanda.localitate || "Bucuresti",
+        county_name: comanda.judet || "Bucuresti",
+        street_name: comanda.adresa || "-",
+        street_number: "-"
+      },
+      
+      content: {
+        envelopes_count: 0,
+        pallets_count: 0,
+        parcels_count: 1,
+        total_weight: 1,
+        parcels: [
+          { sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }
+        ]
+      },
+      
+      extra: {
+        parcel_content: comanda.numeProdus || "Produse magazin",
+        sms_recipient: true
+      }
     };
+
+    // Partea cu rambursul rămâne la fel
+    if (rambursDeIncasat > 0) {
+      payloadEAWB.extra.bank_repayment_amount = rambursDeIncasat;
+      payloadEAWB.extra.bank_repayment_currency = "RON";
+    }
 
     const nouaComanda = new Comanda(payloadComanda);
     await nouaComanda.save(); 
@@ -541,7 +585,7 @@ app.post('/api/admin/login', loginLimiter, (req, res) => {
 });
 
 // ==========================================
-// 📦 2. GENERARE MANUALĂ AWB DIN ADMIN
+// 📦 2. GENERARE MANUALĂ AWB DIN ADMIN (EUROPARCEL OFICIAL)
 // ==========================================
 app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
   try {
@@ -553,26 +597,79 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       return res.status(400).json({ eroare: `Această comandă are deja AWB-ul: ${comanda.awb}` });
     }
 
+    // Calculăm suma de plată pentru curier (Ramburs)
+    const isPlataCard = comanda.metodaPlata && comanda.metodaPlata.toLowerCase().includes('card');
+    const rambursDeIncasat = isPlataCard ? 0 : Number(comanda.total);
+
+    // 🔥 PAYLOAD MILIMETRIC EUROPARCEL
     const payloadEAWB = {
-      name: comanda.numeClient || "Client",
-      phone: comanda.telefon || "0000000000",
-      county: comanda.judet || "-",
-      city: comanda.localitate || comanda.oras || "-", 
-      address: comanda.adresa || "-",
-      cash_on_delivery: comanda.metodaPlata.toLowerCase().includes('card') ? 0 : Number(comanda.total),
-      weight: 1,
-      contents: comanda.numeProdus || "Produse"
+      carrier_id: 1, // 1 = FAN Courier (probabil). Verifică în tabelul lor de Carriers.
+      service_id: 1, // 1 = Door to Door.
+      
+      // ⚠️ TREBUIE SĂ AFLI BILLING ID-ul TĂU DIN CONTUL LOR
+      billing_to: {
+        billing_address_id: 123 // 👈 SCHIMBĂ CU ID-ul TĂU REAL DE FACTURARE!
+      },
+      
+      address_from: {
+        email: "contact@merkado.ro", 
+        phone: "0700000000",       // Pune telefonul tău real
+        contact: "Merkado", 
+        country_code: "RO",
+        locality_id: 10241,        // ⚠️ Pune ID-ul orașului tău (ex: 10241 pt București)
+        street_name: "Strada ta",
+        street_number: "1"
+      },
+      
+      address_to: {
+        email: comanda.email || "no-reply@client.ro",
+        phone: comanda.telefon || "0000000000",
+        contact: comanda.numeClient || "Client",
+        country_code: "RO",
+        postal_code: "000000", // Din păcate cer cod poștal sau ID. Punem un fallback.
+        locality_name: comanda.localitate || "Bucuresti",
+        county_name: comanda.judet || "Bucuresti",
+        street_name: comanda.adresa || "-",
+        street_number: "-"
+      },
+      
+      content: {
+        envelopes_count: 0,
+        pallets_count: 0,
+        parcels_count: 1,
+        total_weight: 1,
+        parcels: [
+          {
+            sequence_no: 1,
+            size: { weight: 1, width: 20, height: 20, length: 20 }
+          }
+        ]
+      },
+      
+      extra: {
+        parcel_content: comanda.numeProdus || "Produse",
+        sms_recipient: true
+      }
     };
 
-    // 🔥 URL-UL CORECT ȘI AICI
-    const urlEawb = 'https://api.europarcel.com/api/public/orders'; 
+    // Dacă are ramburs, Europarcel obligă să le dăm și moneda
+    if (rambursDeIncasat > 0) {
+      payloadEAWB.extra.bank_repayment_amount = rambursDeIncasat;
+      payloadEAWB.extra.bank_repayment_currency = "RON";
+      // Documentația zice că dacă ai IBAN setat în contul Europarcel e ok, dacă nu, trebuie adăugat aici:
+      // payloadEAWB.extra.bank_iban = "ROXXBTRL..."; 
+      // payloadEAWB.extra.bank_holder = "Nume Firma SRL";
+    }
+
+    console.log("👉 Trimitem Europarcel payload-ul:", JSON.stringify(payloadEAWB, null, 2));
+
+    // 🔥 URL-ul lor mega ciudat din documentație
+    const urlEawb = 'https://api.apieuroparcel.com.ro/api.public/orders'; 
 
     const raspunsEawb = await fetch(urlEawb, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        // 🔥 Aici am reparat apiKey-ul și pentru butonul manual!
         'Authorization': `Bearer ${process.env.EAWB_API_KEY}`
       },
       body: JSON.stringify(payloadEAWB)
@@ -590,10 +687,12 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
 
     if (!raspunsEawb.ok) {
       console.error("❌ Europarcel a respins cererea manuală:", dateAwb);
-      return res.status(400).json({ eroare: "Refuzat: " + (dateAwb.message || JSON.stringify(dateAwb)) });
+      const motiv = dateAwb.errors ? JSON.stringify(dateAwb.errors) : dateAwb.message;
+      return res.status(400).json({ eroare: "Refuzat: " + motiv });
     }
 
-    const numarAWBGenerat = dateAwb.awb || dateAwb.tracking_number || "AWB_GENERAT"; 
+    // Conform documentației, răspunsul de succes arată așa: { "data": { "awb_number": "AWB123" } }
+    const numarAWBGenerat = dateAwb.data?.awb_number || "AWB_GENERAT"; 
     
     comanda.awb = numarAWBGenerat;
     comanda.status = 'Expediată'; 
