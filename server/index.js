@@ -538,7 +538,7 @@ app.post('/api/admin/login', loginLimiter, (req, res) => {
 });
 
 // ==========================================
-// 📦 GENERARE MANUALĂ AWB (SUPER SIGUR)
+// 📦 GENERARE MANUALĂ AWB PRIN eAWB
 // ==========================================
 app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
   try {
@@ -547,68 +547,97 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     // 1. Găsim comanda în baza de date
     const comanda = await Comanda.findById(idComanda);
     if (!comanda) {
-      return res.status(404).json({ eroare: "Comanda nu a fost găsită!" });
+      return res.status(404).json({ success: false, eroare: "Comanda nu a fost găsită!" });
     }
 
-    // 🔒 SECURITATE: Verificăm să nu aibă deja AWB generat
+    // 🔒 Verificăm dacă are deja AWB
     if (comanda.awb && comanda.awb.trim() !== '') {
-      return res.status(400).json({ eroare: `Această comandă are deja AWB-ul: ${comanda.awb}` });
+      return res.status(400).json({ success: false, eroare: `Această comandă are deja AWB-ul: ${comanda.awb}` });
     }
 
-    // 2. Mapăm datele conform cerințelor standard API
+    // 2. Extragem suma de plată pentru curier (Ramburs)
+    // Dacă plata a fost făcută cu cardul, rambursul e 0.
+    const isPlataCard = comanda.metodaPlata && comanda.metodaPlata.toLowerCase().includes('card');
+    const rambursDeIncasat = isPlataCard ? 0 : (Number(comanda.total) || 0);
+
+    // 3. Mapăm datele fix cum le vrea documentația eAWB
     const payloadEAWB = {
       name: comanda.numeClient || "Client",
       phone: comanda.telefon || "0000000000",
       county: comanda.judet || "-",
-      city: comanda.localitate || comanda.oras || "-", // prindem ambele variante
+      city: comanda.localitate || comanda.oras || "-", 
       address: comanda.adresa || "-",
-      cash_on_delivery: Number(comanda.total) || 0, // Ne asigurăm că e număr
-      weight: 1,
-      contents: comanda.numeProdus || "Produse"
+      cash_on_delivery: rambursDeIncasat, // suma corectă
+      weight: 1, // greutatea coletului
+      contents: comanda.numeProdus || "Produse magazin",
+      parcels: 1, // numărul de colete
+      // Dacă vrei să forțezi un anumit curier în eAWB (ex: sameday, fan, cargus)
+      // poți adăuga: courier: "sameday" 
     };
 
-    console.log("Trimitem către eAWB datele:", payloadEAWB);
+    console.log("👉 Trimitem către eAWB datele:", payloadEAWB);
 
-    // 3. Facem cererea securizată către eAWB
-const urlEawb = 'https://eawb.ro/api/orders';
+    // 4. Facem cererea către eAWB
+    const urlEawb = 'https://eawb.ro/api/v1/orders'; // 👈 Atenție la URL-ul corect! Adesea e /v1/
+    
+    // Asigură-te că cheia e luată din .env
+    const apiKey = process.env.EAWB_API_KEY; 
+    
+    if (!apiKey) {
+      return res.status(500).json({ success: false, eroare: "Lipsește cheia API (EAWB_API_KEY) din server!" });
+    }
+
     const raspunsEawb = await fetch(urlEawb, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json', // 👈 Obligatoriu!
-    'Accept': 'application/json',       // 👈 Adaugă și linia asta, îi spune lui eAWB "Vreau JSON, nu HTML!"
-    'Authorization': `Bearer ${process.env.EAWB_API_KEY}`
-  },
-  body: JSON.stringify(payloadEAWB)
-});
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${apiKey}` 
+      },
+      body: JSON.stringify(payloadEAWB)
+    });
 
-    const dateAwb = await raspunsEawb.json();
-
-    // 4. Dacă eAWB dă eroare, o trimitem curat către tine să vezi ce nu i-a convenit
-    if (!raspunsEawb.ok) {
-      console.error("Eroare de la eAWB:", dateAwb);
-      return res.status(400).json({ 
-        eroare: "eAWB a respins comanda. Motiv: " + (dateAwb.message || dateAwb.error || JSON.stringify(dateAwb))
+    // 5. CITEȘTE RĂSPUNSUL CA TEXT ÎNTÂI! (Aici era buba care dădea eroare cu "<!DOCTYPE")
+    const textRaspuns = await raspunsEawb.text(); 
+    
+    let dateAwb;
+    try {
+      // Încercăm să transformăm textul în JSON.
+      dateAwb = JSON.parse(textRaspuns);
+    } catch (parseError) {
+      // Dacă eAWB nu a dat un JSON, ci o pagină de eroare HTML, prindem eroarea!
+      console.error("❌ eAWB a returnat HTML în loc de JSON:", textRaspuns.substring(0, 200));
+      return res.status(500).json({ 
+        success: false, 
+        eroare: "Eroare de comunicare cu serverul curierului. eAWB a returnat un răspuns invalid." 
       });
     }
 
-    // 5. Salvăm AWB-ul în comanda noastră și schimbăm statusul
-    // Adaptează "dateAwb.awb" la răspunsul real de la eAWB (uneori e dateAwb.data.awb_number etc.)
-    const numarAWBGenerat = dateAwb.awb || dateAwb.tracking_number || "GENERAT_FARA_NUMAR"; 
-    
-    comanda.awb = numarAWBGenerat;
-    comanda.status = 'Expediată'; // sau 'Procesată'
-    await comanda.save();
-
-    res.json({ success: true, awb: numarAWBGenerat, mesaj: "AWB Generat cu succes!" });
-} catch (err) {
-    console.error("❌ Eroare server la generarea AWB:", err.message);
-    
-    // 👈 ASTA E CHEIA! Ne va arăta fix de ce a picat rețeaua în logurile din Render
-    if (err.cause) {
-        console.error("🔍 CAUZA EXACTĂ A CĂDERII:", err.cause);
+    // 6. Verificăm dacă eAWB a aprobat comanda
+    // eAWB folosește adesea HTTP 200/201 pentru succes.
+    if (!raspunsEawb.ok) {
+      console.error("❌ eAWB a respins cererea:", dateAwb);
+      const mesajEroare = dateAwb.message || dateAwb.error || "Eroare necunoscută la generarea AWB.";
+      return res.status(400).json({ success: false, eroare: `eAWB: ${mesajEroare}` });
     }
 
-    res.status(500).json({ eroare: "Eroare internă server: " + err.message });
+    // 7. Salvăm AWB-ul returnat în baza noastră de date
+    // ⚠️ ATENȚIE: Structura JSON de la eAWB poate diferi. De obicei, numărul e în `dateAwb.awb`, `dateAwb.tracking_number` sau în interiorul unui obiect `dateAwb.data`.
+    // Verifică documentația eAWB sau log-urile din consolă pentru a lua câmpul corect.
+    const numarAWBGenerat = dateAwb.awb || dateAwb.tracking_number || (dateAwb.data && dateAwb.data.awb) || "GENERAT_FARA_NUMAR"; 
+    
+    comanda.awb = numarAWBGenerat;
+    comanda.status = 'Expediată'; // Actualizăm automat statusul
+    await comanda.save();
+
+    console.log(`✅ AWB Generat cu succes: ${numarAWBGenerat}`);
+
+    // 8. Trimitem răspunsul curat către React
+    res.json({ success: true, awb: numarAWBGenerat, mesaj: "AWB Generat cu succes!" });
+
+  } catch (err) {
+    console.error("❌ Eroare server fatală la AWB:", err.message);
+    res.status(500).json({ success: false, eroare: "Eroare internă server: " + err.message });
   }
 });
 
