@@ -222,14 +222,8 @@ const trimiteInEawb = async (comanda) => {
     const payloadEAWB = {
       carrier_id: 1, 
       service_id: 1, 
-      billing_to: {
-        contact: "Merkado SRL",
-        email: "contact@merkado.ro",
-        phone: "0700000000",
-        country_code: "RO",
-        locality_name: "Bucuresti",
-        county_name: "Bucuresti",
-        street_name: "Strada ta nr 1" 
+     billing_to: {
+        billing_address_id: 279010
       },
       address_from: {
         email: "contact@merkado.ro", 
@@ -461,11 +455,14 @@ app.get('/api/comenzi/track/:telefon', async (req, res) => {
   } catch (err) { res.status(500).json({ eroare: "Eroare la server." }); }
 });
 
-// Ruta Checkout Nou
+// ==========================================
+// 🛒 RUTA CHECKOUT NOUĂ (CLIENTI)
+// ==========================================
 app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {  
   try { 
-    const d = req.body;
+    const d = req.body; // Datele venite din formularul de pe site
     
+    // 1. Verificare Securitate Plată Card
     if (d.metodaPlata && d.metodaPlata.toLowerCase().includes('card')) {
       if (!d.paymentId) return res.status(400).json({ eroare: "Tentativă de fraudă: ID plată lipsă!" });
       const plataVerificata = await stripe.paymentIntents.retrieve(d.paymentId);
@@ -474,70 +471,25 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
       }
     }
 
+    // 2. Calculează prețul real și caută produsul
     const totalReal = await calculeazaTotalSecurizat(d.produsId, d.qty, d.tipLivrare, d.extraOptions, d.metodaPlata);
     const produsCumparat = await Produs.findById(d.produsId);
-    const imagineProdus = produsCumparat ? produsCumparat.imaginePrincipala : null;
 
- // 🔥 PAYLOAD MILIMETRIC eAWB DIRECT
-    const payloadEAWB = {
-      carrier_id: 1, // 1 = FAN Courier (Dacă folosești Sameday, verifică id-ul lor)
-      service_id: 1, // 1 = Standard / Door to Door
-      
-      // ✅ REZOLVAREA BUBEI: Datele de facturare puse "pe direct", fără ID!
-     billing_to: {
-        billing_address_id: 279010
-      },
-      
-      // De unde pleacă coletul
-      address_from: {
-        email: "contact@merkado.ro", 
-        phone: "0700000000",       
-        contact: "Merkado", 
-        country_code: "RO",
-        locality_id: 10241, // ⚠️ ID-ul orașului tău (lasă-l așa de test dacă ești din Buc)
-        street_name: "Strada ta",
-        street_number: "1"
-      },
-      
-      // Unde ajunge coletul
-      address_to: {
-        email: comanda.email || "no-reply@client.ro",
-        phone: comanda.telefon || "0000000000",
-        contact: comanda.numeClient || "Client",
-        country_code: "RO",
-        postal_code: "000000", 
-        locality_name: comanda.localitate || "Bucuresti",
-        county_name: comanda.judet || "Bucuresti",
-        street_name: comanda.adresa || "-",
-        street_number: "-"
-      },
-      
-      content: {
-        envelopes_count: 0,
-        pallets_count: 0,
-        parcels_count: 1,
-        total_weight: 1,
-        parcels: [
-          { sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }
-        ]
-      },
-      
-      extra: {
-        parcel_content: comanda.numeProdus || "Produse magazin",
-        sms_recipient: true
-      }
-    };
-
-    // Partea cu rambursul rămâne la fel
-    if (rambursDeIncasat > 0) {
-      payloadEAWB.extra.bank_repayment_amount = rambursDeIncasat;
-      payloadEAWB.extra.bank_repayment_currency = "RON";
-    }
-
-    const nouaComanda = new Comanda(payloadComanda);
+    // 3. Creăm și salvăm comanda în baza noastră de date (MongoDB)
+    // Folosim datele din 'd' dar forțăm totalul calculat de server ca să evităm hack-urile la preț
+    const nouaComanda = new Comanda({
+      ...d,
+      total: totalReal,
+      numeProdus: produsCumparat ? produsCumparat.nume : "Produs Magazin",
+      status: 'Nouă'
+    });
     await nouaComanda.save(); 
 
-    const textMesaj = `
+    // 4. Ștergem coșul abandonat (dacă există) pentru acest număr de telefon
+    await CosAbandonat.findOneAndDelete({ telefon: d.telefon });
+
+    // 5. Trimitem Notificarea pe Telegram
+    const textTelegram = `
 🚀 <b>COMANDĂ NOUĂ!</b>
 👤 <b>Client:</b> ${nouaComanda.numeClient}
 📞 <b>Telefon:</b> ${nouaComanda.telefon}
@@ -547,22 +499,24 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
 💳 <b>Plată:</b> ${nouaComanda.metodaPlata}
 <a href="https://merkado.ro/admin/dashboard">👉 Deschide Dashboard-ul</a>`;
 
-    await trimiteTelegram(textMesaj);
-   await trimiteInEawb(nouaComanda);
+    await trimiteTelegram(textTelegram);
 
-    await CosAbandonat.findOneAndDelete({ telefon: payloadComanda.telefon });
-
-
-
+    // 6. Trimitem Email-ul de confirmare către client
     if (nouaComanda.email) {
       const msgEmail = `Comanda ta a fost preluată și urmează să fie pregătită pentru expediere.`;
-      const htmlEmail = genereazaEmailSuperProduse("Confirmare Comandă 🎉", msgEmail, nouaComanda, imagineProdus);
-      trimiteEmail(nouaComanda.email, "Comanda ta Super Produse a fost înregistrată! 🚀", htmlEmail);
+      const htmlEmail = genereazaEmailSuperProduse("Confirmare Comandă 🎉", msgEmail, nouaComanda, produsCumparat?.imaginePrincipala);
+      trimiteEmail(nouaComanda.email, "Comanda ta a fost înregistrată! 🚀", htmlEmail);
     }
 
-    res.status(201).json({ success: true, mesaj: "Comandă trimisă!" });
+    // 7. 🔥 CEA MAI IMPORTANTĂ PARTE: Trimitem automat în eAWB!
+    // Chemăm funcția de sus care are deja ID-ul 279010 și X-API-Key setate corect
+    await trimiteInEawb(nouaComanda);
+
+    res.status(201).json({ success: true, mesaj: "Comandă procesată cu succes!" });
+
   } catch (err) { 
-    res.status(400).json({ eroare: err.message }); 
+    console.error("❌ Eroare critică la checkout:", err.message);
+    res.status(400).json({ eroare: "Eroare la procesarea comenzii: " + err.message }); 
   }
 });
 
@@ -643,14 +597,9 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       carrier_id: 1, 
       service_id: 1, 
       billing_to: {
-        contact: "Merkado SRL",
-        email: "contact@merkado.ro",
-        phone: "0700000000",
-        country_code: "RO",
-        locality_name: "Bucuresti",
-        county_name: "Bucuresti",
-        street_name: "Strada ta nr 1" 
+        billing_address_id: 279010
       },
+
       address_from: {
         email: "contact@merkado.ro", 
         phone: "0700000000",       
