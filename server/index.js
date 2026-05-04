@@ -425,6 +425,47 @@ app.use('/api/contact', contactRoute);
 // === 11. RUTE PUBLICE (Clienți) ===
 // ============================================================================
 
+// ==========================================
+// 📍 RUTA NOUĂ: CAUTĂ LOCKERE EUROPARCEL
+// ==========================================
+app.get('/api/lockers', async (req, res) => {
+  try {
+    const { judet, localitate } = req.query;
+
+    // Dacă nu avem județ sau localitate, nu facem cererea la ei ca să nu ne dea eroare 400
+    if (!judet || !localitate) {
+      return res.status(400).json({ eroare: "Avem nevoie de județ și localitate pentru a căuta lockere." });
+    }
+
+    // Facem request către Europarcel (Folosim RO standard)
+    const url = `https://api.europarcel.com/api/public/locations/fixedlocations/RO?county_name=${encodeURIComponent(judet)}&locality_name=${encodeURIComponent(localitate)}`;
+
+    const raspuns = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        // Folosim parola ascunsă din server!
+        'X-API-Key': process.env.EUROPARCEL_API_KEY 
+      }
+    });
+
+    const dateLockere = await raspuns.json();
+
+    if (!raspuns.ok) {
+      return res.status(400).json({ eroare: "Nu am găsit lockere pentru această zonă." });
+    }
+
+    // Europarcel returnează și alte chestii, dar noi le filtrăm doar pe cele de tip "locker"
+    const lockereAdevărate = dateLockere.data.filter(loc => loc.fixed_location_type === 'locker');
+
+    res.json(lockereAdevărate);
+
+  } catch (err) {
+    console.error("❌ Eroare la citirea lockerelor:", err.message);
+    res.status(500).json({ eroare: "Eroare la conectarea cu rețeaua de lockere." });
+  }
+});
+
 app.get('/api/produse', async (req, res) => {
   try { res.json(await Produs.find().sort({ createdAt: -1 })); } 
   catch (err) { res.status(500).json({ eroare: err.message }); }

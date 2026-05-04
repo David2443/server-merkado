@@ -150,6 +150,9 @@ const ProductPage = () => {
   const [metodaPlata, setMetodaPlata] = useState('cash');
   const [tipLivrare, setTipLivrare] = useState('curier');
   const [lockerSelectat, setLockerSelectat] = useState(null);
+  const [lockereDisponibile, setLockereDisponibile] = useState([]);
+  const [loadingLockers, setLoadingLockers] = useState(false);
+  const [eroareLockere, setEroareLockere] = useState('');
   const [errors, setErrors] = useState({});
   const [socketClient, setSocketClient] = useState(null);
 
@@ -314,6 +317,32 @@ const ProductPage = () => {
     } finally {
       setLoadingReview(false);
     }
+  };
+
+// 🔍 FUNCȚIA CARE CERE LOCKERELE DE LA SERVER
+  const cautaLockereInZona = async () => {
+    if (!dateClient.judet || !dateClient.localitate) {
+      setErrors({ ...errors, locker: "Te rog să alegi județul și să scrii localitatea mai întâi!" });
+      return;
+    }
+    setErrors({ ...errors, locker: null });
+    setLoadingLockers(true);
+    setEroareLockere('');
+    
+    try {
+      const res = await fetch(`${API_URL}/api/lockers?judet=${dateClient.judet}&localitate=${dateClient.localitate}`);
+      const data = await res.json();
+      
+      if (res.ok) {
+        if (data.length === 0) setEroareLockere(`Nu am găsit Fanbox-uri în ${dateClient.localitate}.`);
+        else setLockereDisponibile(data);
+      } else {
+        setEroareLockere(data.eroare || "Eroare la căutare.");
+      }
+    } catch (err) {
+      setEroareLockere("Eroare de conexiune la server.");
+    }
+    setLoadingLockers(false);
   };
 
 // 🗺️ HOOK NOU: ÎNCĂRCARE HARTĂ EASYBOX
@@ -847,7 +876,7 @@ const ProductPage = () => {
 
                   <div className="checkout-form-side">
 
-                    <div className="checkout-section">
+                   <div className="checkout-section">
                       <h5 className="section-title">1. Date de livrare</h5>
 
                       <div className="input-group-wrapper">
@@ -870,11 +899,6 @@ const ProductPage = () => {
                           style={tipLivrare === 'locker' ? { borderColor: '#3b82f6', borderWidth: '2px' } : {}}
                         />
                         {errors.email && <span className="error-text">{errors.email}</span>}
-                        {tipLivrare === 'locker' && (
-                          <small style={{ color: '#3b82f6', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>
-                            *Emailul este necesar pentru a primi codul PIN Easybox.
-                          </small>
-                        )}
                       </div>
 
                       <div className="modern-toggle-group">
@@ -892,7 +916,7 @@ const ProductPage = () => {
                         {optiuniTransport.some(m => m.tip === 'locker') && (
                           <div className={`modern-toggle-card ${tipLivrare === 'locker' ? 'active' : ''}`} onClick={() => setTipLivrare('locker')} style={{ display: 'flex', flexDirection: 'column', padding: '12px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                              <FiBox className="toggle-icon" /> <span>Easybox</span>
+                              <FiBox className="toggle-icon" /> <span>Locker / Box</span>
                             </div>
                             <span style={{ fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', color: tipLivrare === 'locker' ? '#3b82f6' : '#64748b' }}>
                               {pretLocker} Lei
@@ -901,36 +925,62 @@ const ProductPage = () => {
                         )}
                       </div>
 
+                      {/* JUDEȚUL ȘI LOCALITATEA ACUM APAR PESTE TOT */}
+                      <div className="input-row" style={{ marginTop: '15px' }}>
+                        <div className="input-group-wrapper" style={{ flex: 1 }}>
+                          <select className={`checkout-input ${errors.judet ? 'input-error' : ''}`} value={dateClient.judet} onChange={e => { setDateClient({ ...dateClient, judet: e.target.value }); setErrors({ ...errors, judet: null }); }}>
+                            <option value="">Alege Județul...</option>
+                            {listaJudete.map(judet => <option key={judet} value={judet}>{judet}</option>)}
+                          </select>
+                          {errors.judet && <span className="error-text">{errors.judet}</span>}
+                        </div>
+                        <div className="input-group-wrapper" style={{ flex: 1 }}>
+                          <input type="text" className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} placeholder="Localitate / Oraș" value={dateClient.localitate} onChange={e => { setDateClient({ ...dateClient, localitate: e.target.value }); setErrors({ ...errors, localitate: null }); }} />
+                          {errors.localitate && <span className="error-text">{errors.localitate}</span>}
+                        </div>
+                      </div>
+
+                      {/* ZONA SPECIFICĂ DE CURIER (Doar Adresa Stradală) */}
                       {tipLivrare === 'curier' ? (
                         <div className="fade-in">
                           <div className="input-group-wrapper">
                             <input type="text" className={`checkout-input ${errors.adresa ? 'input-error' : ''}`} placeholder="Adresă completă (Strada, Nr, Bloc)" value={dateClient.adresa} onChange={e => { setDateClient({ ...dateClient, adresa: e.target.value }); setErrors({ ...errors, adresa: null }); }} />
                             {errors.adresa && <span className="error-text">{errors.adresa}</span>}
                           </div>
-
-                          <div className="input-row">
-                            <div className="input-group-wrapper" style={{ flex: 1 }}>
-                              <select className={`checkout-input ${errors.judet ? 'input-error' : ''}`} value={dateClient.judet} onChange={e => { setDateClient({ ...dateClient, judet: e.target.value }); setErrors({ ...errors, judet: null }); }}>
-                                <option value="">Alege Județul...</option>
-                                {listaJudete.map(judet => <option key={judet} value={judet}>{judet}</option>)}
-                              </select>
-                              {errors.judet && <span className="error-text">{errors.judet}</span>}
-                            </div>
-                            <div className="input-group-wrapper" style={{ flex: 1 }}>
-                              <input type="text" className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} placeholder="Localitate / Oraș" value={dateClient.localitate} onChange={e => { setDateClient({ ...dateClient, localitate: e.target.value }); setErrors({ ...errors, localitate: null }); }} />
-                              {errors.localitate && <span className="error-text">{errors.localitate}</span>}
-                            </div>
-                          </div>
                         </div>
                       ) : (
-                        <div className="fade-in">
-                          <button type="button" className={`btn-select-locker ${errors.locker ? 'input-error' : ''}`} onClick={openLockerMap}>
-                            📍 Alege Harta Easybox
+                      
+                      /* ZONA SPECIFICĂ DE LOCKER (Buton de căutare + Listă) */
+                        <div className="fade-in" style={{ marginTop: '10px' }}>
+                          <button type="button" className={`btn-select-locker ${errors.locker ? 'input-error' : ''}`} onClick={cautaLockereInZona}>
+                            {loadingLockers ? "⏳ Se caută lockere..." : "📍 Caută Lockere în Orașul Meu"}
                           </button>
                           {errors.locker && <span className="error-text" style={{ display: 'block', marginTop: '5px' }}>{errors.locker}</span>}
-                          {lockerSelectat && (
-                            <div style={{ marginTop: '12px', padding: '14px', background: '#f0fdf4', border: '1px solid #22c55e', borderRadius: '10px', color: '#15803d', fontWeight: '600' }}>
-                              ✅ {lockerSelectat.name} <br /><span style={{ fontWeight: '400', fontSize: '0.9rem' }}>{lockerSelectat.address}</span>
+                          {eroareLockere && <div style={{ color: '#ef4444', fontSize: '0.9rem', marginTop: '10px' }}>❌ {eroareLockere}</div>}
+
+                          {/* AFIȘAREA LISTEI DE LOCKERE */}
+                          {lockereDisponibile.length > 0 && (
+                            <div style={{ marginTop: '15px', maxHeight: '250px', overflowY: 'auto', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '5px' }}>
+                              {lockereDisponibile.map(locker => (
+                                <div 
+                                  key={locker.id} 
+                                  onClick={() => {
+                                    setLockerSelectat({ id: locker.id, name: locker.name, address: locker.address, city: locker.locality_name, county: locker.county_name });
+                                    setErrors({ ...errors, locker: null });
+                                  }}
+                                  style={{
+                                    padding: '12px', borderBottom: '1px solid #f1f5f9', cursor: 'pointer', borderRadius: '6px',
+                                    backgroundColor: lockerSelectat?.id === locker.id ? '#f0fdf4' : 'transparent',
+                                    border: lockerSelectat?.id === locker.id ? '2px solid #22c55e' : '2px solid transparent'
+                                  }}
+                                >
+                                  <div style={{ fontWeight: 'bold', color: '#0f172a', display: 'flex', justifyContent: 'space-between' }}>
+                                    <span>{locker.name}</span>
+                                    {lockerSelectat?.id === locker.id && <span style={{ color: '#22c55e' }}>✅</span>}
+                                  </div>
+                                  <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>{locker.address}</div>
+                                </div>
+                              ))}
                             </div>
                           )}
                         </div>
