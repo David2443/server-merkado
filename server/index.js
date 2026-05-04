@@ -8,7 +8,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
-const rateLimit = require('express-rate-limit'); // 👉 MUTAT AICI SUS: Rezolvă eroarea de inițializare!
+const rateLimit = require('express-rate-limit'); 
 const nodemailer = require('nodemailer');
 const { Resend } = require('resend');
 const jwt = require('jsonwebtoken');
@@ -212,39 +212,48 @@ const trimiteEmail = async (to, subject, htmlContent) => {
 };
 
 // ==========================================
-// 📦 1. FUNCȚIE TRIMITERE AUTOMATĂ ÎN EAWB
+// 📦 1. FUNCȚIE TRIMITERE AUTOMATĂ ÎN EAWB (Cu Suport Locker & Token ENV)
 // ==========================================
 const trimiteInEawb = async (comanda) => {
   try {
     const isPlataCard = comanda.metodaPlata && comanda.metodaPlata.toLowerCase().includes('card');
     const rambursDeIncasat = isPlataCard ? 0 : (Number(comanda.total) || 0);
+    const isLocker = comanda.tipLivrare === 'locker';
+
+    // 🏗️ Construim destinația în funcție de ce a ales clientul
+    const adresaDestinatie = {
+      email: comanda.email || "no-reply@client.ro",
+      phone: comanda.telefon || "0000000000",
+      contact: comanda.numeClient || "Client",
+      country_code: "RO"
+    };
+
+    if (isLocker) {
+      adresaDestinatie.fixed_location_id = parseInt(comanda.samedayLockerId) || 0; 
+    } else {
+      adresaDestinatie.postal_code = "000000";
+      adresaDestinatie.locality_name = comanda.localitate || "Bucuresti";
+      adresaDestinatie.county_name = comanda.judet || "Bucuresti";
+      adresaDestinatie.street_name = comanda.adresa || "-";
+      adresaDestinatie.street_number = "-";
+    }
 
     const payloadEAWB = {
       carrier_id: 1, 
-      service_id: 1, 
-     billing_to: {
-        billing_address_id: 279010
+      service_id: isLocker ? 1 : 1, 
+      billing_to: {
+        billing_address_id: 279010 
       },
       address_from: {
         email: "contact@merkado.ro", 
         phone: "0700000000",       
         contact: "Merkado", 
         country_code: "RO",
-        locality_id: 10241, // ⚠️ ID Bucuresti. Schimbă dacă expediezi din alt oraș!
+        locality_id: 10241, 
         street_name: "Strada ta",
         street_number: "1"
       },
-      address_to: {
-        email: comanda.email || "no-reply@client.ro",
-        phone: comanda.telefon || "0000000000",
-        contact: comanda.numeClient || "Client",
-        country_code: "RO",
-        postal_code: "000000", 
-        locality_name: comanda.localitate || "Bucuresti",
-        county_name: comanda.judet || "Bucuresti",
-        street_name: comanda.adresa || "-",
-        street_number: "-"
-      },
+      address_to: adresaDestinatie, 
       content: {
         envelopes_count: 0,
         pallets_count: 0,
@@ -272,8 +281,8 @@ const trimiteInEawb = async (comanda) => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        // 🔥 CHEIA NOUA AICI!
-        'X-API-Key': 'pk_fbcnwwwc_a0QlpUFqLMJbwOqFnqL9nTwDTRqwroiq' 
+        // 🔥 CHEIA E ACUM LUATĂ DIN ENVIRONMENT VARIABLES!
+        'X-API-Key': process.env.EUROPARCEL_API_KEY 
       },
       body: JSON.stringify(payloadEAWB)
     });
@@ -281,12 +290,12 @@ const trimiteInEawb = async (comanda) => {
     const rezultat = await raspuns.json();
 
     if (raspuns.ok) {
-      console.log(`🚀 Comandă trimisă automat cu succes în eAWB!`);
+      console.log(`🚀 AWB Generat Automat [${isLocker ? 'LOCKER' : 'CURIER'}] pentru: ${comanda.numeClient}`);
     } else {
-      console.error(`❌ Eroare de la eAWB (Automat):`, rezultat);
+      console.error(`❌ Eroare eAWB Automat (${isLocker ? 'Locker' : 'Curier'}):`, rezultat);
     }
   } catch (eroare) {
-    console.error("❌ Eroare la conexiunea automată cu eAWB:", eroare.message);
+    console.error("❌ Eroare conexiune eAWB:", eroare.message);
   }
 };
 
@@ -416,8 +425,6 @@ app.use('/api/contact', contactRoute);
 // === 11. RUTE PUBLICE (Clienți) ===
 // ============================================================================
 
-
-
 app.get('/api/produse', async (req, res) => {
   try { res.json(await Produs.find().sort({ createdAt: -1 })); } 
   catch (err) { res.status(500).json({ eroare: err.message }); }
@@ -460,9 +467,8 @@ app.get('/api/comenzi/track/:telefon', async (req, res) => {
 // ==========================================
 app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {  
   try { 
-    const d = req.body; // Datele venite din formularul de pe site
+    const d = req.body; 
     
-    // 1. Verificare Securitate Plată Card
     if (d.metodaPlata && d.metodaPlata.toLowerCase().includes('card')) {
       if (!d.paymentId) return res.status(400).json({ eroare: "Tentativă de fraudă: ID plată lipsă!" });
       const plataVerificata = await stripe.paymentIntents.retrieve(d.paymentId);
@@ -471,12 +477,9 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
       }
     }
 
-    // 2. Calculează prețul real și caută produsul
     const totalReal = await calculeazaTotalSecurizat(d.produsId, d.qty, d.tipLivrare, d.extraOptions, d.metodaPlata);
     const produsCumparat = await Produs.findById(d.produsId);
 
-    // 3. Creăm și salvăm comanda în baza noastră de date (MongoDB)
-    // Folosim datele din 'd' dar forțăm totalul calculat de server ca să evităm hack-urile la preț
     const nouaComanda = new Comanda({
       ...d,
       total: totalReal,
@@ -485,10 +488,8 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
     });
     await nouaComanda.save(); 
 
-    // 4. Ștergem coșul abandonat (dacă există) pentru acest număr de telefon
     await CosAbandonat.findOneAndDelete({ telefon: d.telefon });
 
-    // 5. Trimitem Notificarea pe Telegram
     const textTelegram = `
 🚀 <b>COMANDĂ NOUĂ!</b>
 👤 <b>Client:</b> ${nouaComanda.numeClient}
@@ -501,15 +502,12 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
 
     await trimiteTelegram(textTelegram);
 
-    // 6. Trimitem Email-ul de confirmare către client
     if (nouaComanda.email) {
       const msgEmail = `Comanda ta a fost preluată și urmează să fie pregătită pentru expediere.`;
       const htmlEmail = genereazaEmailSuperProduse("Confirmare Comandă 🎉", msgEmail, nouaComanda, produsCumparat?.imaginePrincipala);
       trimiteEmail(nouaComanda.email, "Comanda ta a fost înregistrată! 🚀", htmlEmail);
     }
 
-    // 7. 🔥 CEA MAI IMPORTANTĂ PARTE: Trimitem automat în eAWB!
-    // Chemăm funcția de sus care are deja ID-ul 279010 și X-API-Key setate corect
     await trimiteInEawb(nouaComanda);
 
     res.status(201).json({ success: true, mesaj: "Comandă procesată cu succes!" });
@@ -578,7 +576,7 @@ app.post('/api/admin/login', loginLimiter, (req, res) => {
 
 
 // ==========================================
-// 📦 2. GENERARE MANUALĂ AWB DIN ADMIN (EUROPARCEL OFICIAL)
+// 📦 2. GENERARE MANUALĂ AWB DIN ADMIN (Cu Suport Locker & Token ENV)
 // ==========================================
 app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
   try {
@@ -592,47 +590,44 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
 
     const isPlataCard = comanda.metodaPlata && comanda.metodaPlata.toLowerCase().includes('card');
     const rambursDeIncasat = isPlataCard ? 0 : Number(comanda.total);
+    const isLocker = comanda.tipLivrare === 'locker';
+
+    const adresaDestinatie = {
+      email: comanda.email || "no-reply@client.ro",
+      phone: comanda.telefon || "0000000000",
+      contact: comanda.numeClient || "Client",
+      country_code: "RO"
+    };
+
+    if (isLocker) {
+      adresaDestinatie.fixed_location_id = parseInt(comanda.samedayLockerId) || 0;
+    } else {
+      adresaDestinatie.postal_code = "000000";
+      adresaDestinatie.locality_name = comanda.localitate || "Bucuresti";
+      adresaDestinatie.county_name = comanda.judet || "Bucuresti";
+      adresaDestinatie.street_name = comanda.adresa || "-";
+      adresaDestinatie.street_number = "-";
+    }
 
     const payloadEAWB = {
       carrier_id: 1, 
-      service_id: 1, 
-      billing_to: {
-        billing_address_id: 279010
-      },
-
+      service_id: isLocker ? 1 : 1, 
+      billing_to: { billing_address_id: 279010 },
       address_from: {
         email: "contact@merkado.ro", 
         phone: "0700000000",       
         contact: "Merkado", 
         country_code: "RO",
-        locality_id: 10241, // ⚠️ Schimbă id-ul dacă nu ești din București
+        locality_id: 10241, 
         street_name: "Strada ta",
         street_number: "1"
       },
-      address_to: {
-        email: comanda.email || "no-reply@client.ro",
-        phone: comanda.telefon || "0000000000",
-        contact: comanda.numeClient || "Client",
-        country_code: "RO",
-        postal_code: "000000",
-        locality_name: comanda.localitate || "Bucuresti",
-        county_name: comanda.judet || "Bucuresti",
-        street_name: comanda.adresa || "-",
-        street_number: "-"
-      },
+      address_to: adresaDestinatie,
       content: {
-        envelopes_count: 0,
-        pallets_count: 0,
-        parcels_count: 1,
-        total_weight: 1,
-        parcels: [
-          { sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }
-        ]
+        envelopes_count: 0, pallets_count: 0, parcels_count: 1, total_weight: 1,
+        parcels: [{ sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }]
       },
-      extra: {
-        parcel_content: comanda.numeProdus || "Produse",
-        sms_recipient: true
-      }
+      extra: { parcel_content: comanda.numeProdus || "Produse", sms_recipient: true }
     };
 
     if (rambursDeIncasat > 0) {
@@ -641,21 +636,18 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     }
 
     const urlEawb = 'https://api.europarcel.com/api/public/orders';
-
-    console.log("📦 PAYLOAD-UL CARE PLEACĂ ESTE:", JSON.stringify(payloadEAWB, null, 2));
     
     const raspunsEawb = await fetch(urlEawb, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 🔥 CHEIA NOUA AICI! Fără ea pica garantat.
-        'X-API-Key': 'pk_fbcnwwwc_a0QlpUFqLMJbwOqFnqL9nTwDTRqwroiq'
+        // 🔥 CHEIA E ACUM LUATĂ DIN ENVIRONMENT VARIABLES!
+        'X-API-Key': process.env.EUROPARCEL_API_KEY
       },
       body: JSON.stringify(payloadEAWB)
     });
 
     const textRaspuns = await raspunsEawb.text(); 
-    
     let dateAwb;
     try { dateAwb = JSON.parse(textRaspuns); } 
     catch (e) { return res.status(500).json({ eroare: "Eroare HTML la Europarcel." }); }
@@ -667,7 +659,6 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     }
 
     const numarAWBGenerat = dateAwb.data?.awb_number || "AWB_GENERAT"; 
-    
     comanda.awb = numarAWBGenerat;
     comanda.status = 'Expediată'; 
     await comanda.save();
@@ -678,7 +669,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     console.error("❌ Eroare server fatală la AWB:", err);
     res.status(500).json({ eroare: err.message });
   }
-});+
+});
 
 app.get('/api/dashboard', verifyAdmin, async (req, res) => {
   try {

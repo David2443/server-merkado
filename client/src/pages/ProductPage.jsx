@@ -4,7 +4,6 @@ import { loadStripe } from '@stripe/stripe-js';
 import { io } from 'socket.io-client';
 import { Helmet } from 'react-helmet-async';
 
-
 import {
   Elements, CardNumberElement, CardExpiryElement, CardCvcElement,
   useStripe, useElements
@@ -15,7 +14,6 @@ import {
 } from 'react-icons/fi';
 import './ProductPage.css';
 
-// 🛡️ FIX 1 & 2: URL Dinamic și Cheia Stripe ascunsă
 const API_URL = import.meta.env.VITE_API_URL || 'https://merkado-backend.onrender.com';
 const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_51TKPY5KGxxN608QkXUMYvMKt4b4HXHoC0cBGCtUvQamNX3kLj3q75Agz23XBkJbRNVyhEJaLnDFtFPLbsdJs67hl00CV2G4TCb';
 const stripePromise = loadStripe(STRIPE_KEY);
@@ -122,7 +120,6 @@ const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // 1. TOATE HOOK-URILE DE STATE
   const [optiuniTransport, setOptiuniTransport] = useState([]);
   const [loadingComanda, setLoadingComanda] = useState(false);
   const [loadingReview, setLoadingReview] = useState(false);
@@ -133,10 +130,8 @@ const ProductPage = () => {
   const [transportDeschis, setTransportDeschis] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
 
-  // 2. HOOK-URILE REF
   const fbSectionRef = useRef(null);
 
-  // Mai multe state-uri...
   const [formRecenzie, setFormRecenzie] = useState({ numeClient: '', text: '', rating: 5 });
   const [hoverRating, setHoverRating] = useState(0);
   const [mesajForm, setMesajForm] = useState('');
@@ -144,7 +139,6 @@ const ProductPage = () => {
   const [timp, setTimp] = useState({ ore: 0, minute: 7, secunde: 43 });
   const [salesPopup, setSalesPopup] = useState({ vizibil: false, nume: '', timp: '' });
 
-  // Fake data
   const numeFake = ['Andrei M.', 'Daniel P.', 'Marius T.', 'Florin V.'];
   const timpiFake = ['chiar acum', 'acum 2 minute', 'acum 5 minute'];
 
@@ -159,7 +153,6 @@ const ProductPage = () => {
   const [errors, setErrors] = useState({});
   const [socketClient, setSocketClient] = useState(null);
 
-  // 3. VARIABILE CALCULATE DIN STATE
   const metodaCurenta = optiuniTransport.find(m => m.tip === tipLivrare);
   const transportBase = metodaCurenta ? Number(metodaCurenta.pret) : 19;
   const subtotal = Number(pachet.pret || 0) + Number(extra.livrare || 0) + Number(extra.cadou || 0) + Number(extra.asigurare || 0) + transportBase;
@@ -169,9 +162,6 @@ const ProductPage = () => {
   const pretCurier = optiuniTransport.find(m => m.tip === 'curier')?.pret || 19;
   const pretLocker = optiuniTransport.find(m => m.tip === 'locker')?.pret || 14.99;
 
-  // 4. TOATE USEEFFECT-URILE (Laolaltă)
-
-  // 4.a) Socket.IO Connection
   useEffect(() => {
     const conexiuneNoua = io(API_URL, {
       transports: ['websocket', 'polling']
@@ -188,7 +178,6 @@ const ProductPage = () => {
     };
   }, []);
 
-  // 4.b) Debounce Typed Events
   useEffect(() => {
     if (socketClient && isCheckoutOpen && dateClient.nume.length > 2) {
       const timer = setTimeout(() => {
@@ -203,7 +192,6 @@ const ProductPage = () => {
     }
   }, [dateClient.nume, dateClient.telefon, totalCheckout, pachet.qty, isCheckoutOpen, produs?.nume, socketClient]);
 
-  // 4.c) Scroll Listener
   useEffect(() => {
     const handleScroll = () => {
       if (fbSectionRef.current) {
@@ -216,16 +204,13 @@ const ProductPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
- // 4.d) Data Fetching & Timers
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Aducem produsul curent
         const resProd = await fetch(`${API_URL}/api/produse/${id}`);
         const dataProd = await resProd.json();
         setProdus(dataProd);
 
-        // 2. Setăm ofertele / pachetele
         if (dataProd.oferte && dataProd.oferte.length > 0) {
           setPachet({
             qty: Number(dataProd.oferte[0].cantitate),
@@ -236,27 +221,22 @@ const ProductPage = () => {
           setPachet({ qty: 1, pret: dataProd.pret || 69, text: 'Pachet Standard' });
         }
 
-        // 3. Aducem recenziile produsului
         const resRec = await fetch(`${API_URL}/api/recenzii/produs/${id}`);
         if (resRec.ok) setRecenzii(await resRec.json());
 
-        // 4. Aducem opțiunile de transport active
         const resTrans = await fetch(`${API_URL}/api/transport`);
         if (resTrans.ok) {
           const dataTrans = await resTrans.json();
           setOptiuniTransport(dataTrans.filter(m => m.activ));
         }
 
-        // 🚀 5. NOU: Aducem "Produse Similare" pentru rețeaua SEO internă
         const resToate = await fetch(`${API_URL}/api/produse`);
         if (resToate.ok) {
           const toate = await resToate.json();
-          // Excludem produsul pe care suntem acum și luăm doar 4 produse
           const similare = toate.filter(p => p._id !== id).slice(0, 4);
           setProduseSimilare(similare);
         }
 
-        // Am terminat de încărcat tot
         setIsLoading(false);
       } catch (err) {
         console.error("Eroare la aducerea datelor paginii:", err);
@@ -266,7 +246,6 @@ const ProductPage = () => {
     
     fetchData();
 
-    // --- TIMERS PENTRU MARKETING ---
     const intervalTimp = setInterval(() => {
       setTimp(prev => {
         if (prev.secunde > 0) return { ...prev, secunde: prev.secunde - 1 };
@@ -288,9 +267,8 @@ const ProductPage = () => {
       clearInterval(intervalTimp);
       clearInterval(popupInterval);
     };
-  }, [id, API_URL]);
+  }, [id]);
 
-  // 4.e) Abandoned Cart Silently Update
   useEffect(() => {
     if (dateClient.telefon.length >= 10 && dateClient.nume.length >= 3) {
       const salvareCos = setTimeout(() => {
@@ -309,7 +287,6 @@ const ProductPage = () => {
     }
   }, [dateClient.telefon, dateClient.nume, totalCheckout]);
 
-  // 5. METODE ȘI LOGICĂ (Formulare, Validări)
   const renderStele = (rating, interactive = false) => {
     return [...Array(5)].map((_, i) => (
       <FiStar key={i} className={`star-icon ${i < rating ? 'filled' : ''} ${interactive ? 'interactive' : ''}`} onClick={() => interactive && setFormRecenzie({ ...formRecenzie, rating: i + 1 })} />
@@ -337,23 +314,23 @@ const ProductPage = () => {
     }
   };
 
+  // 🛡️ FIX 1: VALIDARE SMART PENTRU LOCKER VS CURIER
   const validateForm = () => {
     let newErrors = {};
     if (!dateClient.nume || dateClient.nume.length < 3) newErrors.nume = "Nume obligatoriu";
     if (!dateClient.telefon || dateClient.telefon.length < 10) newErrors.telefon = "Telefon invalid";
 
-    if (tipLivrare === 'locker' && (!dateClient.email || !dateClient.email.includes('@'))) {
-      newErrors.email = "Email valid obligatoriu pentru Easybox";
-    }
-
-    if (tipLivrare === 'curier') {
+    if (tipLivrare === 'locker') {
+      if (!dateClient.email || !dateClient.email.includes('@')) {
+        newErrors.email = "Email obligatoriu pentru Easybox (cod PIN)";
+      }
+      if (!lockerSelectat) {
+        newErrors.locker = "Te rugăm să alegi un Easybox de pe hartă";
+      }
+    } else {
       if (!dateClient.adresa) newErrors.adresa = "Adresa e obligatorie";
       if (!dateClient.localitate) newErrors.localitate = "Localitatea e obligatorie";
       if (!dateClient.judet) newErrors.judet = "Județul e obligatoriu";
-    }
-
-    if (tipLivrare === 'locker' && !lockerSelectat) {
-      newErrors.locker = "Te rugăm să alegi un Easybox de pe hartă";
     }
 
     setErrors(newErrors);
@@ -370,77 +347,82 @@ const ProductPage = () => {
     return true;
   };
 
+  // 🛡️ FIX 2: CONSTRUCȚIA CORECTĂ A PACHETULUI PENTRU BACKEND
   const genereazaPayload = (metoda, paymentId = null) => ({
     numeClient: dateClient.nume,
-    telefonClient: dateClient.telefon,
+    telefon: dateClient.telefon, // ATENȚIE: Backend-ul se așteaptă la 'telefon', nu 'telefonClient'
     email: dateClient.email,
     produsId: produs._id,
     numeProdus: produs.nume,
     qty: pachet.qty,
-    totalComanda: totalCheckout,
+    total: totalCheckout, // ATENȚIE: Backend-ul se așteaptă la 'total', nu 'totalComanda'
     metodaPlata: metoda,
     paymentId,
     tipLivrare: tipLivrare,
-    adresaLivrare: tipLivrare === 'curier' ? dateClient.adresa : lockerSelectat?.address,
-    localitate: tipLivrare === 'curier' ? dateClient.localitate : lockerSelectat?.city,
-    judet: tipLivrare === 'curier' ? dateClient.judet : lockerSelectat?.county,
+    adresa: tipLivrare === 'curier' ? dateClient.adresa : (lockerSelectat?.address || "-"),
+    localitate: tipLivrare === 'curier' ? dateClient.localitate : (lockerSelectat?.city || "-"),
+    judet: tipLivrare === 'curier' ? dateClient.judet : (lockerSelectat?.county || "-"),
     samedayLockerId: tipLivrare === 'locker' ? lockerSelectat?.id : null,
     extraOptions: extra
   });
 
- const handleFinalizeCash = async () => {
+  const handleFinalizeCash = async () => {
     if (!validateForm()) return;
     setLoadingComanda(true);
 
-    // 🕵️‍♂️ 1. EXTRAGEM SURSA
     const sursaTrafic = localStorage.getItem('sursa_trafic') || 'Organic / Direct';
 
     try {
       const res = await fetch(`${API_URL}/api/comenzi/noua`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        // 👇 2. ADĂUGĂM SURSA LA PACHETUL DE DATE
         body: JSON.stringify({ ...genereazaPayload('Ramburs'), sursa: sursaTrafic })
       });
       
       if (res.ok) {
         setComandaTrimisa(true);
-        // 🧹 3. CURĂȚĂM SURSA DUPĂ CE COMANDA E GATA
         localStorage.removeItem('sursa_trafic');
       }
-      else throw new Error("Eroare server");
+      else {
+        const errorData = await res.json();
+        throw new Error(errorData.eroare || "Eroare server");
+      }
     } catch (err) {
-      alert("Eroare la trimiterea comenzii spre server.");
+      alert(`Eroare la trimiterea comenzii: ${err.message}`);
     } finally {
       setLoadingComanda(false);
     }
   };
 
   const handlePaymentSuccess = async (paymentId) => {
-    // 🕵️‍♂️ 1. EXTRAGEM SURSA ȘI AICI
     const sursaTrafic = localStorage.getItem('sursa_trafic') || 'Organic / Direct';
 
     try {
       const res = await fetch(`${API_URL}/api/comenzi/noua`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        // 👇 2. ADĂUGĂM SURSA LA PACHETUL DE DATE
         body: JSON.stringify({ ...genereazaPayload('Plătit cu Cardul', paymentId), sursa: sursaTrafic })
       });
       
       if (res.ok) {
         setComandaTrimisa(true);
-        // 🧹 3. CURĂȚĂM SURSA DUPĂ CE COMANDA E GATA
         localStorage.removeItem('sursa_trafic');
       }
     } catch (err) { alert("Eroare salvare plată în dashboard."); }
   };
 
   const openLockerMap = () => {
-    alert("Simulare Hartă Easybox");
-    setLockerSelectat({ id: "TEST_1234", name: "Easybox Mega Image", address: "Strada de Test, Nr. 10", city: "București", county: "București" });
+    // Aici vei integra widget-ul real (Sameday/Fan)
+    // Deocamdată am făcut un mock perfect funcțional pentru test
+    alert("Se deschide harta Easybox...");
+    setLockerSelectat({ 
+      id: "12345", // Un ID fictiv de test (În producție vei primi ID-ul real de la widget)
+      name: "Easybox Mega Image", 
+      address: "Strada de Test, Nr. 10", 
+      city: "București", 
+      county: "București" 
+    });
     setErrors({ ...errors, locker: null });
   };
 
-  // 🛑 6. LA FINAL DE TOT: RETURN-URILE DE LOADING ȘI PRODUS LIPSĂ
   if (isLoading) return (
     <div className="merkado-loader-wrapper">
       <div className="merkado-spinner-container">
@@ -474,11 +456,9 @@ const ProductPage = () => {
 
   const metaDescription = produs.sectiuniLanding?.[0]?.text || `Cumpără acum ${produs.nume} la cel mai bun preț de ${produs.pret} Lei. Livrare rapidă în 24h și plată ramburs. Intră pe Merkado.ro!`;
 
-  // 7. RĂSPUNSUL PRINCIPAL
   return (
     <div className="shopify-page-wrapper">
 
-{/* 🚀 BREADCRUMBS SCHEMA PENTRU GOOGLE */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -506,7 +486,6 @@ const ProductPage = () => {
           })
         }}></script>
 
-      {/* 🚀 SEO BLOCK INCEPE AICI */}
       <Helmet>
         <title>{produs.nume} | Preț Special & Livrare 24h | MERKADO</title>
         <link rel="canonical" href={window.location.href} />
@@ -517,34 +496,7 @@ const ProductPage = () => {
         <meta property="og:url" content={window.location.href} />
         <meta property="og:type" content="product" />
         <meta name="twitter:card" content="summary_large_image" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org/",
-            "@type": "Product",
-            "name": produs.nume,
-            "image": [produs.imaginePrincipala],
-            "description": metaDescription,
-            "brand": {
-              "@type": "Brand",
-              "name": "MERKADO"
-            },
-            "offers": {
-              "@type": "Offer",
-              "url": window.location.href,
-              "priceCurrency": "RON",
-              "price": produs.pret,
-              "availability": "https://schema.org/InStock",
-              "itemCondition": "https://schema.org/NewCondition"
-            },
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "reviewCount": recenzii.length > 0 ? recenzii.length : 445
-            }
-          })}
-        </script>
       </Helmet>
-      {/* 🚀 SEO BLOCK SE TERMINA AICI */}
 
       <div className="marquee-container">
         <div className="marquee-text">
@@ -552,21 +504,17 @@ const ProductPage = () => {
         </div>
       </div>
 
-{/* 🧭 FIRUL ARIADNEI (BREADCRUMBS VIZUAL) */}
       <div className="container">
         <nav className="merkado-breadcrumbs" aria-label="breadcrumb">
           <Link to="/">Acasă</Link>
           <span className="bc-separator">/</span>
           <Link to="/shop">Magazin</Link>
-          
-          {/* Dacă produsul are categorie, o afișăm și pe aia */}
           {produs.categorie && (
             <>
               <span className="bc-separator">/</span>
               <Link to={`/shop?cat=${produs.categorie}`}>{produs.categorie}</Link>
             </>
           )}
-          
           <span className="bc-separator">/</span>
           <span className="bc-current" aria-current="page">{produs.nume}</span>
         </nav>
@@ -575,7 +523,6 @@ const ProductPage = () => {
       <div className="shopify-container" style={{ paddingBottom: '100px' }}>
         <div className="hero-grid">
           <div className="hero-image-col">
-            {/* SEO: Am adăugat alt-ul dinamic pentru indexarea imaginilor pe Google */}
             <img src={produs.imaginePrincipala} alt={`Imagine produs ${produs.nume} - Cumpără de pe Merkado.ro`} className="main-prod-img" />
           </div>
 
@@ -739,15 +686,12 @@ const ProductPage = () => {
             ))}
           </div>
 
-
-
          <div className="add-review-box">
             <h3>Părerea ta contează!</h3>
             {mesajForm && <p className="form-msg">{mesajForm}</p>}
             
             <form onSubmit={trimiteRecenzie}>
               
-              {/* Sistemul Interactiv de Stele Premium */}
 <div className="stele-interactive-container">
   {[1, 2, 3, 4, 5].map((starIndex) => {
     const isActive = starIndex <= (hoverRating || formRecenzie.rating);
@@ -765,7 +709,6 @@ const ProductPage = () => {
   })}
 </div>
 
-{/* Dacă vrei un text mic dedesubt să îi zici omului să dea click, poți adăuga linia asta (opțional): */}
 {formRecenzie.rating === 0 && <p style={{textAlign: 'center', fontSize: '0.85rem', color: '#64748b', marginTop: '-15px', marginBottom: '15px'}}>Alege numărul de stele</p>}
 
               <input 
@@ -789,7 +732,6 @@ const ProductPage = () => {
 
       </div>
 
-{/* 🕸️ SECȚIUNEA SEO INTERN: PRODUSE SIMILARE */}
       {produseSimilare.length > 0 && (
         <section className="related-products-section" style={{ padding: '40px 20px', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
           <div className="container">
