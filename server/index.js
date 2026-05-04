@@ -665,13 +665,12 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
 
     // 🔥 URL-ul lor mega ciudat din documentație
 const urlEawb = 'https://api.europarcel.com/api/public/orders';
-
 console.log("🕵️‍♂️ CHEIA TRIMISA ESTE:", process.env.EAWB_API_KEY);
     const raspunsEawb = await fetch(urlEawb, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.EAWB_API_KEY}`
+        'Authorization': 'Bearer pk_jalnco85_nmDIohLlk0qXiCoun4aCNrhH3gOdvwQU'
       },
       body: JSON.stringify(payloadEAWB)
     });
