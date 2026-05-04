@@ -536,7 +536,8 @@ const actualizeazaStatus = async (id, statusNou) => {
               <button onClick={() => setEditModal({isOpen: false})} className="ac-close-btn"><FiX /></button>
             </div>
             
-          <div className="ac-form-group">
+            <div className="ac-modal-body">
+              <div className="ac-form-group">
     <label>Selectează Produsul</label>
     <select 
       name="numeProdus" 
