@@ -536,20 +536,24 @@ const actualizeazaStatus = async (id, statusNou) => {
               <button onClick={() => setEditModal({isOpen: false})} className="ac-close-btn"><FiX /></button>
             </div>
             
-            <div className="ac-modal-body">
-              <div className="ac-form-group">
-                <label>Selectează Produsul</label>
+          <div className="ac-form-group">
+    <label>Selectează Produsul</label>
     <select 
       name="numeProdus" 
       value={formData.numeProdus || ''} 
       onChange={handleInputChange}
     >
       <option value="">-- Alege un produs --</option>
-      {produse.map((p) => (
-        <option key={p._id} value={p.nume}>{p.nume}</option>
-      ))}
+      {/* 🔥 FIX: Verificăm dacă există produse înainte să dăm map! */}
+      {produse && produse.length > 0 ? (
+        produse.map((p) => (
+          <option key={p._id} value={p.nume}>{p.nume}</option>
+        ))
+      ) : (
+        <option value="" disabled>Se încarcă produsele...</option>
+      )}
     </select>
-              </div>
+  </div>
               <div className="ac-form-row">
                 <div className="ac-form-group">
                   <label>Cantitate (Bucăți)</label>

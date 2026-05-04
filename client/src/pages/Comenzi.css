@@ -62,7 +62,6 @@
   color: var(--text-dark);
 }
 
-/* Butoane Premium */
 .ac-btn-new-order, .ac-btn-save {
   display: flex;
   align-items: center;
@@ -77,6 +76,9 @@
   cursor: pointer;
   transition: var(--transition);
   box-shadow: var(--shadow-sm);
+  /* 🔥 FIX CSS: Îl forțăm să fie deasupra oricărui element invizibil */
+  position: relative;
+  z-index: 10; 
 }
 
 .ac-btn-new-order:hover, .ac-btn-save:hover {
