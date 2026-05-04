@@ -421,6 +421,23 @@ app.use('/api/contact', contactRoute);
 // ============================================================================
 // === 11. RUTE PUBLICE (Clienți) ===
 // ============================================================================
+
+app.get('/api/afla-id-facturare', async (req, res) => {
+  try {
+    const raspuns = await fetch('https://api.europarcel.com/api/public/addresses/billing', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'X-API-Key': 'pk_fbcnwwwc_a0QlpUFqLMJbwOqFnqL9nTwDTRqwroiq' 
+      }
+    });
+    const date = await raspuns.json();
+    res.json(date); 
+  } catch (err) {
+    res.status(500).json({ eroare: err.message });
+  }
+});
+
 app.get('/api/produse', async (req, res) => {
   try { res.json(await Produs.find().sort({ createdAt: -1 })); } 
   catch (err) { res.status(500).json({ eroare: err.message }); }
