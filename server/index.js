@@ -220,38 +220,49 @@ const trimiteInEawb = async (comanda) => {
     const rambursDeIncasat = isPlataCard ? 0 : (Number(comanda.total) || 0);
     const isLocker = comanda.tipLivrare === 'locker';
 
-    // 🏗️ Construim destinația în funcție de ce a ales clientul
+    // 🏗️ Construim destinația (Clientul)
     const adresaDestinatie = {
       email: comanda.email || "no-reply@client.ro",
       phone: comanda.telefon || "0000000000",
       contact: comanda.numeClient || "Client",
-      country_code: "RO"
+      country_code: "RO",
+      postal_code: "000000",
+      locality_name: comanda.localitate || "Bucuresti",
+      county_name: comanda.judet || "Bucuresti",
+      street_name: comanda.adresa || "-",
+      street_number: "1" 
     };
 
     if (isLocker) {
+      // Dacă clientul vrea la Locker, îi punem ID-ul ales de el
       adresaDestinatie.fixed_location_id = parseInt(comanda.samedayLockerId) || 0; 
-    } else {
-      adresaDestinatie.postal_code = "000000";
-      adresaDestinatie.locality_name = comanda.localitate || "Bucuresti";
-      adresaDestinatie.county_name = comanda.judet || "Bucuresti";
-      adresaDestinatie.street_name = comanda.adresa || "-";
-      adresaDestinatie.street_number = "-";
     }
 
+    // 🔥 SETĂRILE TALE EXCLUSIVE PENTRU FAN COURIER DROP-OFF
+    const curierFANCourier = 3; 
+    const serviciuLockerLaUsa = 3;    // Tu lași în FANbox -> Curierul duce la ușa clientului
+    const serviciuLockerLaLocker = 4; // Tu lași în FANbox -> Curierul duce în FANbox-ul clientului
+    
+    // ⚠️ IMPORTANT: Trebuie să pui ID-ul FANbox-ului de la tine din cartier!
+    // Află ID-ul locker-ului tău preferat (prin API sau din contul Europarcel) și pune-l aici:
+    const FANBOX_UL_MEU_PENTRU_PRELUARE = 123456; 
+
     const payloadEAWB = {
-      carrier_id: 1, 
-      service_id: isLocker ? 1 : 1, 
+      carrier_id: curierFANCourier, 
+      service_id: isLocker ? serviciuLockerLaLocker : serviciuLockerLaUsa, 
       billing_to: {
-        billing_address_id: 279010 
+        billing_address_id: 279010 // Facturare Merkado
       },
+      // 📦 De unde pleacă coletul (Locker-ul tău)
       address_from: {
         email: "contact@merkado.ro", 
         phone: "0700000000",       
         contact: "Merkado", 
         country_code: "RO",
-        locality_id: 10241, 
-        street_name: "Strada ta",
-        street_number: "1"
+        locality_id: 10241, // ID Localitate București (Schimbă dacă ești din alt oraș)
+        fixed_location_id: FANBOX_UL_MEU_PENTRU_PRELUARE, // 👈 Asta îți dă ție codul PIN să lași coletul
+        street_name: "-", // Prevenim erorile Europarcel
+        street_number: "-"
       },
       address_to: adresaDestinatie, 
       content: {
@@ -636,27 +647,36 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     const rambursDeIncasat = isPlataCard ? 0 : Number(comanda.total);
     const isLocker = comanda.tipLivrare === 'locker';
 
+    // 1. Construim adresa (peste tot trebuie stradă și oraș ca să nu plângă serverul)
     const adresaDestinatie = {
       email: comanda.email || "no-reply@client.ro",
       phone: comanda.telefon || "0000000000",
       contact: comanda.numeClient || "Client",
-      country_code: "RO"
+      country_code: "RO",
+      postal_code: "000000",
+      locality_name: comanda.localitate || "Bucuresti",
+      county_name: comanda.judet || "Bucuresti",
+      street_name: comanda.adresa || "-",
+      street_number: "1" // Am pus 1 în loc de cratimă pentru siguranță
     };
 
     if (isLocker) {
-      adresaDestinatie.fixed_location_id = parseInt(comanda.samedayLockerId) || 0;
-    } else {
-      adresaDestinatie.postal_code = "000000";
-      adresaDestinatie.locality_name = comanda.localitate || "Bucuresti";
-      adresaDestinatie.county_name = comanda.judet || "Bucuresti";
-      adresaDestinatie.street_name = comanda.adresa || "-";
-      adresaDestinatie.street_number = "-";
+      adresaDestinatie.fixed_location_id = parseInt(comanda.samedayLockerId) || 0; 
     }
 
+    // 🔥 AICI E SECRETUL:
+    // Trebuie să afli de la Europarcel care e ID-ul serviciului pentru Lockere.
+    // În documentația ta, FAN Courier avea ID-ul 3. Presupunem că Serviciul de Locker e 2 sau 3.
+    const curierLockerId = 3;   // ID-ul firmei de curierat (ex: 3 pt FAN)
+    const serviciuLockerId = 2; // ⚠️ AICI S-AR PUTEA SĂ TREBUIASCĂ SĂ SCHIMBI (întreabă la Europarcel ce ID are serviciul Easybox/Fanbox)
+
     const payloadEAWB = {
-      carrier_id: 1, 
-      service_id: isLocker ? 1 : 1, 
-      billing_to: { billing_address_id: 279010 },
+      carrier_id: isLocker ? curierLockerId : 1, 
+      service_id: isLocker ? serviciuLockerId : 1, 
+      billing_to: {
+        billing_address_id: 279010 
+      },
+      // ... (restul rămâne la fel: address_from, content, extra etc)
       address_from: {
         email: "contact@merkado.ro", 
         phone: "0700000000",       
@@ -666,12 +686,20 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
         street_name: "Strada ta",
         street_number: "1"
       },
-      address_to: adresaDestinatie,
+      address_to: adresaDestinatie, 
       content: {
-        envelopes_count: 0, pallets_count: 0, parcels_count: 1, total_weight: 1,
-        parcels: [{ sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }]
+        envelopes_count: 0,
+        pallets_count: 0,
+        parcels_count: 1,
+        total_weight: 1,
+        parcels: [
+          { sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }
+        ]
       },
-      extra: { parcel_content: comanda.numeProdus || "Produse", sms_recipient: true }
+      extra: {
+        parcel_content: comanda.numeProdus || "Produse",
+        sms_recipient: true
+      }
     };
 
     if (rambursDeIncasat > 0) {

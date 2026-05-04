@@ -22,18 +22,28 @@ const AdminComenzi = () => {
   const [formData, setFormData] = useState({});
   const [toast, setToast] = useState({ visible: false, message: '', type: 'success' });
 
-// Funcția de apelare
-// Funcția de apelare REPARATĂ
-// Funcția de apelare REPARATĂ
+// 🛎️ Sistem de Notificări (Toasts)
+  const [toast, setToast] = useState(null);
+
+  const arataToast = (tip, mesaj) => {
+    setToast({ tip, mesaj });
+    // Ascundem notificarea după 6 secunde automat
+    setTimeout(() => {
+      setToast(null);
+    }, 6000);
+  };
+
+// Funcția de apelare REPARATĂ + SMART TOASTS
 const genereazaAWB = async (idComanda) => {
   const confirmare = window.confirm("Ești sigur că vrei să generezi AWB-ul pentru această comandă?");
   if (!confirmare) return;
 
   const token = localStorage.getItem('adminToken');
 
-
-  console.log(`🚀 1. Încerc să generez AWB pentru comanda: ${idComanda}`);
-  console.log(`🔗 2. URL-ul apelat este: ${API_URL}/api/admin/comenzi/${idComanda}/awb`);
+  // 🚀 1. Afișăm Pop-up-ul albastru de încărcare imediat ce a dat click
+  arataToast('loading', '⏳ Comunicăm cu Europarcel... Se generează AWB-ul!');
+  
+  console.log(`🚀 Încerc să generez AWB pentru comanda: ${idComanda}`);
 
   try {
     const response = await fetch(`${API_URL}/api/admin/comenzi/${idComanda}/awb`, {
@@ -44,21 +54,21 @@ const genereazaAWB = async (idComanda) => {
       }
     });
 
-    console.log(`📥 3. Răspuns primit de la server. HTTP Status: ${response.status}`);
-
     const data = await response.json();
-    console.log("📦 4. Date primite în JSON:", data);
+    console.log("📦 Date primite de la server:", data);
 
     if (response.ok && data.success) {
-      showToast(`✅ SUCCES! AWB generat: ${data.awb}`, 'success');
-      fetchData(); // Reîncărcăm tabelul
+      // ✅ 2. SUCCES! Pop-up Verde
+      arataToast('success', `🎉 BOMBĂ! AWB generat cu succes: ${data.awb}`);
+      fetchData(); // Reîncărcăm tabelul instant
     } else {
-      // Dacă backend-ul zice că e o problemă
-      alert(`❌ EROARE DE LA SERVER: ${data.eroare || data.message || 'Eroare necunoscută'}`);
+      // ❌ 3. EROARE DE LA EUROPARCEL! Pop-up Roșu
+      arataToast('error', `❌ EROARE CURIER: ${data.eroare || data.message || 'Eroare necunoscută'}`);
     }
   } catch (err) {
     console.error("💥 EROARE CRITICĂ CATCH:", err);
-    alert(`❌ Eroare gravă (A picat backend-ul sau ai greșit ruta?): ${err.message}`);
+    // ❌ 4. EROARE DE REȚEA! Pop-up Roșu
+    arataToast('error', `❌ Eroare gravă de conexiune: ${err.message}`);
   }
 };
 
@@ -662,6 +672,19 @@ const actualizeazaStatus = async (id, statusNou) => {
           {toast.message}
         </div>
       )}
+
+      {/* 🛎️ RENDER NOTIFICĂRI SMART */}
+      {toast && (
+        <div className="admin-toast-container">
+          <div className={`admin-toast ${toast.tip}`}>
+            <div className="admin-toast-icon">
+              {toast.tip === 'success' ? '✅' : toast.tip === 'error' ? '⚠️' : '🔄'}
+            </div>
+            <div>{toast.mesaj}</div>
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 };
