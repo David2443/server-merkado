@@ -498,15 +498,8 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
       service_id: 1, // 1 = Standard / Door to Door
       
       // ✅ REZOLVAREA BUBEI: Datele de facturare puse "pe direct", fără ID!
-      billing_to: {
-        contact: "Merkado SRL", // Numele firmei tale sau al tău
-        email: "contact@merkado.ro", // Adresa ta
-        phone: "0700000000", // Telefonul tău
-        country_code: "RO",
-        locality_name: "Bucuresti", // Orașul tău
-        county_name: "Bucuresti", // Județul tău
-        street_name: "Strada ta nr 1" 
-        // Poți pune opțional și: company: "Nume Firma SRL", vat_number: "RO123456"
+     billing_to: {
+        billing_address_id: 279010
       },
       
       // De unde pleacă coletul
