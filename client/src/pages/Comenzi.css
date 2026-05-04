@@ -518,128 +518,73 @@
 /* =========================================
    📱 MAGIA RESPONSIVE (CARDURI PE MOBIL) - REPARAT
 ========================================= */
+/* =========================================
+   📱 VARIANTA BOMBA: MAXIMĂ LĂȚIME + FIX OVERFLOW
+========================================= */
 @media (max-width: 1024px) {
-  .ac-header-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .ac-search-box input { width: 100%; }
-  .ac-header-right { flex-direction: column; width: 100%; }
-  .ac-search-box, .ac-filter-container, .ac-btn { width: 100%; justify-content: center; }
-
-  /* Ascundem capul de tabel pe mobil */
-  .ac-table thead { display: none; }
-
-  .ac-table tbody {
-    display: block;
-    background: transparent;
+  /* 1. Lărgim containerul principal să ocupe tot ecranul */
+  .ac-container {
+    padding: 1rem 0.5rem; /* Padding minim pe margini */
   }
 
-  .ac-table tr {
-    display: flex;
-    flex-direction: column;
-    background: var(--ac-surface);
-    margin-bottom: 1.5rem;
-    border-radius: var(--ac-radius-lg);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-    border: 1px solid var(--ac-border);
-    padding: 1rem 1.2rem;
-  }
-
-  /* 🔥 Aici am schimbat logica: folosim 'block' cu padding, nu flex */
-  .ac-table td {
-    display: block;
-    position: relative;
-    padding: 0.8rem 0 0.8rem 120px; /* Lăsăm 120px în stânga gol pentru etichetă */
-    border-bottom: 1px dashed var(--ac-border);
-    text-align: right; /* Aliniem textul la dreapta */
-    min-height: 2.5rem;
-  }
-
-  /* Aliniem corect div-urile cu flex (ex: curier, card) spre dreapta */
-  .ac-table td > div {
-    justify-content: flex-end;
-  }
-
-  /* Eticheta (CLIENT, DATĂ, etc) stă fixată în stânga sus */
-  .ac-table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 0;
-    top: 0.8rem;
-    font-weight: 700;
-    color: #94a3b8;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    text-align: left;
-    width: 110px;
-  }
-
-  .ac-table td:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
-  .ac-truncate {
-    text-align: right;
+  .ac-main-card {
     max-width: 100%;
+    border-radius: 0; /* Colțuri drepte pe mobil ca să câștigi spațiu */
+    border-left: none;
+    border-right: none;
   }
 
-  /* Butoanele de acțiune jos de tot pe tot ecranul */
-  td[data-label="Acțiuni"] {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    padding-left: 0; /* Scoatem paddingul ca să ocupe tot spațiul */
-    margin-top: 10px;
-  }
-
-  td[data-label="Acțiuni"] > * {
-    flex: 1;
-    justify-content: center;
-    padding: 0.8rem !important; /* Butoane mai mari pentru deget */
-  }
-  
-  td[data-label="Acțiuni"]::before {
-    display: none; /* Ascundem cuvântul "Acțiuni" ca să avem loc de butoane */
-  }
-}
-@media (max-width: 1024px) {
+  /* 2. Cardul de comandă: Eliminăm marginile să respire */
   .ac-table tr {
-    /* 🚀 Facem cardul să ocupe tot ecranul telefonului */
     width: 100%;
     margin-left: 0;
     margin-right: 0;
     padding: 1rem 0.8rem;
     box-sizing: border-box;
+    border-radius: 12px;
+    margin-bottom: 1rem;
   }
 
+  /* 3. FIX TEXT CARE IESE: Permitem wrap (ruperea rândului) */
   .ac-table td {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start; /* Aliniem sus în caz că textul e pe 2 rânduri */
     padding: 0.8rem 0;
-    /* 🚀 Scoatem padding-ul fix și lăsăm elementele să respire flexibil */
-    padding-left: 0; 
+    gap: 15px;
     text-align: right;
-    gap: 10px; /* Spațiu între etichetă și conținut */
+    white-space: normal; /* 🔥 IMPORTANT: Permite textului să treacă sub el */
+    word-break: break-word; /* 🔥 Taie cuvintele lungi dacă e nevoie */
   }
 
-  /* Statusul - îl facem să nu mai iasă din ecran */
-  .ac-status-select {
-    /* 🚀 Reducem lățimea minimă pe mobil ca să nu mai împingă marginea */
-    min-width: 120px !important; 
-    max-width: 160px;
-    font-size: 0.75rem !important;
-    padding: 0.4rem 1.8rem 0.4rem 0.6rem !important;
+  /* 4. Conținutul din dreapta (unde e livrarea/plata) */
+  .ac-table td > div {
+    flex: 1; /* Ocupă tot spațiul rămas */
+    display: flex;
+    flex-direction: column; /* Pune iconița și textul unul sub altul pe mobil dacă e îngust */
+    align-items: flex-end;
+    font-size: 0.85rem;
   }
 
+  /* 5. Etichetele (PLATĂ, LIVRARE, etc) */
   .ac-table td::before {
-    /* 🚀 Eticheta nu mai stă "absolute", ci face parte din flux */
-    position: static; 
-    width: auto;
-    margin-bottom: 0;
+    font-size: 0.7rem;
+    min-width: 80px; /* Lăsăm mai mult loc pentru textul din dreapta */
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  /* 6. Fix special pentru Status */
+  .ac-status-select {
+    min-width: 110px !important;
+    max-width: 130px;
+    font-size: 0.75rem !important;
+  }
+
+  /* 7. Butoanele de jos să fie "tanc" */
+  td[data-label="Acțiuni"] {
+    flex-direction: row;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ac-border);
   }
 }
