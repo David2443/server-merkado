@@ -212,30 +212,32 @@ const trimiteEmail = async (to, subject, htmlContent) => {
 };
 
 // ==========================================
-// 📦 FUNCȚIE TRIMITERE COMENZI ÎN EAWB
+// 📦 1. FUNCȚIE TRIMITERE AUTOMATĂ ÎN EAWB
 // ==========================================
 const trimiteInEawb = async (comanda) => {
   try {
-    // Aici mapăm datele tale ca să le înțeleagă eAWB
     const payloadEAWB = {
       name: comanda.numeClient,
       phone: comanda.telefon,
       county: comanda.judet,
-      city: comanda.oras,
+      city: comanda.localitate || comanda.oras,
       address: comanda.adresa,
-      cash_on_delivery: comanda.total, // Valoarea rambursului
-      weight: 1, // 1 kg standard
+      cash_on_delivery: comanda.metodaPlata.toLowerCase().includes('card') ? 0 : comanda.total,
+      weight: 1,
       contents: comanda.numeProdus,
-      observations: "Comanda de pe site" // Poți adăuga note aici
+      observations: "Comanda de pe site"
     };
 
-const urlEawb = 'https://api.europarcel.com/api/public/orders';
+    // 🔥 AICI E URL-UL CORECT
+    const urlEawb = 'https://api.europarcel.com/api/public/orders'; 
 
-    const raspuns = await fetch(url, {
+    const raspuns = await fetch(urlEawb, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.EAWB_API_KEY}`
+        'Accept': 'application/json',
+        // 🔥 Aici am reparat apiKey-ul! Îl luăm direct din mediul serverului:
+        'Authorization': `Bearer ${process.env.EAWB_API_KEY}` 
       },
       body: JSON.stringify(payloadEAWB)
     });
@@ -243,12 +245,12 @@ const urlEawb = 'https://api.europarcel.com/api/public/orders';
     const rezultat = await raspuns.json();
 
     if (raspuns.ok) {
-      console.log(`🚀 Comandă trimisă cu succes în eAWB pentru: ${comanda.numeClient}`);
+      console.log(`🚀 Comandă trimisă automat cu succes în eAWB pentru: ${comanda.numeClient}`);
     } else {
-      console.error(`❌ Eroare de la eAWB:`, rezultat);
+      console.error(`❌ Eroare de la eAWB (Automat):`, rezultat);
     }
   } catch (eroare) {
-    console.error("❌ Eroare la conexiunea cu eAWB:", eroare.message);
+    console.error("❌ Eroare la conexiunea automată cu eAWB:", eroare.message);
   }
 };
 
@@ -539,85 +541,39 @@ app.post('/api/admin/login', loginLimiter, (req, res) => {
 });
 
 // ==========================================
-// 📦 GENERARE MANUALĂ AWB PRIN eAWB (VERSIUNEA V1 OFICIALĂ)
+// 📦 2. GENERARE MANUALĂ AWB DIN ADMIN
 // ==========================================
 app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
   try {
     const idComanda = req.params.id;
-
-    // 1. Găsim comanda
     const comanda = await Comanda.findById(idComanda);
-    if (!comanda) return res.status(404).json({ success: false, eroare: "Comanda nu a fost găsită!" });
+    if (!comanda) return res.status(404).json({ eroare: "Comanda nu a fost găsită!" });
 
     if (comanda.awb && comanda.awb.trim() !== '') {
-      return res.status(400).json({ success: false, eroare: `Are deja AWB: ${comanda.awb}` });
+      return res.status(400).json({ eroare: `Această comandă are deja AWB-ul: ${comanda.awb}` });
     }
 
-    // 2. Calculăm rambursul
-    const isPlataCard = comanda.metodaPlata && comanda.metodaPlata.toLowerCase().includes('card');
-    const rambursDeIncasat = isPlataCard ? 0 : (Number(comanda.total) || 0);
-
-    // 3. 📝 PAYLOAD OFICIAL eAWB (Conform documentației v1)
     const payloadEAWB = {
-      carrier_id: 3, // ⚠️ 3 = FAN Courier (Dacă folosești Sameday/Cargus, verifică în contul tău eAWB ID-ul lor)
-      service_id: 1, // Serviciul standard
-      
-      // Datele TALE de expediere
-      address_from: {
-        email: "contact@merkado.ro", 
-        phone: "0700000000",       // Pune telefonul tău real
-        contact: "Merkado", 
-        country_code: "RO",
-        locality_id: 10241,        // ⚠️ ID localitate expeditor (ex: 10241). Va trebui să vezi id-ul localității tale în eAWB
-        street_name: "Strada ta",
-        street_number: "1"
-      },
-      
-      // Datele CLIENTULUI
-      address_to: {
-        email: comanda.email || "no-reply@client.ro",
-        phone: comanda.telefon || "0000000000",
-        contact: comanda.numeClient || "Client",
-        country_code: "RO",
-        street_name: comanda.adresa || "-",
-        street_number: "-",
-        street_details: `${comanda.localitate || ''}, Jud. ${comanda.judet || ''}` // Băgăm orașul/județul aici să fim siguri că le vede curierul
-      },
-      
-      // Detalii Colet (Greutate/Dimensiuni)
-      content: {
-        envelopes_count: 0,
-        pallets_count: 0,
-        parcels_count: 1,
-        total_weight: 1,
-        parcels: [
-          {
-            sequence_no: 1,
-            size: { weight: 1, width: 20, height: 20, length: 20 }
-          }
-        ]
-      },
-      
-      // Setări extra: Ramburs și altele
-      extra: {
-        parcel_content: comanda.numeProdus || "Produse",
-        sms_recipient: true,
-        repayment_amount: rambursDeIncasat, // Valoarea rambursului
-        repayment_currency: "RON"
-      }
+      name: comanda.numeClient || "Client",
+      phone: comanda.telefon || "0000000000",
+      county: comanda.judet || "-",
+      city: comanda.localitate || comanda.oras || "-", 
+      address: comanda.adresa || "-",
+      cash_on_delivery: comanda.metodaPlata.toLowerCase().includes('card') ? 0 : Number(comanda.total),
+      weight: 1,
+      contents: comanda.numeProdus || "Produse"
     };
 
-    console.log("👉 Trimitem către eAWB datele:", JSON.stringify(payloadEAWB, null, 2));
-
-    // 4. APELEAZĂ RUTA CORECTĂ
-const urlEawb = 'https://api.europarcel.com/api/public/orders';    
+    // 🔥 URL-UL CORECT ȘI AICI
+    const urlEawb = 'https://api.europarcel.com/api/public/orders'; 
 
     const raspunsEawb = await fetch(urlEawb, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': `Bearer ${apiKey}` 
+        // 🔥 Aici am reparat apiKey-ul și pentru butonul manual!
+        'Authorization': `Bearer ${process.env.EAWB_API_KEY}`
       },
       body: JSON.stringify(payloadEAWB)
     });
@@ -628,19 +584,16 @@ const urlEawb = 'https://api.europarcel.com/api/public/orders';
     try {
       dateAwb = JSON.parse(textRaspuns);
     } catch (e) {
-      console.error("❌ eAWB a returnat HTML:", textRaspuns.substring(0, 150));
-      return res.status(500).json({ success: false, eroare: "Endpoint-ul a returnat eroare HTML (Verifică cheia API sau URL-ul)" });
+      console.error("❌ Europarcel a returnat HTML la manual:", textRaspuns.substring(0, 150));
+      return res.status(500).json({ eroare: "Eroare HTML la Europarcel." });
     }
 
     if (!raspunsEawb.ok) {
-      console.error("❌ eAWB a respins cererea:", dateAwb);
-      // eAWB trimite de obicei erorile sub forma unui obiect (ex: dateAwb.message sau dateAwb.errors)
-      const mesajEroare = dateAwb.message || JSON.stringify(dateAwb.errors) || "Eroare la curier.";
-      return res.status(400).json({ success: false, eroare: `Refuzat de eAWB: ${mesajEroare}` });
+      console.error("❌ Europarcel a respins cererea manuală:", dateAwb);
+      return res.status(400).json({ eroare: "Refuzat: " + (dateAwb.message || JSON.stringify(dateAwb)) });
     }
 
-    // 5. Extragere AWB din JSON-ul lor complex
-    const numarAWBGenerat = dateAwb.awb || dateAwb.tracking_number || (dateAwb[0] && dateAwb[0].awb) || "GENERAT_FARA_NUMAR"; 
+    const numarAWBGenerat = dateAwb.awb || dateAwb.tracking_number || "AWB_GENERAT"; 
     
     comanda.awb = numarAWBGenerat;
     comanda.status = 'Expediată'; 
@@ -649,8 +602,8 @@ const urlEawb = 'https://api.europarcel.com/api/public/orders';
     res.json({ success: true, awb: numarAWBGenerat, mesaj: "AWB Generat cu succes!" });
 
   } catch (err) {
-    console.error("❌ Eroare server fatală la AWB:", err);
-    res.status(500).json({ success: false, eroare: err.message });
+    console.error("❌ Eroare server fatală la AWB manual:", err);
+    res.status(500).json({ eroare: "Eroare internă server: " + err.message });
   }
 });
 
