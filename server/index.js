@@ -144,7 +144,10 @@ const comandaSchema = new mongoose.Schema({
   samedayLockerId: String,
   cantitate: { type: Number, default: 1 }, 
   extraOptions: mongoose.Schema.Types.Mixed,
-  status: { type: String, default: 'Nouă' }
+  status: { type: String, default: 'Nouă' },
+  // 🔥 ASTEA LIPSESC DIN CODUL TĂU ȘI DE AIA NU SE SALVEAZĂ:
+  awb: { type: String, default: '' },
+  sursa: { type: String, default: 'Organic / Direct' }
 }, { timestamps: true });
 const Comanda = mongoose.model('Comanda', comandaSchema);
 
@@ -305,14 +308,12 @@ const trimiteInEawb = async (comanda) => {
     if (raspuns.ok) {
       console.log(`🚀 AWB Generat Automat [${isLocker ? 'LOCKER-TO-LOCKER' : 'LOCKER-TO-HOME'}] pt: ${comanda.numeClient}`);
       
-      // 🔥 AICI E MAGIA CARE LIPSEA! SALVĂM AWB-UL ÎN BAZA DE DATE!
-      const numarAWBGenerat = rezultat.data?.awb_number;
-      if (numarAWBGenerat) {
-        comanda.awb = numarAWBGenerat;
-        comanda.status = 'Trimisă'; // Când generăm AWB-ul, trecem statusul automat pe "Trimisă"
-        await comanda.save();
-      }
-
+      // Dacă Europarcel își schimbă structura și nu dă numărul direct, punem un text de siguranță
+      const numarAWBGenerat = rezultat.data?.awb_number || "AWB_GENERAT_VERIFICA_CURIER";
+      
+      comanda.awb = numarAWBGenerat;
+      comanda.status = 'Trimisă'; 
+      await comanda.save();
     } else {
       console.error(`❌ Eroare eAWB Automat:`, rezultat);
     }
