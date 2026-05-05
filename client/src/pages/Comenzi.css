@@ -1,140 +1,105 @@
 /* ==========================================================================
-   VARIABILE GLOBALE - DESIGN SYSTEM PREMIIUM
+   🚀 ADMIN COMENZI - DESIGN BOMBA PREMIUM (SaaS Level)
    ========================================================================== */
-:root {
-  --bg-main: #f8fafc;
-  --bg-card: #ffffff;
-  --text-dark: #0f172a;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
-  
-  --primary-color: #4f46e5;      /* Indigo Bombă */
-  --primary-hover: #4338ca;
-  --success-color: #10b981;
-  --danger-color: #ef4444;
-  --danger-hover: #dc2626;
-  
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  
-  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
-  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-/* ==========================================================================
-   CONTAINER & HEADER
-   ========================================================================== */
+/* --- BAZĂ & CONTAINER --- */
 .ac-container {
-  font-family: var(--font-main);
-  background-color: var(--bg-main);
-  color: var(--text-dark);
-  padding: 24px;
+  padding: 30px;
+  max-width: 1600px;
+  margin: 0 auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #0f172a;
+  background-color: #f8fafc;
   min-height: 100vh;
-  box-sizing: border-box;
 }
 
+.ac-page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
+  background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+/* --- HEADER & CONTROALE --- */
 .ac-header-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px;
+  margin-bottom: 30px;
+  background: white;
+  padding: 20px 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
 }
 
-.ac-header-left {
+.ac-header-right {
   display: flex;
+  gap: 15px;
   align-items: center;
-  gap: 16px;
   flex-wrap: wrap;
 }
 
-.ac-page-title {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: var(--text-dark);
-}
-
-.ac-btn-new-order, .ac-btn-save {
+/* --- BUTOANE PRINCIPALE --- */
+.ac-btn-new-order {
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
   border: none;
-  padding: 10px 18px;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  font-size: 0.9rem;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: var(--transition);
-  box-shadow: var(--shadow-sm);
-  /* 🔥 FIX CSS: Îl forțăm să fie deasupra oricărui element invizibil */
-  position: relative;
-  z-index: 10; 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
-.ac-btn-new-order:hover, .ac-btn-save:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+.ac-btn-new-order:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
-.ac-btn-cancel-order {
-  background-color: transparent;
-  color: var(--danger-color);
-  border: 1px solid var(--danger-color);
-  padding: 10px 18px;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
+.ac-btn-new-order:active {
+  transform: translateY(0);
 }
 
-.ac-btn-cancel-order:hover {
-  background-color: #fee2e2;
-}
-
-/* Search Box & Filtre */
-.ac-header-right {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
+/* --- SEARCH & FILTRE --- */
 .ac-search-box {
+  position: relative;
   display: flex;
   align-items: center;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 8px 16px;
-  border-radius: 9999px; /* Pill shape */
-  width: 250px;
-  transition: var(--transition);
-  box-shadow: var(--shadow-sm);
 }
 
-.ac-search-box:focus-within {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+.ac-search-box svg {
+  position: absolute;
+  left: 12px;
+  color: #64748b;
+  font-size: 1.1rem;
 }
 
 .ac-search-box input {
-  border: none;
-  background: transparent;
+  padding: 10px 15px 10px 40px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  width: 280px;
+  transition: all 0.3s ease;
   outline: none;
-  margin-left: 8px;
-  width: 100%;
-  font-size: 0.9rem;
-  color: var(--text-dark);
+  background: #f8fafc;
+}
+
+.ac-search-box input:focus {
+  background: white;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
 .ac-filter-container {
@@ -145,313 +110,462 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  padding: 9px 16px;
-  border-radius: var(--radius-sm);
+  background: white;
+  border: 1px solid #cbd5e1;
+  padding: 10px 16px;
+  border-radius: 10px;
+  color: #334155;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: 500;
-  color: var(--text-dark);
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  transition: all 0.2s;
 }
 
 .ac-btn:hover {
-  border-color: #cbd5e1;
-  background: #f8fafc;
+  background: #f1f5f9;
+  border-color: #94a3b8;
 }
 
 .ac-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 10px);
   right: 0;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  z-index: 100;
   overflow: hidden;
-  z-index: 10;
-  min-width: 180px;
+  animation: dropdownPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .ac-dropdown-item {
-  padding: 10px 16px;
+  padding: 12px 16px;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: var(--transition);
-}
-
-.ac-dropdown-item:hover, .ac-dropdown-item.active {
-  background-color: #f1f5f9;
-  color: var(--primary-color);
+  transition: background 0.2s;
   font-weight: 500;
+  color: #475569;
 }
 
-/* ==========================================================================
-   MAIN CARD & TABS
-   ========================================================================== */
-.ac-main-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
-  overflow: hidden; /* Ține totul in-check */
+.ac-dropdown-item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
+.ac-dropdown-item.active {
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* --- TAB-URI PENTRU COMENZI --- */
 .ac-tabs {
   display: flex;
-  border-bottom: 1px solid var(--border-color);
-  background: #fcfcfc;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 2px;
 }
 
 .ac-tab {
-  padding: 16px 24px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  border-bottom: 2px solid transparent;
-  transition: var(--transition);
+  gap: 6px;
+  padding: 12px 20px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.3s;
+  border-radius: 8px 8px 0 0;
 }
 
 .ac-tab:hover {
-  color: var(--text-dark);
-  background: rgba(0,0,0,0.02);
+  color: #0f172a;
+  background: #f1f5f9;
 }
 
 .ac-tab.active {
-  color: var(--primary-color);
-  border-bottom-color: var(--primary-color);
-  background: white;
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  background: #eff6ff;
 }
 
 .ac-tab.drafts-tab.active {
-  color: var(--danger-color);
-  border-bottom-color: var(--danger-color);
+  color: #ea580c;
+  border-bottom-color: #ea580c;
+  background: #fff7ed;
 }
 
-/* ==========================================================================
-   TABEL & RESPONSIVITATE (MAGIA PE TELEFON)
-   ========================================================================== */
-.ac-table-wrapper {
-  width: 100%;
-  overflow-x: auto;
+/* --- TABELUL BOMBĂ --- */
+.ac-main-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  padding: 25px;
 }
+
+.ac-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  /* Scrollbar customizat */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.ac-table-wrapper::-webkit-scrollbar { height: 8px; }
+.ac-table-wrapper::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
 
 .ac-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: left;
 }
 
 .ac-table th {
-  background-color: #f8fafc;
-  padding: 14px 20px;
-  font-size: 0.8rem;
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 700;
   text-transform: uppercase;
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
-  color: var(--text-muted);
-  font-weight: 600;
-  border-bottom: 1px solid var(--border-color);
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
 }
+
+.ac-table th:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+.ac-table th:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
 
 .ac-table td {
   padding: 16px 20px;
   vertical-align: middle;
-  border-bottom: 1px solid var(--border-color);
-  color: var(--text-dark);
-  font-size: 0.9rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  transition: background 0.2s;
 }
 
 .ac-table tbody tr {
-  transition: var(--transition);
+  transition: all 0.2s ease;
 }
 
-.ac-table tbody tr:hover {
+.ac-table tbody tr:hover td {
   background-color: #f8fafc;
 }
 
-.ac-row-cancelled td {
+.ac-table tbody tr.ac-row-cancelled td {
   opacity: 0.6;
-  background-color: #fafafa;
+  background: #fef2f2;
 }
 
-/* Utilitare Tabel */
 .ac-truncate {
-  max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 180px;
 }
 
-.ac-fw-medium { font-weight: 500; }
-.ac-fw-bold { font-weight: 700; }
+.ac-fw-medium { font-weight: 600; }
 .text-right { text-align: right; }
 
+/* Selectorul de Status */
 .ac-status-select {
-  appearance: none; /* Ascunde săgeata default */
+  appearance: none;
   border: 1px solid;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 6px 30px 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
   cursor: pointer;
   outline: none;
-  text-align: center;
-  transition: var(--transition);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  transition: all 0.2s;
+}
+
+.ac-status-select:hover {
+  filter: brightness(0.95);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .ac-btn-edit {
-  background: white;
-  border: 1px solid var(--border-color);
-  color: var(--text-muted);
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
+  background: #f1f5f9;
+  border: none;
+  color: #475569;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s;
 }
 
 .ac-btn-edit:hover {
-  border-color: var(--primary-color);
-  color: var(--primary-color);
-  background: #e0e7ff;
+  background: #3b82f6;
+  color: white;
+  transform: rotate(10deg) scale(1.1);
 }
-/* ==========================================================================
-   🔥 RESPONSIVITATE TELEFON (TABLE TO CARDS) 🔥
-   ========================================================================== */
-@media screen and (max-width: 1024px) {
-  .ac-search-box { width: 100%; }
-  
-  .ac-table thead {
-    display: none;
-  }
 
-  .ac-table, .ac-table tbody, .ac-table tr, .ac-table td {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .ac-table tr {
-    margin-bottom: 16px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    background: white;
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-  }
-
-  .ac-table td {
-    position: relative; /* Secretul pentru a nu se mai suprapune */
-    padding: 12px 12px 12px 140px; /* Lăsăm un "tunel" de 140px în stânga pt label */
-    text-align: right;
-    border-bottom: 1px dashed var(--border-color);
-    min-height: 48px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end; /* Tot conținutul (nume, status etc) e împins la dreapta */
-    gap: 6px; /* Spațiu elegant între nume, telefon și email */
-  }
-
-  .ac-table td:last-child {
-    border-bottom: none;
-    padding-top: 16px;
-    padding-bottom: 16px;
-  }
-
-  /* Label-ul stă prins cu bold-uri în stânga, independent de restul textului */
-  .ac-table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 12px;
-    top: 14px;
-    font-weight: 600;
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    text-align: left;
-    width: 120px;
-  }
-  
-  /* Asigurăm că div-urile interioare care au flex (ex: iconițele de la curier) se duc și ele la dreapta */
-  .ac-table td > div {
-    width: 100%;
-    text-align: right;
-    justify-content: flex-end; 
-  }
-  
-  .ac-truncate {
-    max-width: 100%;
-    display: inline-block;
-  }
-
-  /* Pastila de status să fie civilizată, să nu se întindă pe tot ecranul */
-  .ac-status-select {
-    max-width: 160px;
-    width: auto;
-  }
+/* --- MODAL (FEREASTRA POP-UP) --- */
+.ac-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
 }
-/* =========================================
-   🚀 NOTIFICĂRI SMART PENTRU ADMIN AWB
-   ========================================= */
+
+.ac-modal-content {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Scrollbar custom pt modal */
+  scrollbar-width: thin;
+}
+
+.ac-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.ac-modal-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.ac-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ac-close-btn:hover {
+  color: #ef4444;
+  transform: rotate(90deg);
+}
+
+.ac-modal-body {
+  padding: 30px;
+}
+
+/* Formulare Modal */
+.ac-form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.ac-form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.ac-form-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ac-modal-body input,
+.ac-modal-body select {
+  padding: 12px 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s;
+  background: #f8fafc;
+  color: #1e293b;
+  font-family: inherit;
+}
+
+.ac-modal-body input:focus,
+.ac-modal-body select:focus {
+  background: white;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+.ac-modal-footer {
+  padding: 20px 30px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.ac-btn-save {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  transition: all 0.3s;
+}
+
+.ac-btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.ac-btn-cancel-order {
+  background: white;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ac-btn-cancel-order:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+/* --- TOAST NOTIFICATIONS (Notificări Smart) --- */
 .admin-toast-container {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  z-index: 99999;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  pointer-events: none;
+  z-index: 10000;
 }
 
 .admin-toast {
-  min-width: 300px;
-  max-width: 450px;
-  padding: 16px 24px;
-  border-radius: 10px;
-  color: white;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
-  gap: 12px;
-  animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  pointer-events: all;
+  gap: 15px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
+  animation: toastSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.admin-toast.success {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  border-left: 6px solid #047857;
+.admin-toast.success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+.admin-toast.error { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+.admin-toast.loading { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+
+.admin-toast-icon { font-size: 1.5rem; }
+
+/* --- LOADER --- */
+.ac-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
 }
 
-.admin-toast.error {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  border-left: 6px solid #991b1b;
+.ac-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: ac-spin 1s linear infinite;
 }
 
-.admin-toast.loading {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-left: 6px solid #1d4ed8;
+/* --- ANIMAȚII --- */
+@keyframes ac-spin { 
+  to { transform: rotate(360deg); } 
+}
+@keyframes fadeIn { 
+  from { opacity: 0; } 
+  to { opacity: 1; } 
+}
+@keyframes slideUp { 
+  from { opacity: 0; transform: translateY(40px) scale(0.95); } 
+  to { opacity: 1; transform: translateY(0) scale(1); } 
+}
+@keyframes dropdownPop {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes toastSlideIn {
+  0% { opacity: 0; transform: translateX(100px) scale(0.8); }
+  70% { transform: translateX(-10px) scale(1.05); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
 }
 
-.admin-toast-icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-}
+/* --- RESPONSIVITATE TELEFON --- */
+@media (max-width: 900px) {
+  .ac-header-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .ac-header-right {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-@keyframes slideInToast {
-  0% { transform: translateX(120%); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
+  .ac-search-box input {
+    width: 100%;
+  }
+
+  .ac-btn-new-order, .ac-btn, .ac-filter-container button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ac-form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .ac-modal-footer {
+    flex-direction: column;
+  }
+  
+  .ac-modal-footer button {
+    width: 100%;
+    justify-content: center;
+  }
 }
