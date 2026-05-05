@@ -32,7 +32,8 @@ const AdminComenzi = () => {
   
   // 🔥 STATE PENTRU BULK ACTIONS (Selecție multiplă)
   const [selectedItems, setSelectedItems] = useState([]);
-// 🔥 STATE PENTRU MENIU FULLSCREEN
+
+  // 🔥 STATE PENTRU MENIU FULLSCREEN
   const [isMenuMinimized, setIsMenuMinimized] = useState(false);
 
   // Când apăsăm butonul, punem o clasă pe <body> ca să știe CSS-ul să ascundă meniul
@@ -42,7 +43,10 @@ const AdminComenzi = () => {
     } else {
       document.body.classList.remove('admin-menu-minimized');
     }
+    // Cleanup la ieșirea din componentă
+    return () => document.body.classList.remove('admin-menu-minimized');
   }, [isMenuMinimized]);
+
   // 🔥 STATE PENTRU NOUA LOGICĂ DE CALENDAR
   const [range, setRange] = useState('last30'); 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -138,7 +142,7 @@ const AdminComenzi = () => {
     setShowDropdown(false);
   };
 
-  // 🔥 Efect pentru Localități (Autocomplete din localitati.json)
+  // 🔥 Efect pentru Localități (Autocomplete)
   useEffect(() => {
     if (!formData.judet) {
       setListaLocalitatiFiltrate([]);
@@ -386,7 +390,7 @@ const AdminComenzi = () => {
             <FiPlusSquare /> Comandă Nouă
           </button>
           <button onClick={exportaCSV} style={{ display: 'flex', alignItems: 'center', gap: '5px', background: '#10b981', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '0.9rem' }}>
-            <FiDownload /> Exportă Toate
+            <FiDownload /> Exportă Toate Vizibile
           </button>
           <button 
             onClick={() => setIsMenuMinimized(!isMenuMinimized)} 
@@ -469,7 +473,7 @@ const AdminComenzi = () => {
                 <th>Dată</th><th>Client</th><th>Comandă</th><th>Plată & Livrare</th>{activeTab === 'comenzi' && <th>Status</th>}
                 <th>Sursă Trafic 🎯</th><th>Total</th>
                 
-                {/* 🔥 Coloana Nouă dedicată pentru AWB */}
+                {/* 🔥 Coloana dedicată pentru AWB */}
                 <th>AWB Curier</th> 
                 <th className="text-right">Acțiuni</th>
               </tr>
@@ -523,7 +527,7 @@ const AdminComenzi = () => {
                     ) : (
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '5px' }}>
                         <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '4px 8px', borderRadius: '6px', fontSize: '0.85rem', display: 'inline-block', fontWeight: 'bold' }}>
-                          ✅ {item.awb}
+                          ✅ AWB Generat: <br/> {item.awb}
                         </span>
                         <button onClick={() => genereazaAWB(item._id)} style={{ background: 'transparent', color: '#3b82f6', border: '1px dashed #3b82f6', padding: '2px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', transition: 'all 0.2s' }}>
                           🔄 Regenerează
@@ -540,7 +544,7 @@ const AdminComenzi = () => {
                   </td>
                 </tr>
               ))}
-              {listaFiltrata.length === 0 && ( <tr><td colSpan="9" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>Nicio comandă găsită.</td></tr> )}
+              {listaFiltrata.length === 0 && ( <tr><td colSpan="10" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>Nicio comandă găsită.</td></tr> )}
             </tbody>
           </table>
         </div>
