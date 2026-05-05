@@ -463,7 +463,7 @@ const AdminComenzi = () => {
           </div>
         )}
 
-        <div className="ac-table-wrapper">
+       <div className="ac-table-wrapper">
           <table className="ac-table">
             <thead>
               <tr>
@@ -473,8 +473,8 @@ const AdminComenzi = () => {
                 <th>Dată</th><th>Client</th><th>Comandă</th><th>Plată & Livrare</th>{activeTab === 'comenzi' && <th>Status</th>}
                 <th>Sursă Trafic 🎯</th><th>Total</th>
                 
-                {/* 🔥 Coloana dedicată pentru AWB */}
-                <th>AWB Curier</th> 
+                {/* 🔥 Coloana NOUĂ și CLARĂ pentru Status AWB */}
+                <th>Status AWB</th> 
                 <th className="text-right">Acțiuni</th>
               </tr>
             </thead>
@@ -518,26 +518,34 @@ const AdminComenzi = () => {
                   </td>
                   <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938', fontWeight: 'bold' }}>{item.total || item.totalComanda} Lei</td>
                   
-                  {/* 🔥 ZONA AWB REPARATĂ CONFORM CERINȚELOR 🔥 */}
-                  <td data-label="AWB Curier">
+                  {/* 🔥 STATUS AWB - BAZAT PE EXISTENȚA CODULUI 🔥 */}
+                  <td data-label="Status AWB">
+                    {item.awb ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
+                        <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                          ✅ Generat
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 'bold' }}>{item.awb}</span>
+                      </div>
+                    ) : (
+                      <span style={{ background: '#fee2e2', color: '#dc2626', border: '1px solid #fecaca', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-block' }}>
+                        ❌ Negenerat
+                      </span>
+                    )}
+                  </td>
+
+                  {/* 🔥 ACȚIUNI - BUTON DE GENERARE AWB ȘI EDITARE 🔥 */}
+                  <td data-label="Acțiuni" className="text-right" style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
                     {!item.awb ? (
                       <button onClick={() => genereazaAWB(item._id)} style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}>
                         📦 Generează AWB
                       </button>
                     ) : (
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '5px' }}>
-                        <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '4px 8px', borderRadius: '6px', fontSize: '0.85rem', display: 'inline-block', fontWeight: 'bold' }}>
-                          ✅ AWB Generat: <br/> {item.awb}
-                        </span>
-                        <button onClick={() => genereazaAWB(item._id)} style={{ background: 'transparent', color: '#3b82f6', border: '1px dashed #3b82f6', padding: '2px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', transition: 'all 0.2s' }}>
-                          🔄 Regenerează
-                        </button>
-                      </div>
+                      <button onClick={() => genereazaAWB(item._id)} style={{ background: '#f8fafc', color: '#3b82f6', border: '1px dashed #3b82f6', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}>
+                        🔄 Regenerează
+                      </button>
                     )}
-                  </td>
-
-                  {/* 🔥 BUTONUL DE EDITARE - RĂMAS SINGUR 🔥 */}
-                  <td data-label="Acțiuni" className="text-right">
+                    
                     <button onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')} className="ac-btn-edit" title="Editează Comanda">
                       <FiEdit2 />
                     </button>
