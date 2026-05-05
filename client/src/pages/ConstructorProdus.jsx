@@ -57,17 +57,47 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
     if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
-      if (path.length > 0) {
-        setFormData(prev => ({
-          ...prev,
-          [path[0]]: { ...prev[path[0]], [path[1]]: reader.result }
-        }));
-      } else {
-        setFormData(prev => ({ ...prev, [target]: reader.result }));
-      }
+      setFormData(prev => {
+        // Cazul 1: Poze în interiorul sectiunilor Landing (Array)
+        if (path.length === 3 && path[0] === 'sectiuniLanding') {
+          const idx = path[1];
+          const key = path[2];
+          const newSectiuni = [...prev.sectiuniLanding];
+          newSectiuni[idx] = { ...newSectiuni[idx], [key]: reader.result };
+          return { ...prev, sectiuniLanding: newSectiuni };
+        } 
+        // Cazul 2: Poze în interiorul obiectelor (ex: heroRecenzie)
+        else if (path.length === 2) {
+          return {
+            ...prev,
+            [path[0]]: { ...prev[path[0]], [path[1]]: reader.result }
+          };
+        } 
+        // Cazul 3: Poze simple (imaginePrincipala, imagineFacebook)
+        else {
+          return { ...prev, [target]: reader.result };
+        }
+      });
     };
     reader.readAsDataURL(file);
   };
+
+  // 🔥 FUNCȚIE NOUĂ PENTRU ȘTERGEREA POZELOR
+  const stergeImagine = (target, path = []) => {
+    setFormData(prev => {
+        if (path.length === 3 && path[0] === 'sectiuniLanding') {
+          const newSectiuni = [...prev.sectiuniLanding];
+          newSectiuni[path[1]] = { ...newSectiuni[path[1]], [path[2]]: '' };
+          return { ...prev, sectiuniLanding: newSectiuni };
+        } else if (path.length === 2) {
+          return { ...prev, [path[0]]: { ...prev[path[0]], [path[1]]: '' } };
+        } else {
+          return { ...prev, [target]: '' };
+        }
+    });
+  };
+
+  const preventDefault = (e) => { e.preventDefault(); e.stopPropagation(); };
 
   const preventDefault = (e) => { e.preventDefault(); e.stopPropagation(); };
 
@@ -172,14 +202,24 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
               <div className="editor-col">
                 <label>Imagine Produs Principală</label>
                 <div className="drop-zone" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], 'imaginePrincipala'); }}>
-                  {formData.imaginePrincipala ? <img src={formData.imaginePrincipala} alt="Main" /> : <><FiUploadCloud size={30} /><p>Trage poza aici</p></>}
+                  {formData.imaginePrincipala ? (
+                    <div style={{ position: 'relative', display: 'inline-block' }}>
+                      <img src={formData.imaginePrincipala} alt="Main" />
+                      <button type="button" onClick={() => stergeImagine('imaginePrincipala')} style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px 8px', cursor: 'pointer' }}><FiTrash2 /></button>
+                    </div>
+                  ) : <><FiUploadCloud size={30} /><p>Trage poza aici</p></>}
                 </div>
               </div>
 
               <div className="editor-col">
-                <label>Dovadă Facebook (Screenshot sub butoane)</label>
+                <label>Dovadă Facebook (Screenshot)</label>
                 <div className="drop-zone fb" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], 'imagineFacebook'); }}>
-                  {formData.imagineFacebook ? <img src={formData.imagineFacebook} alt="FB" /> : <><FiFacebook size={30} /><p>Trage screenshot FB</p></>}
+                  {formData.imagineFacebook ? (
+                    <div style={{ position: 'relative', display: 'inline-block' }}>
+                      <img src={formData.imagineFacebook} alt="FB" />
+                      <button type="button" onClick={() => stergeImagine('imagineFacebook')} style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px 8px', cursor: 'pointer' }}><FiTrash2 /></button>
+                    </div>
+                  ) : <><FiFacebook size={30} /><p>Trage screenshot FB</p></>}
                 </div>
               </div>
 
@@ -287,8 +327,13 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
               <div className="editor-col full glass-box">
                 <h3>Recenzia de sub Butonul de Comandă</h3>
                 <div className="row">
-                  <div className="mini-drop" title="Trage poza clientului aici" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], '', ['heroRecenzie', 'imagine']); }}>
-                    {formData.heroRecenzie.imagine ? <img src={formData.heroRecenzie.imagine} alt="Avatar" /> : <FiImage />}
+                  <div className="mini-drop" title="Trage poza clientului aici" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], '', ['heroRecenzie', 'imagine']); }} style={{ position: 'relative' }}>
+                    {formData.heroRecenzie.imagine ? (
+                      <>
+                        <img src={formData.heroRecenzie.imagine} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        <button type="button" onClick={() => stergeImagine('', ['heroRecenzie', 'imagine'])} style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '2px 5px', fontSize: '10px', cursor: 'pointer' }}><FiX /></button>
+                      </>
+                    ) : <FiImage />}
                   </div>
                   <input type="text" placeholder="Nume Client (Ex: Marian D.)" value={formData.heroRecenzie.nume} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, nume: e.target.value}})} />
                   <input type="number" min="1" max="5" placeholder="Stele (1-5)" value={formData.heroRecenzie.rating} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, rating: e.target.value}})} />
@@ -368,7 +413,12 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
                       }} />
                       <div className="row">
                         <div className="drop-zone mini" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], '', ['sectiuniLanding', idx, 'imagineUrl']); }}>
-                          {s.imagineUrl ? <img src={s.imagineUrl} alt="Sec" /> : <p>Trage imaginea</p>}
+                          {s.imagineUrl ? (
+                            <div style={{ position: 'relative', display: 'inline-block' }}>
+                              <img src={s.imagineUrl} alt="Sec" style={{ maxHeight: '100px' }} />
+                              <button type="button" onClick={() => stergeImagine('', ['sectiuniLanding', idx, 'imagineUrl'])} style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px', cursor: 'pointer' }}><FiX /></button>
+                            </div>
+                          ) : <p>Trage imaginea</p>}
                         </div>
                         <select value={s.aliniere} onChange={e => {
                           const copy = structuredClone(formData.sectiuniLanding);
