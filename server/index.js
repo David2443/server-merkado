@@ -230,7 +230,6 @@ const trimiteInEawb = async (comanda) => {
       phone: comanda.telefon || "0000000000",
       contact: comanda.numeClient || "Client",
       country_code: "RO",
-      // 🔥 AM ȘTERS postal_code: "000000". Acum va folosi exclusiv numele orașului!
       locality_name: comanda.localitate, 
       county_name: comanda.judet,        
       street_name: comanda.adresa || "-",
@@ -242,15 +241,13 @@ const trimiteInEawb = async (comanda) => {
          console.error(`❌ Eroare AWB: Comanda locker ${comanda._id} nu are salvat ID-ul lockerului destinație.`);
          return;
       }
-      // Daca e locker, fixed_location_id e required pentru livrare (Service 4)
       adresaDestinatie.fixed_location_id = parseInt(comanda.samedayLockerId) || 0; 
     }
 
     const CARRIER_FAN = 3; 
-    const SERVICE_LOCKER_TO_HOME = 3;   // Pickup din locker, Livrare la usa
-    const SERVICE_LOCKER_TO_LOCKER = 4; // Pickup din locker, Livrare in locker
+    const SERVICE_LOCKER_TO_HOME = 3;   
+    const SERVICE_LOCKER_TO_LOCKER = 4; 
     
-    // Locker-ul tău de predare
     const FANBOX_PREDARE_ID = 491265; 
     const LOCALITY_PREDARE_ID = 1407;
 
@@ -274,7 +271,7 @@ const trimiteInEawb = async (comanda) => {
       content: {
         envelopes_count: 0,
         pallets_count: 0,
-        parcels_count: 1, // Fix un pachet conform documentației
+        parcels_count: 1, 
         total_weight: 1,
         parcels: [
           { sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }
@@ -298,7 +295,6 @@ const trimiteInEawb = async (comanda) => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        // 🔥 Ne întoarcem la formatul care a funcționat pentru tine!
         'X-API-Key': process.env.EUROPARCEL_API_KEY 
       },
       body: JSON.stringify(payloadEAWB)
@@ -308,6 +304,15 @@ const trimiteInEawb = async (comanda) => {
 
     if (raspuns.ok) {
       console.log(`🚀 AWB Generat Automat [${isLocker ? 'LOCKER-TO-LOCKER' : 'LOCKER-TO-HOME'}] pt: ${comanda.numeClient}`);
+      
+      // 🔥 AICI E MAGIA CARE LIPSEA! SALVĂM AWB-UL ÎN BAZA DE DATE!
+      const numarAWBGenerat = rezultat.data?.awb_number;
+      if (numarAWBGenerat) {
+        comanda.awb = numarAWBGenerat;
+        comanda.status = 'Trimisă'; // Când generăm AWB-ul, trecem statusul automat pe "Trimisă"
+        await comanda.save();
+      }
+
     } else {
       console.error(`❌ Eroare eAWB Automat:`, rezultat);
     }
