@@ -969,24 +969,28 @@ const ProductPage = () => {
                           {errors.judet && <span className="error-text">{errors.judet}</span>}
                         </div>
                         <div className="input-group-wrapper" style={{ flex: 1 }}>
-                          <select 
-                            className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} 
-                            value={dateClient.localitate} 
-                            onChange={e => { 
-                              setDateClient({ ...dateClient, localitate: e.target.value }); 
-                              setErrors({ ...errors, localitate: null }); 
-                              setLockereDisponibile([]); 
-                              setLockerSelectat(null);
-                            }}
-                            disabled={!dateClient.judet || listaLocalitatiFiltrate.length === 0}
-                          >
-                            <option value="">Alege Localitatea...</option>
-                            {listaLocalitatiFiltrate.map((loc, idx) => (
-                              <option key={idx} value={loc.name}>{loc.name}</option>
-                            ))}
-                          </select>
-                          {errors.localitate && <span className="error-text">{errors.localitate}</span>}
-                        </div>
+  <select 
+    className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} 
+    value={dateClient.localitate} 
+    onChange={e => { 
+      setDateClient({ ...dateClient, localitate: e.target.value }); 
+      setErrors({ ...errors, localitate: null }); 
+      setLockereDisponibile([]); 
+      setLockerSelectat(null);
+    }}
+    disabled={!dateClient.judet} /* 🔥 AM SCOS BLOCAJUL care te încurca! Acum se blochează DOAR dacă n-ai ales județul deloc */
+  >
+    <option value="">Alege Localitatea...</option>
+    {listaLocalitatiFiltrate.length > 0 ? (
+      listaLocalitatiFiltrate.map((loc, idx) => (
+        <option key={idx} value={loc.name}>{loc.name}</option>
+      ))
+    ) : (
+      dateClient.judet && <option disabled>⏳ Se încarcă sau nu am găsit orașe...</option>
+    )}
+  </select>
+  {errors.localitate && <span className="error-text">{errors.localitate}</span>}
+</div>
                       </div>
 
                       {/* ZONA SPECIFICĂ DE CURIER */}
