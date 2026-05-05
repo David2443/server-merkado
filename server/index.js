@@ -442,6 +442,44 @@ app.use('/api/contact', contactRoute);
 // ============================================================================
 
 // ==========================================
+// 🗑️ ȘTERGERE DEFINITIVĂ COMANDĂ
+// ==========================================
+app.delete('/api/comenzi/:id', async (req, res) => {
+  try {
+    // Înlocuiește 'Comanda' cu numele modelului tău din Mongoose
+    const rezultat = await Comanda.findByIdAndDelete(req.params.id);
+    
+    if (!rezultat) {
+      return res.status(404).json({ eroare: 'Comanda nu a fost găsită în baza de date!' });
+    }
+    
+    res.json({ success: true, mesaj: 'Comandă ștearsă definitiv!' });
+  } catch (err) {
+    console.error("Eroare la ștergerea comenzii:", err);
+    res.status(500).json({ eroare: 'Eroare internă a serverului.' });
+  }
+});
+
+// ==========================================
+// 🗑️ ȘTERGERE DEFINITIVĂ COȘ ABANDONAT (DRAFT)
+// ==========================================
+app.delete('/api/comenzi/abandonat/:id', async (req, res) => {
+  try {
+    // Înlocuiește 'CosAbandonat' cu modelul tău pentru draft-uri (dacă e diferit)
+    const rezultat = await CosAbandonat.findByIdAndDelete(req.params.id);
+    
+    if (!rezultat) {
+      return res.status(404).json({ eroare: 'Draft-ul nu a fost găsit!' });
+    }
+    
+    res.json({ success: true, mesaj: 'Draft șters definitiv!' });
+  } catch (err) {
+    console.error("Eroare la ștergerea draft-ului:", err);
+    res.status(500).json({ eroare: 'Eroare internă a serverului.' });
+  }
+});
+
+// ==========================================
 // 📍 RUTA NOUĂ: CAUTĂ DOAR LOCKERE FANBOX
 // ==========================================
 app.get('/api/lockers', async (req, res) => {
@@ -762,42 +800,63 @@ app.get('/api/dashboard', verifyAdmin, async (req, res) => {
   try {
     const { range } = req.query;
     const tz = 'Europe/Bucharest'; 
-    let dataStart, dataEnd;
+    
+    // Inițializăm filtrele goale (care vor aduce TOATE datele dacă range === 'all')
+    let matchComenzi = {};
+    let matchCosuri = {};
+    let matchVizite = {};
 
-    if (range === 'today') {
-      dataStart = moment.tz(tz).startOf('day').toDate();
-      dataEnd = moment.tz(tz).endOf('day').toDate();
-    } else if (range === 'yesterday') {
-      dataStart = moment.tz(tz).subtract(1, 'days').startOf('day').toDate();
-      dataEnd = moment.tz(tz).subtract(1, 'days').endOf('day').toDate();
-    } else if (range === 'last7') {
-      dataStart = moment.tz(tz).subtract(6, 'days').startOf('day').toDate(); 
-      dataEnd = moment.tz(tz).endOf('day').toDate();
-    } else { 
-      dataStart = moment.tz(tz).subtract(29, 'days').startOf('day').toDate();
-      dataEnd = moment.tz(tz).endOf('day').toDate();
+    // Calculăm datele doar dacă utilizatorul NU a selectat "Toate datele"
+    if (range !== 'all') {
+      let dataStart, dataEnd;
+
+      if (range === 'today') {
+        dataStart = moment.tz(tz).startOf('day').toDate();
+        dataEnd = moment.tz(tz).endOf('day').toDate();
+      } else if (range === 'yesterday') {
+        dataStart = moment.tz(tz).subtract(1, 'days').startOf('day').toDate();
+        dataEnd = moment.tz(tz).subtract(1, 'days').endOf('day').toDate();
+      } else if (range === 'last7') {
+        dataStart = moment.tz(tz).subtract(6, 'days').startOf('day').toDate(); 
+        dataEnd = moment.tz(tz).endOf('day').toDate();
+      } else { // Default pentru 'last30'
+        dataStart = moment.tz(tz).subtract(29, 'days').startOf('day').toDate();
+        dataEnd = moment.tz(tz).endOf('day').toDate();
+      }
+
+      const queryData = { $gte: dataStart, $lte: dataEnd };
+      
+      // Aplicăm filtrul de timp pe căutări
+      matchComenzi = { createdAt: queryData };
+      matchCosuri = { updatedAt: queryData };
+      matchVizite = { data: queryData };
     }
 
-    const queryData = { $gte: dataStart, $lte: dataEnd };
-
-    const comenziPerioada = await Comanda.find({ createdAt: queryData }).sort({ createdAt: -1 });
+    const comenziPerioada = await Comanda.find(matchComenzi).sort({ createdAt: -1 });
     const comenziValide = comenziPerioada.filter(c => c.status !== 'Anulată');
     const totalVanzari = comenziValide.reduce((acc, c) => acc + (c.total || 0), 0);
     const platiAsteptare = comenziValide
       .filter(c => c.metodaPlata && c.metodaPlata.toLowerCase().includes('card'))
       .reduce((acc, c) => acc + (c.total || 0), 0);
 
-    const cosuriAbandonate = await CosAbandonat.find({ updatedAt: queryData }).sort({ updatedAt: -1 });
-    const viziteReale = await VizitaSite.countDocuments({ data: queryData });
+    const cosuriAbandonate = await CosAbandonat.find(matchCosuri).sort({ updatedAt: -1 });
+    const viziteReale = await VizitaSite.countDocuments(matchVizite);
+
+    // Trebuie să adaptăm și agregatele ca să funcționeze corect fără filtru de dată dacă range e 'all'
+    const matchAggGrafic = { status: { $ne: 'Anulată' } };
+    if (range !== 'all') matchAggGrafic.createdAt = matchComenzi.createdAt;
 
     const vanzariPeZile = await Comanda.aggregate([
-      { $match: { createdAt: queryData, status: { $ne: 'Anulată' } } },
-      { $group: { _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } }, total: { $sum: "$total" } } },
+      { $match: matchAggGrafic },
+      { $group: { _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt", timezone: tz } }, total: { $sum: "$total" } } },
       { $sort: { "_id": 1 } }
     ]);
 
+    const matchAggProduse = { status: { $ne: 'Anulată' } };
+    if (range !== 'all') matchAggProduse.createdAt = matchComenzi.createdAt;
+
     const produseTop = await Comanda.aggregate([
-      { $match: { createdAt: queryData, status: { $ne: 'Anulată' } } },
+      { $match: matchAggProduse },
       { $group: { _id: "$numeProdus", vanzari: { $sum: "$cantitate" }, venit: { $sum: "$total" } } },
       { $sort: { venit: -1 } }, { $limit: 5 }
     ]);
@@ -812,7 +871,8 @@ app.get('/api/dashboard', verifyAdmin, async (req, res) => {
         platiInAsteptare: platiAsteptare,
         viziteTotale: viziteReale 
       },
-      comenziRecente: comenziPerioada.slice(0, 15), 
+      // Am scos acel .slice(0, 15) ca să îți aducă toate comenzile pentru exportul Excel!
+      comenziRecente: comenziPerioada, 
       cosuriAbandonate: cosuriAbandonate,
       produseTop: produseTop.map(p => ({ nume: p._id || 'Produs', vanzari: p.vanzari, venit: p.venit })),
       dateGrafic: vanzariPeZile.map(d => ({ data: d._id, vanzari: d.total }))
