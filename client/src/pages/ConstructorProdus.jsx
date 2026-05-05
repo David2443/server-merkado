@@ -6,6 +6,7 @@ import {
 } from 'react-icons/fi';
 import './ConstructorPage.css';
 import React from 'react';
+
 const initialState = { 
   nume: '', pret: '', pretVechi: '', imaginePrincipala: '', 
   galerieImagini: [],
@@ -27,7 +28,8 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
   const [formData, setFormData] = useState(initialState);
   const [activeTab, setActiveTab] = useState('hero');
   const [isSubmitting, setIsSubmitting] = useState(false);
-const [slideIndex, setSlideIndex] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(0);
+
   // 🛡️ URL Dinamic pentru a merge pe internet
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -42,6 +44,7 @@ const [slideIndex, setSlideIndex] = useState(0);
           setFormData({ 
             ...initialState, 
             ...data,
+            galerieImagini: data.galerieImagini?.length > 0 ? data.galerieImagini : (data.imaginePrincipala ? [data.imaginePrincipala] : []),
             oferte: data.oferte && data.oferte.length > 0 ? data.oferte : initialState.oferte,
             sectiuniLanding: data.sectiuniLanding || [],
             heroBeneficii: data.heroBeneficii && data.heroBeneficii.length > 0 ? data.heroBeneficii : initialState.heroBeneficii
@@ -53,36 +56,50 @@ const [slideIndex, setSlideIndex] = useState(0);
     }
   }, [idProdus, API_URL]);
 
-  // --- MOTORUL DE DRAG & DROP IMAGINI ---
+  const preventDefault = (e) => { e.preventDefault(); e.stopPropagation(); };
+
+  // --- MOTORUL DE DRAG & DROP PENTRU IMAGINI SINGULARE ---
   const handleFileDrop = (file, target, path = []) => {
     if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
       setFormData(prev => {
-        // Cazul 1: Poze în interiorul sectiunilor Landing (Array)
         if (path.length === 3 && path[0] === 'sectiuniLanding') {
           const idx = path[1];
           const key = path[2];
           const newSectiuni = [...prev.sectiuniLanding];
           newSectiuni[idx] = { ...newSectiuni[idx], [key]: reader.result };
           return { ...prev, sectiuniLanding: newSectiuni };
-        } 
-        // Cazul 2: Poze în interiorul obiectelor (ex: heroRecenzie)
-        else if (path.length === 2) {
+        } else if (path.length === 2) {
           return {
             ...prev,
             [path[0]]: { ...prev[path[0]], [path[1]]: reader.result }
           };
-        } 
-        // Cazul 3: Poze simple (imaginePrincipala, imagineFacebook)
-        else {
+        } else {
           return { ...prev, [target]: reader.result };
         }
       });
     };
     reader.readAsDataURL(file);
+  };
 
-    const adaugaInGalerie = (files) => {
+  // 🔥 FUNCȚIE CORECTATĂ PENTRU ȘTERGEREA POZELOR SINGULARE
+  const stergeImagine = (target, path = []) => {
+    setFormData(prev => {
+      if (path.length === 3 && path[0] === 'sectiuniLanding') {
+        const newSectiuni = [...prev.sectiuniLanding];
+        newSectiuni[path[1]] = { ...newSectiuni[path[1]], [path[2]]: '' };
+        return { ...prev, sectiuniLanding: newSectiuni };
+      } else if (path.length === 2) {
+        return { ...prev, [path[0]]: { ...prev[path[0]], [path[1]]: '' } };
+      } else {
+        return { ...prev, [target]: '' };
+      }
+    });
+  };
+
+  // --- MOTOR PENTRU GALERIE MULTIPLĂ (SLIDER) ---
+  const adaugaInGalerie = (files) => {
     Array.from(files).forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -97,30 +114,14 @@ const [slideIndex, setSlideIndex] = useState(0);
 
   const stergeDinGalerie = (e, index) => {
     e.preventDefault();
-    e.stopPropagation(); // 👈 Asta repara problema cu X-ul!
+    e.stopPropagation(); // 👈 Nu lasă click-ul să declanșeze altceva
     setFormData(prev => {
       const nouaGalerie = [...(prev.galerieImagini || [])];
       nouaGalerie.splice(index, 1);
       return { ...prev, galerieImagini: nouaGalerie };
     });
-    setSlideIndex(0); // Resetăm la prima poză ca să nu crape vizualizarea
+    setSlideIndex(0); // Resetăm la prima poză
   };
-  };
-
-  // 🔥 FUNCȚIE NOUĂ PENTRU ȘTERGEREA POZELOR
-  const stergeImagine = (target, path = []) => {
-    setFormData({ 
-            ...initialState, 
-            ...data,
-            galerieImagini: data.galerieImagini?.length > 0 ? data.galerieImagini : (data.imaginePrincipala ? [data.imaginePrincipala] : []),
-            oferte: data.oferte?.length > 0 ? data.oferte : initialState.oferte,
-            sectiuniLanding: data.sectiuniLanding || [],
-            heroBeneficii: data.heroBeneficii?.length > 0 ? data.heroBeneficii : initialState.heroBeneficii
-          });
-  };
-
-  const preventDefault = (e) => { e.preventDefault(); e.stopPropagation(); };
-
 
   // --- MOTORUL DE MODULE ---
   const adaugaSectiune = (tip) => {
@@ -153,7 +154,7 @@ const [slideIndex, setSlideIndex] = useState(0);
     const metoda = idCurat ? 'PUT' : 'POST';
     const url = idCurat ? `${API_URL}/api/produse/${idCurat}` : `${API_URL}/api/produse`;
     
-    // 🛡️ Extragem datele sigure (fără _id sau __v care blochează MongoDB) și le pregătim
+    // 🛡️ Extragem datele sigure
     const { _id, __v, createdAt, updatedAt, ...dateDeTrimis } = formData;
     
     // FORȚĂM CONVERSIA LA NUMERE PENTRU OFERTE
@@ -165,12 +166,13 @@ const [slideIndex, setSlideIndex] = useState(0);
       }));
     }
 
-    // Trucul magic: Prima poză din galerie devine mereu imaginea principală a site-ului
+    // Prima poză din galerie devine imaginea principală
     if (dateDeTrimis.galerieImagini && dateDeTrimis.galerieImagini.length > 0) {
       dateDeTrimis.imaginePrincipala = dateDeTrimis.galerieImagini[0];
     } else {
       dateDeTrimis.imaginePrincipala = '';
     }
+
     try {
       const res = await fetch(url, {
         method: metoda,
@@ -298,7 +300,7 @@ const [slideIndex, setSlideIndex] = useState(0);
                   {formData.imagineFacebook ? (
                     <div style={{ position: 'relative', display: 'inline-block' }}>
                       <img src={formData.imagineFacebook} alt="FB" />
-                      <button type="button" onClick={() => stergeImagine('imagineFacebook')} style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px 8px', cursor: 'pointer' }}><FiTrash2 /></button>
+                      <button type="button" onClick={(e) => { e.stopPropagation(); stergeImagine('imagineFacebook'); }} style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px 8px', cursor: 'pointer' }}><FiTrash2 /></button>
                     </div>
                   ) : <><FiFacebook size={30} /><p>Trage screenshot FB</p></>}
                 </div>
@@ -412,7 +414,7 @@ const [slideIndex, setSlideIndex] = useState(0);
                     {formData.heroRecenzie.imagine ? (
                       <>
                         <img src={formData.heroRecenzie.imagine} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                        <button type="button" onClick={() => stergeImagine('', ['heroRecenzie', 'imagine'])} style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '2px 5px', fontSize: '10px', cursor: 'pointer' }}><FiX /></button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); stergeImagine('', ['heroRecenzie', 'imagine']); }} style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '2px 5px', fontSize: '10px', cursor: 'pointer' }}><FiX /></button>
                       </>
                     ) : <FiImage />}
                   </div>
@@ -497,7 +499,7 @@ const [slideIndex, setSlideIndex] = useState(0);
                           {s.imagineUrl ? (
                             <div style={{ position: 'relative', display: 'inline-block' }}>
                               <img src={s.imagineUrl} alt="Sec" style={{ maxHeight: '100px' }} />
-                              <button type="button" onClick={() => stergeImagine('', ['sectiuniLanding', idx, 'imagineUrl'])} style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px', cursor: 'pointer' }}><FiX /></button>
+                              <button type="button" onClick={(e) => { e.stopPropagation(); stergeImagine('', ['sectiuniLanding', idx, 'imagineUrl']); }} style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px', cursor: 'pointer' }}><FiX /></button>
                             </div>
                           ) : <p>Trage imaginea</p>}
                         </div>
