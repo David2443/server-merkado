@@ -449,6 +449,23 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
     };
   }, []);
 
+// 💾 Salvare automată draft (Coș Abandonat)
+  const salveazaDraft = async () => {
+    if (dateClient.telefon && dateClient.telefon.length >= 10) {
+      try {
+        await fetch(`${API_URL}/api/comenzi/abandonat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            telefon: dateClient.telefon,
+            numeClient: dateClient.nume || 'Anonim',
+            total: totalCheckout
+          })
+        });
+      } catch (err) { console.log("Eroare la salvare draft:", err); }
+    }
+  };
+
   // 🛡️ VALIDARE
   const validateForm = () => {
     let newErrors = {};
