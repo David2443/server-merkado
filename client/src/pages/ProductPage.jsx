@@ -129,6 +129,7 @@ const ProductPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [transportDeschis, setTransportDeschis] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const fbSectionRef = useRef(null);
 
@@ -589,6 +590,10 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
   ];
 
   const metaDescription = produs.sectiuniLanding?.[0]?.text || `Cumpără acum ${produs.nume} la cel mai bun preț de ${produs.pret} Lei. Livrare rapidă în 24h și plată ramburs. Intră pe Merkado.ro!`;
+  // 🔥 CALCULĂM IMAGINILE PENTRU GALERIE
+  const imaginiProdus = produs.galerieImagini?.length > 0 
+    ? produs.galerieImagini 
+    : (produs.imaginePrincipala ? [produs.imaginePrincipala] : []);
 
   return (
     <div className="shopify-page-wrapper">
@@ -641,8 +646,48 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
 
       <div className="shopify-container" style={{ paddingBottom: '100px' }}>
         <div className="hero-grid">
-          <div className="hero-image-col">
-            <img src={produs.imaginePrincipala} alt={`Imagine produs ${produs.nume} - Cumpără de pe Merkado.ro`} className="main-prod-img" />
+         <div className="hero-image-col">
+            {imaginiProdus.length > 1 ? (
+              <div className="product-carousel-wrapper">
+                
+                <div className="product-carousel-main">
+                  <button 
+                    className="carousel-nav prev" 
+                    onClick={() => setCurrentImageIndex(prev => prev === 0 ? imaginiProdus.length - 1 : prev - 1)}
+                  >
+                    &#10094;
+                  </button>
+                  
+                  <img 
+                    src={imaginiProdus[currentImageIndex]} 
+                    alt={`${produs.nume} - Imaginea ${currentImageIndex + 1}`} 
+                    className="carousel-main-img" 
+                  />
+                  
+                  <button 
+                    className="carousel-nav next" 
+                    onClick={() => setCurrentImageIndex(prev => prev === imaginiProdus.length - 1 ? 0 : prev + 1)}
+                  >
+                    &#10095;
+                  </button>
+                </div>
+
+                <div className="carousel-thumbnails">
+                  {imaginiProdus.map((img, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`carousel-thumb-box ${currentImageIndex === idx ? 'active' : ''}`} 
+                      onClick={() => setCurrentImageIndex(idx)}
+                    >
+                      <img src={img} alt={`Thumbnail ${idx + 1}`} />
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            ) : (
+              <img src={imaginiProdus[0] || produs.imaginePrincipala} alt={`Imagine produs ${produs.nume}`} className="main-prod-img" />
+            )}
           </div>
 
           <div className="hero-info-col">
