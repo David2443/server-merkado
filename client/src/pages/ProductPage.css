@@ -2160,3 +2160,184 @@
   border-color: #3b82f6; 
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
 }
+/* =======================================
+   ✨ STILURI SELECT JUDEȚE & INPUT-URI
+   ======================================= */
+.checkout-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #1e293b;
+  background-color: #fff;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Efect când dai click pe input/select */
+.checkout-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Cum arată când e blocat (disabled) */
+.checkout-input:disabled {
+  background-color: #f8fafc;
+  cursor: not-allowed;
+  color: #94a3b8;
+  border-color: #e2e8f0;
+}
+
+/* Stilizare "Premium" pentru SELECT (Județe) - Săgeată custom */
+select.checkout-input {
+  appearance: none; /* Ascunde săgeata default a browserului */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.2em;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+/* =======================================
+   🔍 STILURI DROPDOWN CĂUTARE LOCALITĂȚI
+   ======================================= */
+.custom-searchable-select {
+  position: relative;
+}
+
+.custom-dropdown-list {
+  position: absolute;
+  top: calc(100% + 5px); /* Spațiu finuț sub input */
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  max-height: 220px; /* Cât să încapă ~5-6 orașe o dată */
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* 🔥 Custom Scrollbar (Bara de derulare subțire) pentru liste */
+.custom-dropdown-list::-webkit-scrollbar,
+.lockers-list::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-dropdown-list::-webkit-scrollbar-track,
+.lockers-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 8px;
+}
+.custom-dropdown-list::-webkit-scrollbar-thumb,
+.lockers-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 8px;
+}
+.custom-dropdown-list::-webkit-scrollbar-thumb:hover,
+.lockers-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Elementele din listă (Orașele) */
+.custom-dropdown-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f8fafc;
+  font-size: 0.95rem;
+  color: #334155;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.custom-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+/* Hover-ul ăla șmecher cu albastru */
+.custom-dropdown-item:hover {
+  background-color: #eff6ff;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+/* =======================================
+   📱 FIX BUTOANE LIVRARE (PE O LINIE PE MOBIL)
+   ======================================= */
+.modern-toggle-group {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.modern-toggle-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 5px;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+
+.modern-toggle-card.active {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.toggle-card-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.toggle-card-content span {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.toggle-price {
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-top: 4px;
+  color: #64748b;
+}
+
+/* Cand e selectat, se face textul albastru misto */
+.modern-toggle-card.active .toggle-price,
+.modern-toggle-card.active .toggle-card-content span,
+.modern-toggle-card.active .toggle-icon {
+  color: #1d4ed8; 
+}
+
+/* 🔥 MAGIA PENTRU TELEFOANE: Aici le fortam sa intre pe o linie */
+@media (max-width: 480px) {
+  .modern-toggle-card {
+    padding: 10px 2px;
+  }
+  .toggle-card-content {
+    flex-direction: column; /* Punem iconita deasupra textului pt a salva spatiu */
+    gap: 2px;
+  }
+  .toggle-card-content span {
+    font-size: 0.75rem; /* Text puțin mai mic pe mobil */
+    white-space: nowrap; /* Nu lasam textul sa se sparga in 2 randuri */
+  }
+  .toggle-price {
+    font-size: 0.8rem;
+  }
+  .toggle-icon {
+    font-size: 1.3rem; /* Facem iconița puțin mai proeminentă */
+  }
+}

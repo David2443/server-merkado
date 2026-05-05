@@ -938,29 +938,6 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
                         {errors.email && <span className="error-text">{errors.email}</span>}
                       </div>
 
-                      <div className="modern-toggle-group">
-                        {optiuniTransport.some(m => m.tip === 'curier') && (
-                          <div className={`modern-toggle-card ${tipLivrare === 'curier' ? 'active' : ''}`} onClick={() => setTipLivrare('curier')} style={{ display: 'flex', flexDirection: 'column', padding: '12px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                              <FiTruck className="toggle-icon" /> <span>Acasă / Birou</span>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', color: tipLivrare === 'curier' ? '#3b82f6' : '#64748b' }}>
-                              {pretCurier} Lei
-                            </span>
-                          </div>
-                        )}
-
-                        {optiuniTransport.some(m => m.tip === 'locker') && (
-                          <div className={`modern-toggle-card ${tipLivrare === 'locker' ? 'active' : ''}`} onClick={() => setTipLivrare('locker')} style={{ display: 'flex', flexDirection: 'column', padding: '12px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                              <FiBox className="toggle-icon" /> <span>Locker / Box</span>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', color: tipLivrare === 'locker' ? '#3b82f6' : '#64748b' }}>
-                              {pretLocker} Lei
-                            </span>
-                          </div>
-                        )}
-                      </div>
 
                       {/* JUDEȚUL ȘI LOCALITATEA  */}
                       <div className="input-row" style={{ marginTop: '15px' }}>
@@ -1026,6 +1003,31 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
   )}
   {errors.localitate && <span className="error-text">{errors.localitate}</span>}
 </div>
+                      </div>
+
+
+                       <div className="modern-toggle-group">
+                        {optiuniTransport.some(m => m.tip === 'curier') && (
+                          <div className={`modern-toggle-card ${tipLivrare === 'curier' ? 'active' : ''}`} onClick={() => setTipLivrare('curier')} style={{ display: 'flex', flexDirection: 'column', padding: '12px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                              <FiTruck className="toggle-icon" /> <span>Acasă / Birou</span>
+                            </div>
+                            <span style={{ fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', color: tipLivrare === 'curier' ? '#3b82f6' : '#64748b' }}>
+                              {pretCurier} Lei
+                            </span>
+                          </div>
+                        )}
+
+                        {optiuniTransport.some(m => m.tip === 'locker') && (
+                          <div className={`modern-toggle-card ${tipLivrare === 'locker' ? 'active' : ''}`} onClick={() => setTipLivrare('locker')} style={{ display: 'flex', flexDirection: 'column', padding: '12px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                              <FiBox className="toggle-icon" /> <span>Locker / Box</span>
+                            </div>
+                            <span style={{ fontSize: '0.9rem', fontWeight: '800', marginTop: '4px', color: tipLivrare === 'locker' ? '#3b82f6' : '#64748b' }}>
+                              {pretLocker} Lei
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       {/* ZONA SPECIFICĂ DE CURIER */}
