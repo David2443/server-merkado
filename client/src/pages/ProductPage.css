@@ -2341,3 +2341,187 @@ select.checkout-input {
     font-size: 1.3rem; /* Facem iconița puțin mai proeminentă */
   }
 }
+
+/* =======================================
+   🛡️ FIX ICONIȚE ÎNCREDERE PE MOBIL
+   ======================================= */
+.trust-icons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.t-icon {
+  display: flex;
+  flex-direction: column; /* Iconița deasupra textului */
+  align-items: center;
+  text-align: center;
+  flex: 1;
+}
+
+.t-icon svg {
+  font-size: 1.6rem;
+  color: #3b82f6; 
+  margin-bottom: 5px;
+}
+
+.t-icon span {
+  font-size: 0.85rem;
+  color: #475569;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Pentru telefoane, le înghesuim elegant pe o singură linie */
+@media (max-width: 480px) {
+  .trust-icons {
+    gap: 5px;
+  }
+  .t-icon span {
+    font-size: 0.7rem;
+    white-space: nowrap; /* Nu lasă textul să cadă pe rândul 2 */
+  }
+  .t-icon svg {
+    font-size: 1.3rem;
+  }
+}
+
+/* =======================================
+   🎁 DESIGN PREMIUM "ALEGE OFERTA"
+   ======================================= */
+.offers-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.premium-offer-card {
+  position: relative;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  overflow: hidden; /* Pentru a ascunde colțul de la badge */
+}
+
+.premium-offer-card:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+/* Ofertă Standard Selectată (Albastră) */
+.premium-offer-card.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+/* Ofertă Recomandată (Verde) */
+.premium-offer-card.recommended {
+  border-color: #10b981; 
+}
+.premium-offer-card.recommended.active {
+  background: #f0fdf4;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+}
+
+.premium-rec-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #10b981;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-bottom-left-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 2;
+}
+
+.offer-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Radio Button (Cerculețul) */
+.offer-radio {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #cbd5e1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.premium-offer-card.active .offer-radio { border-color: #2563eb; }
+.premium-offer-card.recommended.active .offer-radio { border-color: #10b981; }
+
+.radio-inner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.2s ease;
+}
+
+.premium-offer-card.active .radio-inner.checked { background: #2563eb; }
+.premium-offer-card.recommended.active .radio-inner.checked { background: #10b981; }
+
+/* Imaginea Produsului */
+.offer-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+/* Texte */
+.offer-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.offer-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.offer-subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.offer-price-zone {
+  text-align: right;
+}
+
+.offer-price {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.premium-offer-card.active .offer-price { color: #2563eb; }
+.premium-offer-card.recommended.active .offer-price { color: #10b981; }
+
+@media (max-width: 480px) {
+  .offer-image { width: 45px; height: 45px; }
+  .offer-title { font-size: 0.95rem; }
+  .offer-price { font-size: 1.1rem; }
+  .premium-offer-card { padding: 12px; }
+}

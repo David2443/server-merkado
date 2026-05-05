@@ -1096,28 +1096,60 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
                     </div>
 
                     <div className="checkout-section" style={{ marginTop: '30px' }}>
-                      <h5 className="section-title">2. Alege Oferta</h5>
+  <h5 className="section-title">2. Alege Oferta</h5>
+  
+  <div className="offers-grid">
+    {produs.oferte && produs.oferte.length > 0 ? (
+      produs.oferte.map((of, index) => (
+        <div
+          key={index}
+          className={`premium-offer-card ${pachet.qty === Number(of.cantitate) ? 'active' : ''} ${index === 1 ? 'recommended' : ''}`}
+          onClick={() => setPachet({ qty: Number(of.cantitate), pret: Number(of.pret), text: of.text })}
+        >
+          {/* BADGE PENTRU OFERTA 2 */}
+          {index === 1 && <div className="premium-rec-badge">⭐ RECOMANDAT</div>}
 
-                      {produs.oferte && produs.oferte.length > 0 ? (
-                        produs.oferte.map((of, index) => (
-                          <div
-                            key={index}
-                            className={`offer-card ${pachet.qty === Number(of.cantitate) ? 'active' : ''} ${index === 1 ? 'recommended' : ''}`}
-                            onClick={() => setPachet({ qty: Number(of.cantitate), pret: Number(of.pret), text: of.text })}
-                          >
-                            {index === 1 && <div className="rec-badge">RECOMANDAT</div>}
-                            <strong>{of.cantitate} Bucăți <span style={{ fontSize: '0.85rem', fontWeight: 'normal', color: '#64748b' }}>({of.text})</span></strong>
-                            <span style={{ color: pachet.qty === Number(of.cantitate) ? '#3b82f6' : '#1e293b', fontWeight: '800' }}>
-                              {of.pret} Lei
-                            </span>
-                          </div>
-                        ))
-                      ) : (
-                        <div className={`offer-card active`} onClick={() => setPachet({ qty: 1, pret: produs.pret })}>
-                          <strong>1 Bucată</strong> <span>{produs.pret} Lei</span>
-                        </div>
-                      )}
-                    </div>
+          <div className="offer-content-wrapper">
+            {/* CERCULEȚ SELECTARE */}
+            <div className="offer-radio">
+              <div className={`radio-inner ${pachet.qty === Number(of.cantitate) ? 'checked' : ''}`}></div>
+            </div>
+
+            {/* POZA PRODUSULUI */}
+            <img src={produs.imaginePrincipala} alt="Pachet" className="offer-image" />
+
+            {/* TEXT OFERTĂ */}
+            <div className="offer-details">
+              <span className="offer-title">{of.cantitate} {Number(of.cantitate) === 1 ? 'Bucată' : 'Bucăți'}</span>
+              <span className="offer-subtitle">{of.text}</span>
+            </div>
+
+            {/* PREȚ */}
+            <div className="offer-price-zone">
+              <span className="offer-price">{of.pret} Lei</span>
+            </div>
+          </div>
+        </div>
+      ))
+    ) : (
+      <div className={`premium-offer-card active`} onClick={() => setPachet({ qty: 1, pret: produs.pret })}>
+        <div className="offer-content-wrapper">
+          <div className="offer-radio">
+            <div className="radio-inner checked"></div>
+          </div>
+          <img src={produs.imaginePrincipala} alt="Pachet" className="offer-image" />
+          <div className="offer-details">
+            <span className="offer-title">1 Bucată</span>
+            <span className="offer-subtitle">Pachet Standard</span>
+          </div>
+          <div className="offer-price-zone">
+            <span className="offer-price">{produs.pret} Lei</span>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
 
                     <div className="checkout-section" style={{ marginTop: '30px' }}>
                       <h5 className="section-title">3. Opțiuni Suplimentare</h5>
