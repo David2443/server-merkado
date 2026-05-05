@@ -2105,3 +2105,58 @@
   color: #64748b;
   margin-top: 4px;
 }
+/* =======================================
+   STILURI PENTRU DROPDOWN SI SEARCH BAR
+   ======================================= */
+.custom-dropdown-list {
+  position: absolute; 
+  top: 100%; 
+  left: 0; 
+  right: 0; 
+  background: #fff;
+  border: 1px solid #cbd5e1; 
+  border-radius: 8px; 
+  max-height: 250px; 
+  overflow-y: auto;
+  z-index: 100; 
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+  margin-top: 5px;
+}
+
+.custom-dropdown-item {
+  padding: 10px 15px; 
+  cursor: pointer; 
+  border-bottom: 1px solid #f1f5f9; 
+  font-size: 0.95rem;
+}
+
+.custom-dropdown-item:hover { 
+  background-color: #f8fafc; 
+  color: #3b82f6; 
+}
+
+.search-box-locker {
+  position: relative; 
+  margin-bottom: 15px;
+}
+
+.search-box-locker svg {
+  position: absolute; 
+  left: 12px; 
+  top: 14px; 
+  color: #64748b;
+}
+
+.search-box-locker input {
+  width: 100%; 
+  padding: 12px 12px 12px 35px; 
+  border-radius: 8px; 
+  border: 1px solid #cbd5e1; 
+  outline: none; 
+  font-size: 0.95rem;
+}
+
+.search-box-locker input:focus { 
+  border-color: #3b82f6; 
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+}

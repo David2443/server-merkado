@@ -141,7 +141,9 @@ const ProductPage = () => {
 
   const numeFake = ['Andrei M.', 'Daniel P.', 'Marius T.', 'Florin V.'];
   const timpiFake = ['chiar acum', 'acum 2 minute', 'acum 5 minute'];
-
+const [cautareLocalitate, setCautareLocalitate] = useState('');
+  const [dropdownLocalitateDeschis, setDropdownLocalitateDeschis] = useState(false);
+  const [cautareLocker, setCautareLocker] = useState('');
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [comandaTrimisa, setComandaTrimisa] = useState(false);
   const [pachet, setPachet] = useState({ qty: 1, pret: 69 });
@@ -977,27 +979,51 @@ const ProductPage = () => {
                           </select>
                           {errors.judet && <span className="error-text">{errors.judet}</span>}
                         </div>
-                        <div className="input-group-wrapper" style={{ flex: 1 }}>
-  <select 
+                       {/* 🔥 SEARCH BAR PENTRU LOCALITATE 🔥 */}
+<div className="input-group-wrapper custom-searchable-select" style={{ flex: 1, position: 'relative' }}>
+  <input 
+    type="text" 
     className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} 
-    value={dateClient.localitate} 
-    onChange={e => { 
-      setDateClient({ ...dateClient, localitate: e.target.value }); 
-      setErrors({ ...errors, localitate: null }); 
-      setLockereDisponibile([]); 
-      setLockerSelectat(null);
+    placeholder={dateClient.judet ? "Caută și alege orașul..." : "Alege Județul mai întâi"}
+    value={dropdownLocalitateDeschis ? cautareLocalitate : dateClient.localitate}
+    onChange={e => {
+      setCautareLocalitate(e.target.value);
+      setDropdownLocalitateDeschis(true);
     }}
-    disabled={!dateClient.judet} /* 🔥 AM SCOS BLOCAJUL care te încurca! Acum se blochează DOAR dacă n-ai ales județul deloc */
-  >
-    <option value="">Alege Localitatea...</option>
-    {listaLocalitatiFiltrate.length > 0 ? (
-      listaLocalitatiFiltrate.map((loc, idx) => (
-        <option key={idx} value={loc.name}>{loc.name}</option>
-      ))
-    ) : (
-      dateClient.judet && <option disabled>⏳ Se încarcă sau nu am găsit orașe...</option>
-    )}
-  </select>
+    onFocus={() => {
+      if (dateClient.judet) { setDropdownLocalitateDeschis(true); setCautareLocalitate(''); }
+    }}
+    onBlur={() => { setTimeout(() => setDropdownLocalitateDeschis(false), 200); }}
+    disabled={!dateClient.judet || listaLocalitatiFiltrate.length === 0}
+    style={{ cursor: (!dateClient.judet || listaLocalitatiFiltrate.length === 0) ? 'not-allowed' : 'text' }}
+  />
+  
+  {dropdownLocalitateDeschis && dateClient.judet && (
+    <div className="custom-dropdown-list">
+      {listaLocalitatiFiltrate
+        .filter(loc => (loc.name || '').toLowerCase().includes(cautareLocalitate.toLowerCase()))
+        .map((loc, idx) => (
+          <div 
+            key={idx} 
+            className="custom-dropdown-item"
+            onMouseDown={() => { 
+              setDateClient({ ...dateClient, localitate: loc.name }); 
+              setErrors({ ...errors, localitate: null }); 
+              setLockereDisponibile([]); 
+              setLockerSelectat(null);
+              setCautareLocker('');
+              setCautareLocalitate('');
+              setDropdownLocalitateDeschis(false);
+            }}
+          >
+            {loc.name}
+          </div>
+      ))}
+      {listaLocalitatiFiltrate.filter(loc => (loc.name || '').toLowerCase().includes(cautareLocalitate.toLowerCase())).length === 0 && (
+        <div className="custom-dropdown-item" style={{ color: '#64748b' }}>Niciun oraș găsit...</div>
+      )}
+    </div>
+  )}
   {errors.localitate && <span className="error-text">{errors.localitate}</span>}
 </div>
                       </div>
@@ -1021,30 +1047,48 @@ const ProductPage = () => {
                           {eroareLockere && <div style={{ color: '#ef4444', fontSize: '0.9rem', marginTop: '10px' }}>❌ {eroareLockere}</div>}
 
                           {/* AFIȘAREA LISTEI DE LOCKERE */}
-                          {lockereDisponibile.length > 0 && (
-                            <div style={{ marginTop: '15px', maxHeight: '250px', overflowY: 'auto', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '5px' }}>
-                              {lockereDisponibile.map(locker => (
-                                <div 
-                                  key={locker.id} 
-                                  onClick={() => {
-                                    setLockerSelectat({ id: locker.id, name: locker.name, address: locker.address, city: locker.locality_name, county: locker.county_name });
-                                    setErrors({ ...errors, locker: null });
-                                  }}
-                                  style={{
-                                    padding: '12px', borderBottom: '1px solid #f1f5f9', cursor: 'pointer', borderRadius: '6px',
-                                    backgroundColor: lockerSelectat?.id === locker.id ? '#f0fdf4' : 'transparent',
-                                    border: lockerSelectat?.id === locker.id ? '2px solid #22c55e' : '2px solid transparent'
-                                  }}
-                                >
-                                  <div style={{ fontWeight: 'bold', color: '#0f172a', display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>{locker.name}</span>
-                                    {lockerSelectat?.id === locker.id && <span style={{ color: '#22c55e' }}>✅</span>}
-                                  </div>
-                                  <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>{locker.address}</div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                          {/* AFIȘAREA LISTEI DE LOCKERE CU SEARCH */}
+{lockereDisponibile.length > 0 && (
+  <div style={{ marginTop: '15px', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '10px', background: '#f8fafc' }}>
+    
+    {/* 🔥 SEARCH BAR PENTRU FANBOX 🔥 */}
+    <div className="search-box-locker">
+      <FiSearch />
+      <input 
+        type="text" 
+        placeholder="Caută după adresă sau nume locker..." 
+        value={cautareLocker}
+        onChange={e => setCautareLocker(e.target.value)}
+      />
+    </div>
+
+    <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
+      {lockereDisponibile
+        .filter(l => (l.name || '').toLowerCase().includes(cautareLocker.toLowerCase()) || (l.address || '').toLowerCase().includes(cautareLocker.toLowerCase()))
+        .map(locker => (
+        <div 
+          key={locker.id} 
+          onClick={() => {
+            setLockerSelectat({ id: locker.id, name: locker.name, address: locker.address, city: locker.locality_name, county: locker.county_name });
+            setErrors({ ...errors, locker: null });
+          }}
+          style={{
+            padding: '12px', borderBottom: '1px solid #e2e8f0', cursor: 'pointer', borderRadius: '6px',
+            backgroundColor: lockerSelectat?.id === locker.id ? '#f0fdf4' : '#fff',
+            border: lockerSelectat?.id === locker.id ? '2px solid #22c55e' : '2px solid transparent',
+            marginBottom: '5px'
+          }}
+        >
+          <div style={{ fontWeight: 'bold', color: '#0f172a', display: 'flex', justifyContent: 'space-between' }}>
+            <span>{locker.name}</span>
+            {lockerSelectat?.id === locker.id && <span style={{ color: '#22c55e' }}>✅</span>}
+          </div>
+          <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>{locker.address}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
                         </div>
                       )}
                     </div>
