@@ -592,19 +592,8 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
     </div>
   );
 
-  const sectiuniActive = produs.sectiuniLanding?.length > 0 ? produs.sectiuniLanding : [
-    {
-      tip: 'text_imagine',
-      titlu: 'Soluția definitivă pentru tine',
-      text: 'Nu mai pierde timpul cu produse care promit și nu livrează. Formula noastră este testată și validată pentru a oferi rezultate maxime în timp record.',
-      imagineUrl: produs.imaginePrincipala
-    },
-    {
-      tip: 'beneficii_grid',
-      titlu: 'Rezultate dovedite clinic',
-      beneficii: [{ text: '98% Clienți mulțumiți' }, { text: '100% Efect Garantat' }, { text: '24h Acțiune rapidă' }]
-    }
-  ];
+// Daca ai bagat din admin sectiuni, le afisam. Daca nu, array-ul e gol si nu apare nimic.
+  const sectiuniActive = produs.sectiuniLanding?.length > 0 ? produs.sectiuniLanding : [];
 
   const metaDescription = produs.sectiuniLanding?.[0]?.text || `Cumpără acum ${produs.nume} la cel mai bun preț de ${produs.pret} Lei. Livrare rapidă în 24h și plată ramburs. Intră pe Merkado.ro!`;
   // 🔥 CALCULĂM IMAGINILE PENTRU GALERIE
@@ -821,20 +810,7 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
             </div>
           ))}
 
-          <div className="comparison-block comparatie-section">
-            <h2 className="comparatie-text" style={{ color: '#ffffff', marginBottom: '20px' }}>De ce produsul nostru e superior</h2>
-            <table className="comp-table">
-              <thead>
-                <tr><th style={{ color: '#000000' }}>Caracteristici</th><th style={{ color: '#000000' }}>Noi</th><th style={{ color: '#000000' }}>Alții</th></tr>
-              </thead>
-              <tbody>
-                <tr><td className="comparatie-text">Efect Garantat</td><td><FiCheck className="c-green" /></td><td><FiX style={{ color: '#ff4d4d' }} /></td></tr>
-                <tr><td className="comparatie-text">Calitate Superioară</td><td><FiCheck className="c-green" /></td><td><FiX style={{ color: '#ff4d4d' }} /></td></tr>
-                <tr><td className="comparatie-text">Fără reacții adverse</td><td><FiCheck className="c-green" /></td><td><FiX style={{ color: '#ff4d4d' }} /></td></tr>
-                <tr><td className="comparatie-text">Preț Corect</td><td><FiCheck className="c-green" /></td><td><FiX style={{ color: '#ff4d4d' }} /></td></tr>
-              </tbody>
-            </table>
-          </div>
+          
         </div>
 
         <div className="customer-reviews-section">
