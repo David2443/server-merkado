@@ -99,7 +99,6 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
 
   const preventDefault = (e) => { e.preventDefault(); e.stopPropagation(); };
 
-  const preventDefault = (e) => { e.preventDefault(); e.stopPropagation(); };
 
   // --- MOTORUL DE MODULE ---
   const adaugaSectiune = (tip) => {
