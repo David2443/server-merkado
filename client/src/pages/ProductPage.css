@@ -2608,3 +2608,148 @@ select.checkout-input {
     height: 60px;
   }
 }
+
+/* =======================================================
+   🌟 DINAMIC SECTIONS: TEXT + IMAGINE (PREMIUM LOOK)
+   ======================================================= */
+
+.info-block {
+  padding: 80px 0;
+  max-width: 1100px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* Containerul Flex */
+.info-content-flex {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease out forwards;
+}
+
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Aliniere dinamică bazată pe alegerea din Admin */
+.aliniere-dreapta .info-content-flex {
+  flex-direction: row-reverse;
+}
+
+/* Zona de Text */
+.info-block h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 20px;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+
+.info-block p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #475569;
+  margin-bottom: 0;
+}
+
+/* Zona de Imagine */
+.info-img {
+  flex: 1;
+  width: 100%;
+  max-width: 550px;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  object-fit: cover;
+}
+
+.info-img:hover {
+  transform: scale(1.03);
+}
+
+/* Conținutul textului ocupă spațiul rămas */
+.info-content-flex > div:not(.info-img) {
+  flex: 1;
+}
+
+/* =======================================================
+   📱 SUPER RESPONSIVE (MOBIL & TABLETĂ)
+   ======================================================= */
+
+@media (max-width: 1024px) {
+  .info-block { padding: 60px 20px; }
+  .info-block h2 { font-size: 2rem; }
+  .info-content-flex { gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  .info-block { padding: 40px 15px; }
+  
+  /* Forțăm imaginea sus și textul jos pe mobil, indiferent de setarea din Admin */
+  .info-content-flex, 
+  .aliniere-dreapta .info-content-flex {
+    flex-direction: column !important; 
+    gap: 30px;
+    text-align: center;
+  }
+
+  .info-block h2 {
+    font-size: 1.75rem;
+    margin-bottom: 15px;
+  }
+
+  .info-block p {
+    font-size: 1.05rem;
+    padding: 0 10px;
+  }
+
+  .info-img {
+    max-width: 100%;
+    order: -1; /* Această regulă mută imaginea PRIMA pe mobil */
+    border-radius: 16px;
+  }
+}
+/* Stiluri pentru Cercurile Procentuale */
+.procente-flex-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  padding: 20px 0;
+}
+
+.procent-circle-item {
+  text-align: center;
+  width: 150px;
+}
+
+.circular-chart {
+  display: block;
+  margin: 10px auto;
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 3; }
+.circle { fill: none; stroke-width: 3; stroke-linecap: round; stroke: #3b82f6; transition: stroke-dasharray 1s ease; }
+.percentage { fill: #1e293b; font-family: 'Inter', sans-serif; font-size: 0.55em; text-anchor: middle; font-weight: 800; }
+.procent-desc { font-size: 0.9rem; font-weight: 600; color: #475569; margin-top: 10px; line-height: 1.3; }
+
+/* Video Responsive */
+.video-responsive-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.video-responsive-container iframe {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+}
