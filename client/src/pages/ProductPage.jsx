@@ -10,7 +10,7 @@ import {
 } from '@stripe/react-stripe-js';
 import {
   FiStar, FiTruck, FiShield, FiRotateCcw, FiChevronDown, FiChevronUp,
-  FiCheck, FiArrowRight, FiShoppingBag, FiX, FiThumbsUp, FiLock, FiCheckCircle, FiChevronRight, FiCreditCard, FiBox
+  FiCheck, FiArrowRight, FiShoppingBag, FiX, FiThumbsUp, FiLock, FiCheckCircle, FiChevronRight, FiCreditCard, FiBox, FiAlertCircle
 } from 'react-icons/fi';
 import './ProductPage.css';
 
@@ -155,6 +155,14 @@ const ProductPage = () => {
   const [eroareLockere, setEroareLockere] = useState('');
   const [errors, setErrors] = useState({});
   const [socketClient, setSocketClient] = useState(null);
+  
+  // 🛎️ TOAST NOTIFICATIONS
+  const [toast, setToast] = useState(null);
+
+  const arataToast = (tip, mesaj) => {
+    setToast({ tip, mesaj });
+    setTimeout(() => setToast(null), 5000);
+  };
 
   const metodaCurenta = optiuniTransport.find(m => m.tip === tipLivrare);
   const transportBase = metodaCurenta ? Number(metodaCurenta.pret) : 19;
@@ -180,8 +188,6 @@ const ProductPage = () => {
       conexiuneNoua.disconnect();
     };
   }, []);
-
-
 
   useEffect(() => {
     if (socketClient && isCheckoutOpen && dateClient.nume.length > 2) {
@@ -319,7 +325,7 @@ const ProductPage = () => {
     }
   };
 
-// 🔍 FUNCȚIA CARE CERE LOCKERELE DE LA SERVER
+  // 🔍 FUNCȚIA CARE CERE LOCKERELE DE LA SERVER
   const cautaLockereInZona = async () => {
     if (!dateClient.judet || !dateClient.localitate) {
       setErrors({ ...errors, locker: "Te rog să alegi județul și să scrii localitatea mai întâi!" });
@@ -345,24 +351,8 @@ const ProductPage = () => {
     setLoadingLockers(false);
   };
 
-// 🇷🇴 HOOK PENTRU LOCALITĂȚI DIN ROMÂNIA
+  // 🇷🇴 HOOK PENTRU LOCALITĂȚI (Curățat de bug-uri și bucle infinite)
   useEffect(() => {
-    // Când clientul schimbă județul, golim localitatea veche
-    setDateClient(prev => ({ ...prev, localitate: '' }));
-    setLockereDisponibile([]); // Golim și lockerele vechi
-    
-    if (!dateClient.judet) {
-      setListaLocalitatiFiltrate([]);
-      return;
-    }
-
-    // Aici facem fetch către baza ta de date de localități sau către un API RO.
-    // Presupunând că ai transformat Excel-ul tău într-un fișier localitati.json pe server:
-   // 🇷🇴 HOOK PENTRU LOCALITĂȚI (Adaptat la JSON-ul tău)
-  useEffect(() => {
-    setDateClient(prev => ({ ...prev, localitate: '' }));
-    setLockereDisponibile([]); 
-    
     if (!dateClient.judet) {
       setListaLocalitatiFiltrate([]);
       return;
@@ -370,22 +360,17 @@ const ProductPage = () => {
 
     const fetchLocalitati = async () => {
       try {
-        // Punem un timestamp la final ca să fim siguri că nu e citit din cache-ul vechi de browser
         const res = await fetch(`/localitati.json?t=${new Date().getTime()}`); 
-        
         if (!res.ok) throw new Error("Serverul nu a găsit fișierul localitati.json");
         
         const toateLocalitatile = await res.json();
         
-        // 🔥 FILTRARE: Folosim cheile "county_name" și "name" din JSON-ul tău
         const filtrate = toateLocalitatile.filter(loc => {
           const judetDinDate = loc.county_name || '';
           return judetDinDate.toLowerCase() === dateClient.judet.toLowerCase();
         });
         
-        // Sortăm alfabetic localitățile ca să fie ușor de găsit
-        filtrate.sort((a, b) => a.name.localeCompare(b.name));
-        
+        filtrate.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         setListaLocalitatiFiltrate(filtrate);
 
       } catch (err) {
@@ -396,26 +381,17 @@ const ProductPage = () => {
     fetchLocalitati();
   }, [dateClient.judet]);
 
-    fetchLocalitati();
-  }, [dateClient.judet]);
-
-// 🗺️ HOOK NOU: ÎNCĂRCARE HARTĂ EASYBOX
+  // 🗺️ HOOK NOU: ÎNCĂRCARE HARTĂ EASYBOX
   useEffect(() => {
-    // 1. Inserăm script-ul oficial de hartă în pagină
     const script = document.createElement('script');
-    // Folosim widget-ul oficial Sameday (sau poți pune link-ul de la Europarcel dacă ți-au dat unul specific)
     script.src = "https://cdn.sameday.ro/locker-plugin/lockerpluginsameday.js";
     script.async = true;
     document.body.appendChild(script);
 
-    // 2. Ascultăm mesajul pe care îl trimite harta când clientul dă click pe "Alege acest Easybox"
     const handleLockerSelect = (event) => {
-      // Verificăm dacă mesajul primit conține date de locker
       if (typeof event.data === 'object' && event.data !== null) {
         if (event.data.lockerId) {
           console.log("📦 Clientul a ales Locker-ul:", event.data);
-          
-          // Salvăm datele fix cum le vrea serverul tău
           setLockerSelectat({
             id: event.data.lockerId,
             name: event.data.name,
@@ -424,10 +400,8 @@ const ProductPage = () => {
             county: event.data.county
           });
           
-          // Ștergem eroarea roșie din formular (dacă exista)
           setErrors((prev) => ({ ...prev, locker: null }));
           
-          // Închidem fereastra hărții
           if (window.LockerPlugin) {
             window.LockerPlugin.getInstance().close();
           }
@@ -435,11 +409,9 @@ const ProductPage = () => {
       }
     };
 
-    // Activăm "ascultătorul"
     window.addEventListener('message', handleLockerSelect);
 
     return () => {
-      // Curățăm memoria când omul iese de pe pagină
       window.removeEventListener('message', handleLockerSelect);
       if (document.body.contains(script)) {
         document.body.removeChild(script);
@@ -447,7 +419,7 @@ const ProductPage = () => {
     };
   }, []);
 
-  // 🛡️ FIX 1: VALIDARE SMART PENTRU LOCKER VS CURIER
+  // 🛡️ VALIDARE
   const validateForm = () => {
     let newErrors = {};
     if (!dateClient.nume || dateClient.nume.length < 3) newErrors.nume = "Nume obligatoriu";
@@ -458,7 +430,7 @@ const ProductPage = () => {
         newErrors.email = "Email obligatoriu pentru Easybox (cod PIN)";
       }
       if (!lockerSelectat) {
-        newErrors.locker = "Te rugăm să alegi un Easybox de pe hartă";
+        newErrors.locker = "Te rugăm să alegi un Easybox din listă";
       }
     } else {
       if (!dateClient.adresa) newErrors.adresa = "Adresa e obligatorie";
@@ -480,15 +452,15 @@ const ProductPage = () => {
     return true;
   };
 
-  // 🛡️ FIX 2: CONSTRUCȚIA CORECTĂ A PACHETULUI PENTRU BACKEND
+  // 🛡️ CONSTRUCȚIA CORECTĂ A PACHETULUI PENTRU BACKEND
   const genereazaPayload = (metoda, paymentId = null) => ({
     numeClient: dateClient.nume,
-    telefon: dateClient.telefon, // ATENȚIE: Backend-ul se așteaptă la 'telefon', nu 'telefonClient'
+    telefon: dateClient.telefon, 
     email: dateClient.email,
     produsId: produs._id,
     numeProdus: produs.nume,
     qty: pachet.qty,
-    total: totalCheckout, // ATENȚIE: Backend-ul se așteaptă la 'total', nu 'totalComanda'
+    total: totalCheckout, 
     metodaPlata: metoda,
     paymentId,
     tipLivrare: tipLivrare,
@@ -520,7 +492,7 @@ const ProductPage = () => {
         throw new Error(errorData.eroare || "Eroare server");
       }
     } catch (err) {
-      alert(`Eroare la trimiterea comenzii: ${err.message}`);
+      arataToast('error', `Eroare la trimiterea comenzii: ${err.message}`);
     } finally {
       setLoadingComanda(false);
     }
@@ -539,23 +511,20 @@ const ProductPage = () => {
         setComandaTrimisa(true);
         localStorage.removeItem('sursa_trafic');
       }
-    } catch (err) { alert("Eroare salvare plată în dashboard."); }
+    } catch (err) { arataToast('error', "Eroare salvare plată în dashboard."); }
   };
 
- const openLockerMap = () => {
+  const openLockerMap = () => {
     if (window.LockerPlugin) {
-      // Harta e gata, o inițializăm și o deschidem pe ecran!
       window.LockerPlugin.init({
-        clientId: 'aici_pui_client_id', // ⚠️ Daca Europarcel sau Sameday ti-a dat un Client ID, il pui aici. Daca nu, uneori merge si fara pe modul public.
+        clientId: 'aici_pui_client_id',
         country: 'RO',
         language: 'ro',
-        // Dacă clientul a scris deja orașul în formular, centrăm harta direct pe orașul lui!
         city: dateClient.localitate || 'Bucuresti' 
       });
-      
       window.LockerPlugin.getInstance().open();
     } else {
-      alert("Harta se încarcă în fundal... Te rugăm să mai aștepți 2 secunde și să apeși din nou!");
+      arataToast('error', "Harta se încarcă în fundal... Te rugăm să mai aștepți 2 secunde!");
     }
   };
 
@@ -600,24 +569,9 @@ const ProductPage = () => {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Acasă",
-                "item": window.location.origin
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Magazin",
-                "item": `${window.location.origin}/shop`
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": produs.nume,
-                "item": window.location.href
-              }
+              { "@type": "ListItem", "position": 1, "name": "Acasă", "item": window.location.origin },
+              { "@type": "ListItem", "position": 2, "name": "Magazin", "item": `${window.location.origin}/shop` },
+              { "@type": "ListItem", "position": 3, "name": produs.nume, "item": window.location.href }
             ]
           })
         }}></script>
@@ -979,36 +933,45 @@ const ProductPage = () => {
                         )}
                       </div>
 
-                      {/* JUDEȚUL ȘI LOCALITATEA ACUM APAR PESTE TOT */}
+                      {/* JUDEȚUL ȘI LOCALITATEA  */}
                       <div className="input-row" style={{ marginTop: '15px' }}>
                         <div className="input-group-wrapper" style={{ flex: 1 }}>
-                          <select className={`checkout-input ${errors.judet ? 'input-error' : ''}`} value={dateClient.judet} onChange={e => { setDateClient({ ...dateClient, judet: e.target.value }); setErrors({ ...errors, judet: null }); }}>
+                          <select 
+                            className={`checkout-input ${errors.judet ? 'input-error' : ''}`} 
+                            value={dateClient.judet} 
+                            onChange={e => { 
+                              setDateClient({ ...dateClient, judet: e.target.value, localitate: '' }); 
+                              setErrors({ ...errors, judet: null, localitate: null }); 
+                              setLockereDisponibile([]);
+                              setLockerSelectat(null);
+                            }}>
                             <option value="">Alege Județul...</option>
                             {listaJudete.map(judet => <option key={judet} value={judet}>{judet}</option>)}
                           </select>
                           {errors.judet && <span className="error-text">{errors.judet}</span>}
                         </div>
                         <div className="input-group-wrapper" style={{ flex: 1 }}>
-    <select 
-      className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} 
-      value={dateClient.localitate} 
-      onChange={e => { 
-        setDateClient({ ...dateClient, localitate: e.target.value }); 
-        setErrors({ ...errors, localitate: null }); 
-        setLockereDisponibile([]); // Forțăm să caute din nou lockerele pentru noul oraș
-      }}
-      disabled={!dateClient.judet || listaLocalitatiFiltrate.length === 0}
-    >
-      <option value="">Alege Localitatea...</option>
-      {listaLocalitatiFiltrate.map((loc, idx) => (
-        <option key={idx} value={loc.name}>{loc.name}</option>
-      ))}
-    </select>
-    {errors.localitate && <span className="error-text">{errors.localitate}</span>}
-  </div>
+                          <select 
+                            className={`checkout-input ${errors.localitate ? 'input-error' : ''}`} 
+                            value={dateClient.localitate} 
+                            onChange={e => { 
+                              setDateClient({ ...dateClient, localitate: e.target.value }); 
+                              setErrors({ ...errors, localitate: null }); 
+                              setLockereDisponibile([]); 
+                              setLockerSelectat(null);
+                            }}
+                            disabled={!dateClient.judet || listaLocalitatiFiltrate.length === 0}
+                          >
+                            <option value="">Alege Localitatea...</option>
+                            {listaLocalitatiFiltrate.map((loc, idx) => (
+                              <option key={idx} value={loc.name}>{loc.name}</option>
+                            ))}
+                          </select>
+                          {errors.localitate && <span className="error-text">{errors.localitate}</span>}
+                        </div>
                       </div>
 
-                      {/* ZONA SPECIFICĂ DE CURIER (Doar Adresa Stradală) */}
+                      {/* ZONA SPECIFICĂ DE CURIER */}
                       {tipLivrare === 'curier' ? (
                         <div className="fade-in">
                           <div className="input-group-wrapper">
@@ -1018,7 +981,7 @@ const ProductPage = () => {
                         </div>
                       ) : (
                       
-                      /* ZONA SPECIFICĂ DE LOCKER (Buton de căutare + Listă) */
+                      /* ZONA SPECIFICĂ DE LOCKER */
                         <div className="fade-in" style={{ marginTop: '10px' }}>
                           <button type="button" className={`btn-select-locker ${errors.locker ? 'input-error' : ''}`} onClick={cautaLockereInZona}>
                             {loadingLockers ? "⏳ Se caută lockere..." : "📍 Caută Lockere în Orașul Meu"}
@@ -1169,6 +1132,20 @@ const ProductPage = () => {
           </button>
         </div>
       </div>
+
+      {/* 🛎️ RENDER NOTIFICĂRI SMART AICI JOS DE TOT */}
+      {toast && (
+        <div className={`smart-toast ${toast.tip}`} style={{
+          position: 'fixed', bottom: '20px', right: '20px', padding: '15px 25px',
+          borderRadius: '10px', color: 'white', display: 'flex', alignItems: 'center', gap: '10px',
+          boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', zIndex: 999999,
+          background: toast.tip === 'success' ? '#10b981' : '#ef4444'
+        }}>
+          {toast.tip === 'success' ? <FiCheckCircle /> : <FiAlertCircle />}
+          <span style={{ fontWeight: 'bold' }}>{toast.mesaj}</span>
+        </div>
+      )}
+
     </div>
   );
 };
