@@ -116,6 +116,10 @@ const produsSchema = new mongoose.Schema({
   pret: Number,
   pretVechi: Number,
   imaginePrincipala: String,
+  
+  // 🔥 AICI E MAGIA: I-AM DAT VOIE SĂ SALVEZE CATEGORIA
+  categorie: { type: String, default: 'Toate' }, 
+  
   heroBeneficii: [String], 
   heroRecenzie: { nume: String, text: String, rating: Number, imagine: String },
   imagineFacebook: String,
