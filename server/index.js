@@ -734,9 +734,9 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
         billing_address_id: 279010 
       },
       address_from: {
-        email: "contact@merkado.ro", 
-        phone: "0700000000",       
-        contact: "Merkado", 
+        email: "superprodusele@gmail.com", 
+        phone: "0723717438",       
+        contact: "Catalin Serban", 
         country_code: "RO",
         locality_id: LOCALITY_PREDARE_ID, 
         fixed_location_id: FANBOX_PREDARE_ID, 
