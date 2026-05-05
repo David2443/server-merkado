@@ -8,6 +8,7 @@ import './ConstructorPage.css';
 import React from 'react';
 const initialState = { 
   nume: '', pret: '', pretVechi: '', imaginePrincipala: '', 
+  galerieImagini: [],
   categorie: 'Auto',
   heroBeneficii: ['', '', ''], 
   heroRecenzie: { nume: '', text: '', rating: 5, imagine: '' },
@@ -26,7 +27,7 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
   const [formData, setFormData] = useState(initialState);
   const [activeTab, setActiveTab] = useState('hero');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+const [slideIndex, setSlideIndex] = useState(0);
   // 🛡️ URL Dinamic pentru a merge pe internet
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -80,21 +81,42 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
       });
     };
     reader.readAsDataURL(file);
+
+    const adaugaInGalerie = (files) => {
+    Array.from(files).forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({
+          ...prev,
+          galerieImagini: [...(prev.galerieImagini || []), reader.result]
+        }));
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const stergeDinGalerie = (e, index) => {
+    e.preventDefault();
+    e.stopPropagation(); // 👈 Asta repara problema cu X-ul!
+    setFormData(prev => {
+      const nouaGalerie = [...(prev.galerieImagini || [])];
+      nouaGalerie.splice(index, 1);
+      return { ...prev, galerieImagini: nouaGalerie };
+    });
+    setSlideIndex(0); // Resetăm la prima poză ca să nu crape vizualizarea
+  };
   };
 
   // 🔥 FUNCȚIE NOUĂ PENTRU ȘTERGEREA POZELOR
   const stergeImagine = (target, path = []) => {
-    setFormData(prev => {
-        if (path.length === 3 && path[0] === 'sectiuniLanding') {
-          const newSectiuni = [...prev.sectiuniLanding];
-          newSectiuni[path[1]] = { ...newSectiuni[path[1]], [path[2]]: '' };
-          return { ...prev, sectiuniLanding: newSectiuni };
-        } else if (path.length === 2) {
-          return { ...prev, [path[0]]: { ...prev[path[0]], [path[1]]: '' } };
-        } else {
-          return { ...prev, [target]: '' };
-        }
-    });
+    setFormData({ 
+            ...initialState, 
+            ...data,
+            galerieImagini: data.galerieImagini?.length > 0 ? data.galerieImagini : (data.imaginePrincipala ? [data.imaginePrincipala] : []),
+            oferte: data.oferte?.length > 0 ? data.oferte : initialState.oferte,
+            sectiuniLanding: data.sectiuniLanding || [],
+            heroBeneficii: data.heroBeneficii?.length > 0 ? data.heroBeneficii : initialState.heroBeneficii
+          });
   };
 
   const preventDefault = (e) => { e.preventDefault(); e.stopPropagation(); };
@@ -143,6 +165,12 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
       }));
     }
 
+    // Trucul magic: Prima poză din galerie devine mereu imaginea principală a site-ului
+    if (dateDeTrimis.galerieImagini && dateDeTrimis.galerieImagini.length > 0) {
+      dateDeTrimis.imaginePrincipala = dateDeTrimis.galerieImagini[0];
+    } else {
+      dateDeTrimis.imaginePrincipala = '';
+    }
     try {
       const res = await fetch(url, {
         method: metoda,
@@ -199,15 +227,69 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
             <div className="editor-grid">
               
               <div className="editor-col">
-                <label>Imagine Produs Principală</label>
-                <div className="drop-zone" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], 'imaginePrincipala'); }}>
-                  {formData.imaginePrincipala ? (
-                    <div style={{ position: 'relative', display: 'inline-block' }}>
-                      <img src={formData.imaginePrincipala} alt="Main" />
-                      <button type="button" onClick={() => stergeImagine('imaginePrincipala')} style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px 8px', cursor: 'pointer' }}><FiTrash2 /></button>
-                    </div>
-                  ) : <><FiUploadCloud size={30} /><p>Trage poza aici</p></>}
+                <label>Galerie Imagini Produs (Trage una sau mai multe)</label>
+                
+                <div
+                    className="drop-zone"
+                    onDragOver={preventDefault}
+                    onDrop={e => {
+                        preventDefault(e);
+                        adaugaInGalerie(e.dataTransfer.files);
+                    }}
+                >
+                  <FiUploadCloud size={30} />
+                  <p>Trage pozele aici</p>
                 </div>
+
+                {/* SLIDER-UL MAGIC */}
+                {formData.galerieImagini && formData.galerieImagini.length > 0 && (
+                  <div className="slider-wrapper">
+                    {/* Săgeată Stânga */}
+                    {formData.galerieImagini.length > 1 && (
+                      <button
+                        className="slider-nav-btn left"
+                        onClick={(e) => { e.preventDefault(); setSlideIndex(slideIndex > 0 ? slideIndex - 1 : formData.galerieImagini.length - 1); }}
+                      >
+                        &#10094;
+                      </button>
+                    )}
+
+                    <div className="slide-image-container">
+                       <img src={formData.galerieImagini[slideIndex]} alt={`Slide ${slideIndex}`} />
+                       <button
+                         className="btn-delete-slide"
+                         onClick={(e) => stergeDinGalerie(e, slideIndex)}
+                       >
+                         <FiX />
+                       </button>
+                    </div>
+
+                    {/* Săgeată Dreapta */}
+                    {formData.galerieImagini.length > 1 && (
+                      <button
+                        className="slider-nav-btn right"
+                        onClick={(e) => { e.preventDefault(); setSlideIndex(slideIndex < formData.galerieImagini.length - 1 ? slideIndex + 1 : 0); }}
+                      >
+                        &#10095;
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* THUMBNAILS (POZE MICI DE JOS) */}
+                {formData.galerieImagini && formData.galerieImagini.length > 0 && (
+                  <div className="galerie-thumbnails">
+                    {formData.galerieImagini.map((img, idx) => (
+                      <img
+                          key={idx}
+                          src={img}
+                          className={`galerie-thumb ${idx === slideIndex ? 'active' : ''}`}
+                          onClick={() => setSlideIndex(idx)}
+                          alt="thumb"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="editor-col">

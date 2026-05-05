@@ -2525,3 +2525,96 @@ select.checkout-input {
   .offer-price { font-size: 1.1rem; }
   .premium-offer-card { padding: 12px; }
 }
+/* CSS PENTRU SLIDER ȘI GALERIE */
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  margin-top: 15px;
+  background: #f8fafc;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+}
+
+.slide-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.slide-image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.btn-delete-slide {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.btn-delete-slide:hover {
+  transform: scale(1.1);
+}
+
+.slider-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(15, 23, 42, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  font-size: 1.2rem;
+  transition: background 0.3s;
+}
+
+.slider-nav-btn:hover { background: rgba(15, 23, 42, 1); }
+.slider-nav-btn.left { left: 10px; }
+.slider-nav-btn.right { right: 10px; }
+
+.galerie-thumbnails {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.galerie-thumb {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.galerie-thumb:hover { transform: scale(1.05); }
+.galerie-thumb.active { border-color: #3b82f6; opacity: 0.8; }
