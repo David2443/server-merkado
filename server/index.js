@@ -298,8 +298,8 @@ const trimiteInEawb = async (comanda) => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        // 🔥 Schimbat exact pe formatul cerut de documentație
-        'Authorization': `Bearer ${process.env.EUROPARCEL_API_KEY}`
+        // 🔥 Ne întoarcem la formatul care a funcționat pentru tine!
+        'X-API-Key': process.env.EUROPARCEL_API_KEY 
       },
       body: JSON.stringify(payloadEAWB)
     });
@@ -727,8 +727,9 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 🔥 Autorizare corectă
-        'Authorization': `Bearer ${process.env.EUROPARCEL_API_KEY}`
+        'Accept': 'application/json',
+        // 🔥 Formatul corect pentru contul tău
+        'X-API-Key': process.env.EUROPARCEL_API_KEY
       },
       body: JSON.stringify(payloadEAWB)
     });
