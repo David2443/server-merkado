@@ -14,8 +14,8 @@ import {
 } from 'react-icons/fi';
 import './ProductPage.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://merkado-backend.onrender.com';
-const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_51TKPY5KGxxN608QkXUMYvMKt4b4HXHoC0cBGCtUvQamNX3kLj3q75Agz23XBkJbRNVyhEJaLnDFtFPLbsdJs67hl00CV2G4TCb';
+const API_URL = import.meta.env.VITE_API_URL;
+const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY ;
 const stripePromise = loadStripe(STRIPE_KEY);
 
 const listaJudete = [
