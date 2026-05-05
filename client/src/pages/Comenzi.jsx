@@ -6,6 +6,12 @@ import {
   FiSearch, FiPlusSquare, FiTruck, FiBox, FiCreditCard,
   FiDownload, FiTrash2
 } from 'react-icons/fi';
+
+// 🔥 IMPORTĂRI PENTRU CALENDARUL NOU
+import { DateRange } from 'react-date-range';
+import 'react-date-range/dist/styles.css'; 
+import 'react-date-range/dist/theme/default.css'; 
+import { ro } from 'date-fns/locale';
   
 import './Comenzi.css'; 
 
@@ -23,12 +29,20 @@ const AdminComenzi = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [produse, setProduse] = useState([]); 
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // 🔥 STATE PENTRU BULK ACTIONS (Selecție multiplă)
   const [selectedItems, setSelectedItems] = useState([]);
-  // 🔥 Setări pentru Date Picker
+
+  // 🔥 STATE PENTRU NOUA LOGICĂ DE CALENDAR
   const [range, setRange] = useState('last30'); 
-  const [customStartDate, setCustomStartDate] = useState('');
-  const [customEndDate, setCustomEndDate] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [dateRange, setDateRange] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'selection'
+    }
+  ]);
   
   // Modal states
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, id: null, type: '' });
@@ -46,16 +60,16 @@ const AdminComenzi = () => {
 
   const [toast, setToast] = useState(null);
 
-  const arataToast = (tip, mesaj) => {
-    setToast({ tip, mesaj });
-    setTimeout(() => { setToast(null); }, 6000);
-  };
-
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const rangeLabels = {
     today: 'Azi', yesterday: 'Ieri', last7: 'Ultimele 7 zile', 
     last30: 'Ultimele 30 de zile', all: 'Toate datele', custom: 'Interval Personalizat'
+  };
+
+  const arataToast = (tip, mesaj) => {
+    setToast({ tip, mesaj });
+    setTimeout(() => { setToast(null); }, 6000);
   };
 
   const delogareSilentioasa = () => {
@@ -73,8 +87,10 @@ const AdminComenzi = () => {
 
     try {
       let queryParams = `?range=${range}`;
-      if (range === 'custom' && customStartDate && customEndDate) {
-        queryParams += `&startDate=${customStartDate}&endDate=${customEndDate}`;
+      if (range === 'custom') {
+        const dStart = dateRange[0].startDate.toISOString().split('T')[0];
+        const dEnd = dateRange[0].endDate.toISOString().split('T')[0];
+        queryParams += `&startDate=${dStart}&endDate=${dEnd}`;
       }
 
       const resComenzi = await fetch(`${API_URL}/api/dashboard${queryParams}`, {
@@ -98,6 +114,7 @@ const AdminComenzi = () => {
     } catch (err) { console.error("Eroare fetch:", err); }
     
     setIsLoading(false);
+    setSelectedItems([]); // resetăm selecția după un fetch proaspăt
   };
 
   // Trigger fetch la schimbarea range-ului (dacă nu e custom, facem instant)
@@ -105,16 +122,13 @@ const AdminComenzi = () => {
     if (range !== 'custom') fetchData(); 
   }, [range]);
 
-  // Aplică filtrul custom
+  // Aplică filtrul custom din calendar
   const aplicaFiltruCustom = () => {
-    if (!customStartDate || !customEndDate) {
-      arataToast('error', 'Te rog selectează ambele date!');
-      return;
-    }
     fetchData();
+    setShowDropdown(false);
   };
 
-  // 🔥 Efect pentru Localități (ca pe frontend)
+  // 🔥 Efect pentru Localități (Autocomplete din localitati.json)
   useEffect(() => {
     if (!formData.judet) {
       setListaLocalitatiFiltrate([]);
@@ -176,10 +190,38 @@ const AdminComenzi = () => {
     return (item.numeClient?.toLowerCase().includes(term) || item.telefon?.includes(term) || item.email?.toLowerCase().includes(term) || item.adresa?.toLowerCase().includes(term));
   });
 
+  // 🔥 FUNCȚII PENTRU BULK ACTIONS (Selecție Multiplă)
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedItems(listaFiltrata.map(item => item._id));
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const handleSelectItem = (id) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(selectedItems.filter(itemId => itemId !== id));
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
+  };
+
   const exportaCSV = () => {
     if (listaFiltrata.length === 0) return arataToast('error', 'Nu există comenzi de exportat.');
+    exportDataToCSV(listaFiltrata, "Toate_Vizibile");
+  };
+
+  const exportaSelectate = () => {
+    const itemsToExport = listaFiltrata.filter(item => selectedItems.includes(item._id));
+    if (itemsToExport.length === 0) return arataToast('error', 'Selectează cel puțin o comandă!');
+    exportDataToCSV(itemsToExport, "Selectate");
+    setSelectedItems([]); // reset
+  };
+
+  const exportDataToCSV = (dateLista, sufixNume) => {
     const headers = ['Data', 'Nume Client', 'Telefon', 'Email', 'Produs', 'Cantitate', 'Total', 'Metoda Plata', 'Tip Livrare', 'Adresa', 'Localitate', 'Judet', 'Status', 'Sursa', 'AWB'];
-    const rows = listaFiltrata.map(c => [
+    const rows = dateLista.map(c => [
       new Date(c.createdAt || c.updatedAt).toLocaleDateString('ro-RO'),
       `"${c.numeClient || c.nume || ''}"`, `"${c.telefon || ''}"`, `"${c.email || ''}"`,
       `"${c.numeProdus || c.produs || ''}"`, c.cantitate || 1, c.total || c.totalComanda || c.pret || 0,
@@ -189,11 +231,30 @@ const AdminComenzi = () => {
     const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers.join(',') + '\n' + rows.map(e => e.join(',')).join('\n');
     const link = document.createElement("a");
     link.href = encodeURI(csvContent);
-    link.download = `Export_Comenzi_${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `Export_Comenzi_${sufixNume}_${new Date().toISOString().split('T')[0]}.csv`;
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
     arataToast('success', 'Fișier descărcat!');
   };
 
+  const stergeSelectate = async () => {
+    const confirm = window.confirm(`Ești sigur că vrei să ștergi DEFINITIV cele ${selectedItems.length} comenzi selectate?`);
+    if (!confirm) return;
+    
+    const token = localStorage.getItem('adminToken');
+    try {
+      for (const id of selectedItems) {
+        const endpoint = activeTab === 'comenzi' ? `${API_URL}/api/comenzi/${id}` : `${API_URL}/api/comenzi/abandonat/${id}`;
+        await fetch(endpoint, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      }
+      arataToast('success', 'Comenzile selectate au fost șterse!');
+      setSelectedItems([]);
+      fetchData();
+    } catch (e) {
+      arataToast('error', 'Eroare la ștergerea multiplă!');
+    }
+  };
+
+  // --- FUNCȚII CRUD COMANDĂ INDIVIDUALĂ ---
   const openEditModal = (item, type) => {
     setFormData(item);
     setLockereDisponibile([]);
@@ -306,60 +367,6 @@ const AdminComenzi = () => {
 
   if (isLoading) return <div className="ac-loader"><div className="ac-spinner"></div></div>;
 
-const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedItems(listaFiltrata.map(item => item._id));
-    } else {
-      setSelectedItems([]);
-    }
-  };
-
-  const handleSelectItem = (id) => {
-    if (selectedItems.includes(id)) {
-      setSelectedItems(selectedItems.filter(itemId => itemId !== id));
-    } else {
-      setSelectedItems([...selectedItems, id]);
-    }
-  };
-
-  const exportaSelectate = () => {
-    const itemsToExport = listaFiltrata.filter(item => selectedItems.includes(item._id));
-    if (itemsToExport.length === 0) return arataToast('error', 'Selectează cel puțin o comandă!');
-    
-    const headers = ['Data', 'Nume Client', 'Telefon', 'Email', 'Produs', 'Cantitate', 'Total', 'Status'];
-    const rows = itemsToExport.map(c => [
-      new Date(c.createdAt || c.updatedAt).toLocaleDateString('ro-RO'),
-      `"${c.numeClient || ''}"`, `"${c.telefon || ''}"`, `"${c.email || ''}"`,
-      `"${c.numeProdus || ''}"`, c.cantitate || 1, c.total || 0, `"${c.status || ''}"`
-    ]);
-    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers.join(',') + '\n' + rows.map(e => e.join(',')).join('\n');
-    const link = document.createElement("a");
-    link.href = encodeURI(csvContent);
-    link.download = `Export_Selectate_${new Date().toISOString().split('T')[0]}.csv`;
-    document.body.appendChild(link); link.click(); document.body.removeChild(link);
-    arataToast('success', 'Fișier descărcat!');
-    setSelectedItems([]); // reset
-  };
-
-  const stergeSelectate = async () => {
-    const confirm = window.confirm(`Ești sigur că vrei să ștergi DEFINITIV cele ${selectedItems.length} comenzi selectate?`);
-    if (!confirm) return;
-    
-    const token = localStorage.getItem('adminToken');
-    try {
-      // Ștergem pe rând (sau faci un endpoint de bulk_delete pe backend)
-      for (const id of selectedItems) {
-        const endpoint = activeTab === 'comenzi' ? `${API_URL}/api/comenzi/${id}` : `${API_URL}/api/comenzi/abandonat/${id}`;
-        await fetch(endpoint, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
-      }
-      arataToast('success', 'Comenzile selectate au fost șterse!');
-      setSelectedItems([]);
-      fetchData();
-    } catch (e) {
-      arataToast('error', 'Eroare la ștergerea multiplă!');
-    }
-  };
-
   return (
     <div className="ac-container">
       <div className="ac-header-bar">
@@ -369,7 +376,7 @@ const handleSelectAll = (e) => {
             <FiPlusSquare /> Comandă Nouă
           </button>
           <button onClick={exportaCSV} style={{ display: 'flex', alignItems: 'center', gap: '5px', background: '#10b981', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '0.9rem' }}>
-            <FiDownload /> Exportă CSV
+            <FiDownload /> Exportă Toate
           </button>
         </div>
         
@@ -381,33 +388,40 @@ const handleSelectAll = (e) => {
 
           <div className="ac-filter-container">
             <button className="ac-btn" onClick={(e) => { e.stopPropagation(); setShowDropdown(!showDropdown); }}>
-              <FiCalendar /> {rangeLabels[range]} <FiChevronDown />
+              <FiCalendar /> {range === 'custom' ? 'Interval Custom' : rangeLabels[range]} <FiChevronDown />
             </button>
             
             {showDropdown && (
-              <div className="ac-dropdown" style={{ width: '280px', right: 0 }}>
-                {Object.keys(rangeLabels).map(key => (
-                  <div key={key} className={`ac-dropdown-item ${range === key ? 'active' : ''}`} onClick={() => { setRange(key); if(key !== 'custom') setShowDropdown(false); }}>
-                    {rangeLabels[key]}
+              <div className="ac-dropdown" style={{ width: 'max-content', minWidth: '280px', right: 0 }}>
+                <div style={{ display: 'flex', flexDirection: 'row', padding: '10px', gap: '15px' }}>
+                  
+                  {/* Butoane Rapide */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', minWidth: '150px' }}>
+                    {Object.keys(rangeLabels).map(key => (
+                      <div key={key} className={`ac-dropdown-item ${range === key ? 'active' : ''}`} onClick={() => { setRange(key); if(key !== 'custom') setShowDropdown(false); }}>
+                        {rangeLabels[key]}
+                      </div>
+                    ))}
                   </div>
-                ))}
-                
-                {/* 🔥 Zona de Custom Date Range */}
-                {range === 'custom' && (
-                  <div style={{ padding: '15px', background: '#f8fafc', borderTop: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 'bold' }}>De la data:</label>
-                      <input type="date" value={customStartDate} onChange={e => setCustomStartDate(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #cbd5e1', marginTop: '4px' }} />
+
+                  {/* 🔥 CALENDARUL VIZUAL */}
+                  {range === 'custom' && (
+                    <div style={{ borderLeft: '1px solid #e2e8f0', paddingLeft: '20px', display: 'flex', flexDirection: 'column' }}>
+                      <DateRange
+                        ranges={dateRange}
+                        onChange={item => setDateRange([item.selection])}
+                        locale={ro}
+                        months={1}
+                        direction="horizontal"
+                        rangeColors={['#3b82f6']}
+                      />
+                      <button onClick={aplicaFiltruCustom} style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' }}>
+                        Aplică Intervalul
+                      </button>
                     </div>
-                    <div>
-                      <label style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 'bold' }}>Până la data:</label>
-                      <input type="date" value={customEndDate} onChange={e => setCustomEndDate(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #cbd5e1', marginTop: '4px' }} />
-                    </div>
-                    <button onClick={() => { aplicaFiltruCustom(); setShowDropdown(false); }} style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginTop: '5px' }}>
-                      Aplică Intervalul
-                    </button>
-                  </div>
-                )}
+                  )}
+
+                </div>
               </div>
             )}
           </div>
@@ -416,20 +430,26 @@ const handleSelectAll = (e) => {
 
       <div className="ac-main-card">
         <div className="ac-tabs">
-          <div className={`ac-tab ${activeTab === 'comenzi' ? 'active' : ''}`} onClick={() => setActiveTab('comenzi')}><FiShoppingBag /> Comenzi ({comenzi.length})</div>
-          <div className={`ac-tab drafts-tab ${activeTab === 'drafts' ? 'active' : ''}`} onClick={() => setActiveTab('drafts')}><FiAlertCircle /> Abandonate ({drafts.length})</div>
+          <div className={`ac-tab ${activeTab === 'comenzi' ? 'active' : ''}`} onClick={() => {setActiveTab('comenzi'); setSelectedItems([]);}}><FiShoppingBag /> Comenzi ({comenzi.length})</div>
+          <div className={`ac-tab drafts-tab ${activeTab === 'drafts' ? 'active' : ''}`} onClick={() => {setActiveTab('drafts'); setSelectedItems([]);}}><FiAlertCircle /> Abandonate ({drafts.length})</div>
         </div>
-{selectedItems.length > 0 && (
+
+        {/* 🔥 BARA ACȚIUNI MULTIPLE */}
+        {selectedItems.length > 0 && (
           <div style={{ background: '#eff6ff', padding: '10px 20px', borderRadius: '10px', marginBottom: '15px', display: 'flex', gap: '15px', alignItems: 'center' }}>
             <span style={{ fontWeight: 'bold', color: '#2563eb' }}>{selectedItems.length} selectate</span>
-            <button onClick={exportaSelectate} style={{ background: '#10b981', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer' }}><FiDownload /> Exportă Selectate</button>
-            <button onClick={stergeSelectate} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer' }}><FiTrash2 /> Șterge Selectate</button>
+            <button onClick={exportaSelectate} style={{ background: '#10b981', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}><FiDownload /> Exportă Selectate</button>
+            <button onClick={stergeSelectate} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}><FiTrash2 /> Șterge Selectate</button>
           </div>
         )}
+
         <div className="ac-table-wrapper">
           <table className="ac-table">
             <thead>
               <tr>
+                <th style={{ width: '40px', paddingLeft: '15px' }}>
+                  <input type="checkbox" onChange={handleSelectAll} checked={listaFiltrata.length > 0 && selectedItems.length === listaFiltrata.length} style={{ width: '18px', height: '18px', cursor: 'pointer' }}/>
+                </th>
                 <th>Dată</th><th>Client</th><th>Comandă</th><th>Plată & Livrare</th>{activeTab === 'comenzi' && <th>Status</th>}
                 <th>Sursă Trafic 🎯</th><th>Total</th><th className="text-right">Acțiuni</th>
               </tr>
@@ -437,6 +457,9 @@ const handleSelectAll = (e) => {
             <tbody>
               {listaFiltrata.map((item) => (
                 <tr key={item._id} className={item.status === 'Anulată' ? 'ac-row-cancelled' : ''}>
+                  <td style={{ paddingLeft: '15px' }}>
+                    <input type="checkbox" checked={selectedItems.includes(item._id)} onChange={() => handleSelectItem(item._id)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                  </td>
                   <td data-label="Dată">{new Date(item.createdAt || item.updatedAt).toLocaleDateString('ro-RO')}</td>
                   <td data-label="Client">
                     <div className="ac-truncate ac-fw-medium">{item.numeClient || '-'}</div>
@@ -470,20 +493,28 @@ const handleSelectAll = (e) => {
                     })()}
                   </td>
                   <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938', fontWeight: 'bold' }}>{item.total || item.totalComanda} Lei</td>
+                  
+                  {/* 🔥 ZONA AWB REPARATĂ CONFORM CERINȚELOR 🔥 */}
                   <td data-label="Acțiuni" className="text-right" style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
                     {!item.awb ? (
-                      <button onClick={() => genereazaAWB(item._id)} style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}>📦 AWB</button>
+                      <button onClick={() => genereazaAWB(item._id)} style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}>
+                        📦 Generează AWB
+                      </button>
                     ) : (
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-                        <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}>✅ {item.awb}</span>
-                        <button onClick={() => genereazaAWB(item._id)} style={{ background: '#f8fafc', color: '#94a3b8', border: '1px dashed #cbd5e1', padding: '2px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', opacity: '0.7', transition: 'all 0.2s' }} onMouseOver={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = '#3b82f6'; e.currentTarget.style.borderColor = '#3b82f6'; }} onMouseOut={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = '#cbd5e1'; }}>🔄 Regenerează</button>
+                        <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px', textAlign: 'right' }}>
+                          <div><strong>AWB Generat:</strong><br/>{item.awb}</div>
+                        </span>
+                        <button onClick={() => genereazaAWB(item._id)} style={{ background: '#f8fafc', color: '#94a3b8', border: '1px dashed #cbd5e1', padding: '2px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', opacity: '0.7', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '3px' }} onMouseOver={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = '#3b82f6'; e.currentTarget.style.borderColor = '#3b82f6'; }} onMouseOut={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = '#cbd5e1'; }}>
+                          🔄 Regenerează
+                        </button>
                       </div>
                     )}
                     <button onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')} className="ac-btn-edit"><FiEdit2 /></button>
                   </td>
                 </tr>
               ))}
-              {listaFiltrata.length === 0 && ( <tr><td colSpan="8" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>Nicio comandă găsită.</td></tr> )}
+              {listaFiltrata.length === 0 && ( <tr><td colSpan="9" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>Nicio comandă găsită.</td></tr> )}
             </tbody>
           </table>
         </div>
