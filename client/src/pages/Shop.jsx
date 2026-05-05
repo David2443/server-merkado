@@ -26,12 +26,16 @@ const Shop = () => {
     
     fetch(`${API_URL}/api/produse`)
       .then(res => res.json())
-       .then(data => {
+      .then(data => {
         setProduse(data);
         setFilteredProduse(data);
         
-        // 🔥 MAGIA: Extragem toate categoriile care există efectiv pe produse, fără dubluri!
-        const categoriiUnice = ["Toate", ...new Set(data.map(p => p.categorie).filter(Boolean))];
+        // 🔥 MAGIA: Extragem categoriile reale, dar EXCLUDEM orice variantă de "Toate" venită din baza de date ca să nu se dubleze!
+        const categoriiReale = data
+          .map(p => p.categorie)
+          .filter(cat => cat && cat.toLowerCase() !== 'toate' && cat.toLowerCase() !== 'toate categoriile');
+          
+        const categoriiUnice = ["Toate", ...new Set(categoriiReale)];
         setCategoriiDisponibile(categoriiUnice);
         
         setIsLoading(false); 
