@@ -23,7 +23,7 @@ const AdminComenzi = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [produse, setProduse] = useState([]); 
   const [searchTerm, setSearchTerm] = useState('');
-  
+  const [selectedItems, setSelectedItems] = useState([]);
   // 🔥 Setări pentru Date Picker
   const [range, setRange] = useState('last30'); 
   const [customStartDate, setCustomStartDate] = useState('');
@@ -306,6 +306,60 @@ const AdminComenzi = () => {
 
   if (isLoading) return <div className="ac-loader"><div className="ac-spinner"></div></div>;
 
+const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedItems(listaFiltrata.map(item => item._id));
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const handleSelectItem = (id) => {
+    if (selectedItems.includes(id)) {
+      setSelectedItems(selectedItems.filter(itemId => itemId !== id));
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
+  };
+
+  const exportaSelectate = () => {
+    const itemsToExport = listaFiltrata.filter(item => selectedItems.includes(item._id));
+    if (itemsToExport.length === 0) return arataToast('error', 'Selectează cel puțin o comandă!');
+    
+    const headers = ['Data', 'Nume Client', 'Telefon', 'Email', 'Produs', 'Cantitate', 'Total', 'Status'];
+    const rows = itemsToExport.map(c => [
+      new Date(c.createdAt || c.updatedAt).toLocaleDateString('ro-RO'),
+      `"${c.numeClient || ''}"`, `"${c.telefon || ''}"`, `"${c.email || ''}"`,
+      `"${c.numeProdus || ''}"`, c.cantitate || 1, c.total || 0, `"${c.status || ''}"`
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers.join(',') + '\n' + rows.map(e => e.join(',')).join('\n');
+    const link = document.createElement("a");
+    link.href = encodeURI(csvContent);
+    link.download = `Export_Selectate_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    arataToast('success', 'Fișier descărcat!');
+    setSelectedItems([]); // reset
+  };
+
+  const stergeSelectate = async () => {
+    const confirm = window.confirm(`Ești sigur că vrei să ștergi DEFINITIV cele ${selectedItems.length} comenzi selectate?`);
+    if (!confirm) return;
+    
+    const token = localStorage.getItem('adminToken');
+    try {
+      // Ștergem pe rând (sau faci un endpoint de bulk_delete pe backend)
+      for (const id of selectedItems) {
+        const endpoint = activeTab === 'comenzi' ? `${API_URL}/api/comenzi/${id}` : `${API_URL}/api/comenzi/abandonat/${id}`;
+        await fetch(endpoint, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+      }
+      arataToast('success', 'Comenzile selectate au fost șterse!');
+      setSelectedItems([]);
+      fetchData();
+    } catch (e) {
+      arataToast('error', 'Eroare la ștergerea multiplă!');
+    }
+  };
+
   return (
     <div className="ac-container">
       <div className="ac-header-bar">
@@ -365,7 +419,13 @@ const AdminComenzi = () => {
           <div className={`ac-tab ${activeTab === 'comenzi' ? 'active' : ''}`} onClick={() => setActiveTab('comenzi')}><FiShoppingBag /> Comenzi ({comenzi.length})</div>
           <div className={`ac-tab drafts-tab ${activeTab === 'drafts' ? 'active' : ''}`} onClick={() => setActiveTab('drafts')}><FiAlertCircle /> Abandonate ({drafts.length})</div>
         </div>
-
+{selectedItems.length > 0 && (
+          <div style={{ background: '#eff6ff', padding: '10px 20px', borderRadius: '10px', marginBottom: '15px', display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <span style={{ fontWeight: 'bold', color: '#2563eb' }}>{selectedItems.length} selectate</span>
+            <button onClick={exportaSelectate} style={{ background: '#10b981', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer' }}><FiDownload /> Exportă Selectate</button>
+            <button onClick={stergeSelectate} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '6px', cursor: 'pointer' }}><FiTrash2 /> Șterge Selectate</button>
+          </div>
+        )}
         <div className="ac-table-wrapper">
           <table className="ac-table">
             <thead>

@@ -967,7 +967,7 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
                       </div>
 
                       <div className="input-group-wrapper">
-                        <input type="tel" className={`checkout-input ${errors.telefon ? 'input-error' : ''}`} placeholder="Telefon" value={dateClient.telefon} onChange={e => { setDateClient({ ...dateClient, telefon: e.target.value }); setErrors({ ...errors, telefon: null }); }} />
+                        <input type="tel" className={`checkout-input ${errors.telefon ? 'input-error' : ''}`} placeholder="Telefon" value={dateClient.telefon} onBlur={salveazaDraft} onChange={e => { setDateClient({ ...dateClient, telefon: e.target.value }); setErrors({ ...errors, telefon: null }); }} />
                         {errors.telefon && <span className="error-text">{errors.telefon}</span>}
                       </div>
 
