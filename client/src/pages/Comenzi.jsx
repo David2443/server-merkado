@@ -32,7 +32,17 @@ const AdminComenzi = () => {
   
   // 🔥 STATE PENTRU BULK ACTIONS (Selecție multiplă)
   const [selectedItems, setSelectedItems] = useState([]);
+// 🔥 STATE PENTRU MENIU FULLSCREEN
+  const [isMenuMinimized, setIsMenuMinimized] = useState(false);
 
+  // Când apăsăm butonul, punem o clasă pe <body> ca să știe CSS-ul să ascundă meniul
+  useEffect(() => {
+    if (isMenuMinimized) {
+      document.body.classList.add('admin-menu-minimized');
+    } else {
+      document.body.classList.remove('admin-menu-minimized');
+    }
+  }, [isMenuMinimized]);
   // 🔥 STATE PENTRU NOUA LOGICĂ DE CALENDAR
   const [range, setRange] = useState('last30'); 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -378,6 +388,12 @@ const AdminComenzi = () => {
           <button onClick={exportaCSV} style={{ display: 'flex', alignItems: 'center', gap: '5px', background: '#10b981', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '0.9rem' }}>
             <FiDownload /> Exportă Toate
           </button>
+          <button 
+            onClick={() => setIsMenuMinimized(!isMenuMinimized)} 
+            style={{ display: 'flex', alignItems: 'center', gap: '5px', background: '#334155', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', fontSize: '0.9rem' }}
+          >
+            {isMenuMinimized ? 'Restabilește Meniul' : 'Lățește Tabelul'}
+          </button>
         </div>
         
         <div className="ac-header-right">
@@ -451,7 +467,11 @@ const AdminComenzi = () => {
                   <input type="checkbox" onChange={handleSelectAll} checked={listaFiltrata.length > 0 && selectedItems.length === listaFiltrata.length} style={{ width: '18px', height: '18px', cursor: 'pointer' }}/>
                 </th>
                 <th>Dată</th><th>Client</th><th>Comandă</th><th>Plată & Livrare</th>{activeTab === 'comenzi' && <th>Status</th>}
-                <th>Sursă Trafic 🎯</th><th>Total</th><th className="text-right">Acțiuni</th>
+                <th>Sursă Trafic 🎯</th><th>Total</th>
+                
+                {/* 🔥 Coloana Nouă dedicată pentru AWB */}
+                <th>AWB Curier</th> 
+                <th className="text-right">Acțiuni</th>
               </tr>
             </thead>
             <tbody>
@@ -495,22 +515,28 @@ const AdminComenzi = () => {
                   <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938', fontWeight: 'bold' }}>{item.total || item.totalComanda} Lei</td>
                   
                   {/* 🔥 ZONA AWB REPARATĂ CONFORM CERINȚELOR 🔥 */}
-                  <td data-label="Acțiuni" className="text-right" style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                  <td data-label="AWB Curier">
                     {!item.awb ? (
                       <button onClick={() => genereazaAWB(item._id)} style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}>
                         📦 Generează AWB
                       </button>
                     ) : (
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-                        <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px', textAlign: 'right' }}>
-                          <div><strong>AWB Generat:</strong><br/>{item.awb}</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '5px' }}>
+                        <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '4px 8px', borderRadius: '6px', fontSize: '0.85rem', display: 'inline-block', fontWeight: 'bold' }}>
+                          ✅ {item.awb}
                         </span>
-                        <button onClick={() => genereazaAWB(item._id)} style={{ background: '#f8fafc', color: '#94a3b8', border: '1px dashed #cbd5e1', padding: '2px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', opacity: '0.7', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '3px' }} onMouseOver={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = '#3b82f6'; e.currentTarget.style.borderColor = '#3b82f6'; }} onMouseOut={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = '#cbd5e1'; }}>
+                        <button onClick={() => genereazaAWB(item._id)} style={{ background: 'transparent', color: '#3b82f6', border: '1px dashed #3b82f6', padding: '2px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', transition: 'all 0.2s' }}>
                           🔄 Regenerează
                         </button>
                       </div>
                     )}
-                    <button onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')} className="ac-btn-edit"><FiEdit2 /></button>
+                  </td>
+
+                  {/* 🔥 BUTONUL DE EDITARE - RĂMAS SINGUR 🔥 */}
+                  <td data-label="Acțiuni" className="text-right">
+                    <button onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')} className="ac-btn-edit" title="Editează Comanda">
+                      <FiEdit2 />
+                    </button>
                   </td>
                 </tr>
               ))}
