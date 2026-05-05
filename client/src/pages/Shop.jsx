@@ -15,7 +15,8 @@ const Shop = () => {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('Toate');
   const [sort, setSort] = useState('newest');
-
+// 🔥 Memorie pentru categoriile extrase automat din baza de date
+  const [categoriiDisponibile, setCategoriiDisponibile] = useState(['Toate']);
   // 🛡️ FIX 1: URL Dinamic (Citește din fișierul tău .env din frontend)
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -25,10 +26,15 @@ const Shop = () => {
     
     fetch(`${API_URL}/api/produse`)
       .then(res => res.json())
-      .then(data => {
+       .then(data => {
         setProduse(data);
         setFilteredProduse(data);
-        setIsLoading(false); // Am primit datele, oprim încărcarea
+        
+        // 🔥 MAGIA: Extragem toate categoriile care există efectiv pe produse, fără dubluri!
+        const categoriiUnice = ["Toate", ...new Set(data.map(p => p.categorie).filter(Boolean))];
+        setCategoriiDisponibile(categoriiUnice);
+        
+        setIsLoading(false); 
       })
       .catch(err => {
         console.error("Eroare la încărcare shop:", err);
@@ -118,12 +124,12 @@ const Shop = () => {
           <div className="filter-group">
             <div className="filter-item">
               <FiFilter />
-              <select value={category} onChange={(e) => setCategory(e.target.value)}>
-                <option value="Toate">Toate Categoriile</option>
-                <option value="Auto">Auto & Accesorii</option>
-                <option value="Electronice">Electronice & Gadget</option>
-                <option value="Casa">Casă & Grădină</option>
-                <option value="Sport">Sport & Outdoor</option>
+             <select value={category} onChange={(e) => setCategory(e.target.value)}>
+                {categoriiDisponibile.map(cat => (
+                  <option key={cat} value={cat}>
+                    {cat === 'Toate' ? 'Toate Categoriile' : cat}
+                  </option>
+                ))}
               </select>
             </div>
 

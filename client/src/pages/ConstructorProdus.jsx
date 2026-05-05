@@ -316,18 +316,21 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
                 <div className="row" style={{ marginTop: '15px', gap: '15px' }}>
                   <div style={{ flex: 1 }} className="ac-form-group">
                     <label>Categorie (Pentru Shop)</label>
-                    <select 
-                      className="ac-select-premium" 
-                      value={formData.categorie || 'Auto'} 
+                   <input 
+                      list="lista-categorii"
+                      type="text"
+                      className="ac-select-premium"
+                      style={{ padding: '14px', borderRadius: '10px', border: '2px solid #e5e7eb', width: '100%', fontSize: '1rem' }}
+                      placeholder="Scrie o categorie nouă sau alege..."
+                      value={formData.categorie || ''} 
                       onChange={e => setFormData({...formData, categorie: e.target.value})}
-                    >
-                      <option value="Auto">Auto & Accesorii</option>
-                      <option value="Electronice">Electronice & Gadget</option>
-                      <option value="Casa">Casă & Grădină</option>
-                      <option value="Sport">Sport & Outdoor</option>
-                      <option value="Fashion">Modă & Stil</option>
-                      <option value="Beauty">Frumusețe & Îngrijire</option>
-                    </select>
+                    />
+                    <datalist id="lista-categorii">
+                      <option value="Auto" />
+                      <option value="Electronice" />
+                      <option value="Casa & Grădină" />
+                      <option value="Sport" />
+                    </datalist>
                   </div>
                 </div>
 
