@@ -216,10 +216,9 @@ const trimiteEmail = async (to, subject, htmlContent) => {
 // ==========================================
 const trimiteInEawb = async (comanda) => {
   try {
-    // 🔥 BLOCAJ ANTI-BUCUREȘTI: Dacă nu are localitate, oprim tot!
     if (!comanda.localitate || !comanda.judet || comanda.localitate === "-" || comanda.judet === "-") {
       console.error(`❌ Eroare AWB: Comanda ${comanda._id} nu are o localitate sau un județ valid salvat.`);
-      return; // Ne oprim aici, nu trimitem nicio cerere la curier
+      return; 
     }
 
     const isPlataCard = comanda.metodaPlata && comanda.metodaPlata.toLowerCase().includes('card');
@@ -231,9 +230,9 @@ const trimiteInEawb = async (comanda) => {
       phone: comanda.telefon || "0000000000",
       contact: comanda.numeClient || "Client",
       country_code: "RO",
-      postal_code: "000000",
-      locality_name: comanda.localitate, // STRICT ce e în bază
-      county_name: comanda.judet,        // STRICT ce e în bază
+      // 🔥 AM ȘTERS postal_code: "000000". Acum va folosi exclusiv numele orașului!
+      locality_name: comanda.localitate, 
+      county_name: comanda.judet,        
       street_name: comanda.adresa || "-",
       street_number: "1" 
     };
@@ -243,12 +242,13 @@ const trimiteInEawb = async (comanda) => {
          console.error(`❌ Eroare AWB: Comanda locker ${comanda._id} nu are salvat ID-ul lockerului destinație.`);
          return;
       }
+      // Daca e locker, fixed_location_id e required pentru livrare (Service 4)
       adresaDestinatie.fixed_location_id = parseInt(comanda.samedayLockerId) || 0; 
     }
 
     const CARRIER_FAN = 3; 
-    const SERVICE_LOCKER_TO_HOME = 3;   // Tu lași în Locker, se duce Acasă
-    const SERVICE_LOCKER_TO_LOCKER = 4; // Tu lași în Locker, se duce în Locker
+    const SERVICE_LOCKER_TO_HOME = 3;   // Pickup din locker, Livrare la usa
+    const SERVICE_LOCKER_TO_LOCKER = 4; // Pickup din locker, Livrare in locker
     
     // Locker-ul tău de predare
     const FANBOX_PREDARE_ID = 491265; 
@@ -256,7 +256,6 @@ const trimiteInEawb = async (comanda) => {
 
     const payloadEAWB = {
       carrier_id: CARRIER_FAN, 
-      // Aici aplicăm regula fixată din tabelul tău
       service_id: isLocker ? SERVICE_LOCKER_TO_LOCKER : SERVICE_LOCKER_TO_HOME, 
       billing_to: {
         billing_address_id: 279010 
@@ -275,7 +274,7 @@ const trimiteInEawb = async (comanda) => {
       content: {
         envelopes_count: 0,
         pallets_count: 0,
-        parcels_count: 1,
+        parcels_count: 1, // Fix un pachet conform documentației
         total_weight: 1,
         parcels: [
           { sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }
@@ -299,7 +298,8 @@ const trimiteInEawb = async (comanda) => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'X-API-Key': process.env.EUROPARCEL_API_KEY 
+        // 🔥 Schimbat exact pe formatul cerut de documentație
+        'Authorization': `Bearer ${process.env.EUROPARCEL_API_KEY}`
       },
       body: JSON.stringify(payloadEAWB)
     });
@@ -648,10 +648,9 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       return res.status(400).json({ eroare: `Această comandă are deja AWB-ul: ${comanda.awb}` });
     }
 
-    // 🔥 BLOCAJ ANTI-BUCUREȘTI: Trimitem eroare direct în interfața de Admin
     if (!comanda.localitate || !comanda.judet || comanda.localitate === "-" || comanda.judet === "-") {
       return res.status(400).json({ 
-        eroare: "⚠️ Eroare adresă: Comanda nu are o localitate sau un județ valid! Te rugăm să editezi manual comanda și să pui un oraș real înainte de a genera AWB-ul." 
+        eroare: "⚠️ Eroare adresă: Comanda nu are o localitate sau un județ valid! Editează comanda și pune un oraș real înainte de a genera AWB-ul." 
       });
     }
 
@@ -664,7 +663,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       phone: comanda.telefon || "0000000000",
       contact: comanda.numeClient || "Client",
       country_code: "RO",
-      postal_code: "000000",
+      // 🔥 COD POȘTAL SCOS!
       locality_name: comanda.localitate, 
       county_name: comanda.judet,        
       street_name: comanda.adresa || "-",
@@ -705,7 +704,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       content: {
         envelopes_count: 0,
         pallets_count: 0,
-        parcels_count: 1,
+        parcels_count: 1, // Obligatoriu 1 conform documentatiei
         total_weight: 1,
         parcels: [
           { sequence_no: 1, size: { weight: 1, width: 20, height: 20, length: 20 } }
@@ -728,7 +727,8 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-API-Key': process.env.EUROPARCEL_API_KEY
+        // 🔥 Autorizare corectă
+        'Authorization': `Bearer ${process.env.EUROPARCEL_API_KEY}`
       },
       body: JSON.stringify(payloadEAWB)
     });
