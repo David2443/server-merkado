@@ -9,7 +9,7 @@ import {
   useStripe, useElements
 } from '@stripe/react-stripe-js';
 import {
-  FiStar, FiTruck, FiShield, FiRotateCcw, FiChevronDown, FiChevronUp,
+  FiSearch , FiStar, FiTruck, FiShield, FiRotateCcw, FiChevronDown, FiChevronUp,
   FiCheck, FiArrowRight, FiShoppingBag, FiX, FiThumbsUp, FiLock, FiCheckCircle, FiChevronRight, FiCreditCard, FiBox, FiAlertCircle
 } from 'react-icons/fi';
 import './ProductPage.css';
