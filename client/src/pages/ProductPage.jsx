@@ -280,23 +280,41 @@ const ProductPage = () => {
     };
   }, [id]);
 
+ // 🇷🇴 HOOK PENTRU LOCALITĂȚI (Corectat pentru DIACRITICE)
   useEffect(() => {
-    if (dateClient.telefon.length >= 10 && dateClient.nume.length >= 3) {
-      const salvareCos = setTimeout(() => {
-        fetch(`${API_URL}/api/comenzi/abandonat`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            telefon: dateClient.telefon,
-            numeClient: dateClient.nume,
-            total: totalCheckout
-          })
-        }).catch(err => console.log("Cos silent update fail", err));
-      }, 1000);
-
-      return () => clearTimeout(salvareCos);
+    if (!dateClient.judet) {
+      setListaLocalitatiFiltrate([]);
+      return;
     }
-  }, [dateClient.telefon, dateClient.nume, totalCheckout]);
+
+    const fetchLocalitati = async () => {
+      try {
+        const res = await fetch(`/localitati.json?t=${new Date().getTime()}`); 
+        if (!res.ok) throw new Error("Serverul nu a găsit fișierul localitati.json");
+        
+        const toateLocalitatile = await res.json();
+        
+        // 🔥 MAGIA: Funcție care șterge diacriticele (ă, î, ș, ț, â) ca să compare corect!
+        const eliminaDiacritice = (str) => {
+          return str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : '';
+        };
+
+        const filtrate = toateLocalitatile.filter(loc => {
+          const judetDinDate = loc.county_name || '';
+          // Comparăm ignorând diacriticele și literele mari/mici
+          return eliminaDiacritice(judetDinDate) === eliminaDiacritice(dateClient.judet);
+        });
+        
+        filtrate.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        setListaLocalitatiFiltrate(filtrate);
+
+      } catch (err) {
+        console.error("❌ Eroare la încărcarea localităților:", err.message);
+      }
+    };
+
+    fetchLocalitati();
+  }, [dateClient.judet]);
 
   const renderStele = (rating, interactive = false) => {
     return [...Array(5)].map((_, i) => (
