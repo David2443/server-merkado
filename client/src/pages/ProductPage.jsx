@@ -369,7 +369,7 @@ const ProductPage = () => {
     setLoadingLockers(false);
   };
 
-  // 🇷🇴 HOOK PENTRU LOCALITĂȚI (Curățat de bug-uri și bucle infinite)
+  // 🇷🇴 HOOK PENTRU LOCALITĂȚI (Adaptat pentru fișier de tip OBIECT)
   useEffect(() => {
     if (!dateClient.judet) {
       setListaLocalitatiFiltrate([]);
@@ -381,11 +381,20 @@ const ProductPage = () => {
         const res = await fetch(`/localitati.json?t=${new Date().getTime()}`); 
         if (!res.ok) throw new Error("Serverul nu a găsit fișierul localitati.json");
         
-        const toateLocalitatile = await res.json();
+        const dateRaw = await res.json();
         
-        const filtrate = toateLocalitatile.filter(loc => {
+        // 🔥 AICI ERA PROBLEMA: Convertim OBIECTUL tău cu numere într-o LISTĂ normală
+        const arrayLocalitati = Array.isArray(dateRaw) ? dateRaw : Object.values(dateRaw);
+        
+        // Funcție care elimină diacriticele pentru comparație perfectă
+        const eliminaDiacritice = (str) => {
+          return str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : '';
+        };
+
+        // Acum putem filtra liniștiți
+        const filtrate = arrayLocalitati.filter(loc => {
           const judetDinDate = loc.county_name || '';
-          return judetDinDate.toLowerCase() === dateClient.judet.toLowerCase();
+          return eliminaDiacritice(judetDinDate) === eliminaDiacritice(dateClient.judet);
         });
         
         filtrate.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
