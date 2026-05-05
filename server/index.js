@@ -798,7 +798,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
 
 app.get('/api/dashboard', verifyAdmin, async (req, res) => {
   try {
-    const { range } = req.query;
+    const { range, startDate, endDate } = req.query; // Adăugat startDate și endDate aici
     const tz = 'Europe/Bucharest'; 
     
     // Inițializăm filtrele goale (care vor aduce TOATE datele dacă range === 'all')
@@ -810,7 +810,11 @@ app.get('/api/dashboard', verifyAdmin, async (req, res) => {
     if (range !== 'all') {
       let dataStart, dataEnd;
 
-      if (range === 'today') {
+      if (range === 'custom' && startDate && endDate) {
+        // 🔥 AICI E MAGIA PENTRU INTERVALUL TĂU PERSONALIZAT
+        dataStart = moment.tz(startDate, tz).startOf('day').toDate();
+        dataEnd = moment.tz(endDate, tz).endOf('day').toDate();
+      } else if (range === 'today') {
         dataStart = moment.tz(tz).startOf('day').toDate();
         dataEnd = moment.tz(tz).endOf('day').toDate();
       } else if (range === 'yesterday') {
@@ -871,7 +875,7 @@ app.get('/api/dashboard', verifyAdmin, async (req, res) => {
         platiInAsteptare: platiAsteptare,
         viziteTotale: viziteReale 
       },
-      // Am scos acel .slice(0, 15) ca să îți aducă toate comenzile pentru exportul Excel!
+      // Va trimite fix comenzile pe care le-ai cerut din frontend
       comenziRecente: comenziPerioada, 
       cosuriAbandonate: cosuriAbandonate,
       produseTop: produseTop.map(p => ({ nume: p._id || 'Produs', vanzari: p.vanzari, venit: p.venit })),
