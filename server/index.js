@@ -212,57 +212,64 @@ const trimiteEmail = async (to, subject, htmlContent) => {
 };
 
 // ==========================================
-// 📦 1. FUNCȚIE TRIMITERE AUTOMATĂ ÎN EAWB (Cu Suport Locker & Token ENV)
+// 📦 1. FUNCȚIE TRIMITERE AUTOMATĂ ÎN EAWB 
 // ==========================================
 const trimiteInEawb = async (comanda) => {
   try {
+    // 🔥 BLOCAJ ANTI-BUCUREȘTI: Dacă nu are localitate, oprim tot!
+    if (!comanda.localitate || !comanda.judet || comanda.localitate === "-" || comanda.judet === "-") {
+      console.error(`❌ Eroare AWB: Comanda ${comanda._id} nu are o localitate sau un județ valid salvat.`);
+      return; // Ne oprim aici, nu trimitem nicio cerere la curier
+    }
+
     const isPlataCard = comanda.metodaPlata && comanda.metodaPlata.toLowerCase().includes('card');
     const rambursDeIncasat = isPlataCard ? 0 : (Number(comanda.total) || 0);
     const isLocker = comanda.tipLivrare === 'locker';
 
-    // 🏗️ Construim destinația (Clientul)
     const adresaDestinatie = {
       email: comanda.email || "no-reply@client.ro",
       phone: comanda.telefon || "0000000000",
       contact: comanda.numeClient || "Client",
       country_code: "RO",
       postal_code: "000000",
-      locality_name: comanda.localitate || "Bucuresti",
-      county_name: comanda.judet || "Bucuresti",
+      locality_name: comanda.localitate, // STRICT ce e în bază
+      county_name: comanda.judet,        // STRICT ce e în bază
       street_name: comanda.adresa || "-",
       street_number: "1" 
     };
 
     if (isLocker) {
-      // Dacă clientul vrea la Locker, îi punem ID-ul ales de el
+      if (!comanda.samedayLockerId) {
+         console.error(`❌ Eroare AWB: Comanda locker ${comanda._id} nu are salvat ID-ul lockerului destinație.`);
+         return;
+      }
       adresaDestinatie.fixed_location_id = parseInt(comanda.samedayLockerId) || 0; 
     }
 
-    // 🔥 SETĂRILE TALE EXCLUSIVE PENTRU FAN COURIER DROP-OFF
-    const curierFANCourier = 3; 
-    const serviciuLockerLaUsa = 3;    // Tu lași în FANbox -> Curierul duce la ușa clientului
-    const serviciuLockerLaLocker = 4; // Tu lași în FANbox -> Curierul duce în FANbox-ul clientului
+    const CARRIER_FAN = 3; 
+    const SERVICE_LOCKER_TO_HOME = 3;   // Tu lași în Locker, se duce Acasă
+    const SERVICE_LOCKER_TO_LOCKER = 4; // Tu lași în Locker, se duce în Locker
     
-    // ⚠️ IMPORTANT: Trebuie să pui ID-ul FANbox-ului de la tine din cartier!
-    // Află ID-ul locker-ului tău preferat (prin API sau din contul Europarcel) și pune-l aici:
-    const FANBOX_UL_MEU_PENTRU_PRELUARE = 123456; 
+    // Locker-ul tău de predare
+    const FANBOX_PREDARE_ID = 491265; 
+    const LOCALITY_PREDARE_ID = 1407;
 
     const payloadEAWB = {
-      carrier_id: curierFANCourier, 
-      service_id: isLocker ? serviciuLockerLaLocker : serviciuLockerLaUsa, 
+      carrier_id: CARRIER_FAN, 
+      // Aici aplicăm regula fixată din tabelul tău
+      service_id: isLocker ? SERVICE_LOCKER_TO_LOCKER : SERVICE_LOCKER_TO_HOME, 
       billing_to: {
-        billing_address_id: 279010 // Facturare Merkado
+        billing_address_id: 279010 
       },
-      // 📦 De unde pleacă coletul (Locker-ul tău)
       address_from: {
         email: "contact@merkado.ro", 
         phone: "0700000000",       
         contact: "Merkado", 
         country_code: "RO",
-        locality_id: 10241, // ID Localitate București (Schimbă dacă ești din alt oraș)
-        fixed_location_id: FANBOX_UL_MEU_PENTRU_PRELUARE, // 👈 Asta îți dă ție codul PIN să lași coletul
-        street_name: "-", // Prevenim erorile Europarcel
-        street_number: "-"
+        locality_id: LOCALITY_PREDARE_ID, 
+        fixed_location_id: FANBOX_PREDARE_ID, 
+        street_name: "Str. Augustin Z.N. Pop",
+        street_number: "1"
       },
       address_to: adresaDestinatie, 
       content: {
@@ -292,7 +299,6 @@ const trimiteInEawb = async (comanda) => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        // 🔥 CHEIA E ACUM LUATĂ DIN ENVIRONMENT VARIABLES!
         'X-API-Key': process.env.EUROPARCEL_API_KEY 
       },
       body: JSON.stringify(payloadEAWB)
@@ -301,15 +307,14 @@ const trimiteInEawb = async (comanda) => {
     const rezultat = await raspuns.json();
 
     if (raspuns.ok) {
-      console.log(`🚀 AWB Generat Automat [${isLocker ? 'LOCKER' : 'CURIER'}] pentru: ${comanda.numeClient}`);
+      console.log(`🚀 AWB Generat Automat [${isLocker ? 'LOCKER-TO-LOCKER' : 'LOCKER-TO-HOME'}] pt: ${comanda.numeClient}`);
     } else {
-      console.error(`❌ Eroare eAWB Automat (${isLocker ? 'Locker' : 'Curier'}):`, rezultat);
+      console.error(`❌ Eroare eAWB Automat:`, rezultat);
     }
   } catch (eroare) {
     console.error("❌ Eroare conexiune eAWB:", eroare.message);
   }
 };
-
 const trimiteTelegram = async (mesaj) => {
   const token = process.env.TELEGRAM_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -631,7 +636,7 @@ app.post('/api/admin/login', loginLimiter, (req, res) => {
 
 
 // ==========================================
-// 📦 2. GENERARE MANUALĂ AWB DIN ADMIN (Cu Suport Locker & Token ENV)
+// 📦 2. GENERARE MANUALĂ AWB DIN ADMIN 
 // ==========================================
 app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
   try {
@@ -643,47 +648,57 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       return res.status(400).json({ eroare: `Această comandă are deja AWB-ul: ${comanda.awb}` });
     }
 
+    // 🔥 BLOCAJ ANTI-BUCUREȘTI: Trimitem eroare direct în interfața de Admin
+    if (!comanda.localitate || !comanda.judet || comanda.localitate === "-" || comanda.judet === "-") {
+      return res.status(400).json({ 
+        eroare: "⚠️ Eroare adresă: Comanda nu are o localitate sau un județ valid! Te rugăm să editezi manual comanda și să pui un oraș real înainte de a genera AWB-ul." 
+      });
+    }
+
     const isPlataCard = comanda.metodaPlata && comanda.metodaPlata.toLowerCase().includes('card');
     const rambursDeIncasat = isPlataCard ? 0 : Number(comanda.total);
     const isLocker = comanda.tipLivrare === 'locker';
 
-    // 1. Construim adresa (peste tot trebuie stradă și oraș ca să nu plângă serverul)
     const adresaDestinatie = {
       email: comanda.email || "no-reply@client.ro",
       phone: comanda.telefon || "0000000000",
       contact: comanda.numeClient || "Client",
       country_code: "RO",
       postal_code: "000000",
-      locality_name: comanda.localitate || "Bucuresti",
-      county_name: comanda.judet || "Bucuresti",
+      locality_name: comanda.localitate, 
+      county_name: comanda.judet,        
       street_name: comanda.adresa || "-",
-      street_number: "1" // Am pus 1 în loc de cratimă pentru siguranță
+      street_number: "1"
     };
 
     if (isLocker) {
+      if (!comanda.samedayLockerId) {
+        return res.status(400).json({ eroare: "Comanda este de tip Locker, dar nu are salvat ID-ul Lockerului destinație!" });
+      }
       adresaDestinatie.fixed_location_id = parseInt(comanda.samedayLockerId) || 0; 
     }
 
-    // 🔥 AICI E SECRETUL:
-    // Trebuie să afli de la Europarcel care e ID-ul serviciului pentru Lockere.
-    // În documentația ta, FAN Courier avea ID-ul 3. Presupunem că Serviciul de Locker e 2 sau 3.
-    const curierLockerId = 3;   // ID-ul firmei de curierat (ex: 3 pt FAN)
-    const serviciuLockerId = 2; // ⚠️ AICI S-AR PUTEA SĂ TREBUIASCĂ SĂ SCHIMBI (întreabă la Europarcel ce ID are serviciul Easybox/Fanbox)
+    const CARRIER_FAN = 3; 
+    const SERVICE_LOCKER_TO_HOME = 3; 
+    const SERVICE_LOCKER_TO_LOCKER = 4;
+    
+    const FANBOX_PREDARE_ID = 491265; 
+    const LOCALITY_PREDARE_ID = 1407;
 
     const payloadEAWB = {
-      carrier_id: isLocker ? curierLockerId : 1, 
-      service_id: isLocker ? serviciuLockerId : 1, 
+      carrier_id: CARRIER_FAN, 
+      service_id: isLocker ? SERVICE_LOCKER_TO_LOCKER : SERVICE_LOCKER_TO_HOME, 
       billing_to: {
         billing_address_id: 279010 
       },
-      // ... (restul rămâne la fel: address_from, content, extra etc)
       address_from: {
         email: "contact@merkado.ro", 
         phone: "0700000000",       
         contact: "Merkado", 
         country_code: "RO",
-        locality_id: 10241, 
-        street_name: "Strada ta",
+        locality_id: LOCALITY_PREDARE_ID, 
+        fixed_location_id: FANBOX_PREDARE_ID, 
+        street_name: "Str. Augustin Z.N. Pop",
         street_number: "1"
       },
       address_to: adresaDestinatie, 
@@ -713,7 +728,6 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 🔥 CHEIA E ACUM LUATĂ DIN ENVIRONMENT VARIABLES!
         'X-API-Key': process.env.EUROPARCEL_API_KEY
       },
       body: JSON.stringify(payloadEAWB)
@@ -735,7 +749,7 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     comanda.status = 'Expediată'; 
     await comanda.save();
 
-    res.json({ success: true, awb: numarAWBGenerat, mesaj: "AWB Generat cu succes!" });
+    res.json({ success: true, awb: numarAWBGenerat, mesaj: `AWB Generat (${isLocker ? 'Locker' : 'Acasă'}) cu succes!` });
 
   } catch (err) {
     console.error("❌ Eroare server fatală la AWB:", err);
