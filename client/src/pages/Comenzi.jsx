@@ -3,7 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { 
   FiEdit2, FiCheckCircle, FiX, FiPhoneCall, 
   FiShoppingBag, FiAlertCircle, FiCalendar, FiChevronDown,
-  FiSearch, FiPlusSquare, FiTruck, FiBox, FiCreditCard
+  FiSearch, FiPlusSquare, FiTruck, FiBox, FiCreditCard,
+  FiDownload, FiTrash2
 } from 'react-icons/fi';
   
 import './Comenzi.css'; 
@@ -17,11 +18,12 @@ const AdminComenzi = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [range, setRange] = useState('last30'); 
   const [showDropdown, setShowDropdown] = useState(false);
-  const [confirmModal, setConfirmModal] = useState({ isOpen: false, id: null });
+  
+  // Am adăugat acțiunea pentru tipul de confirmare (anulare vs stergere)
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, id: null, type: '' });
   const [editModal, setEditModal] = useState({ isOpen: false, type: '', item: null });
   const [formData, setFormData] = useState({});
 
-  // 🛎️ UNICUL Sistem de Notificări Smart (Toast)
   const [toast, setToast] = useState(null);
 
   const arataToast = (tip, mesaj) => {
@@ -33,8 +35,9 @@ const AdminComenzi = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+  // 1. Am adăugat opțiunea 'Toate datele'
   const rangeLabels = {
-    today: 'Azi', yesterday: 'Ieri', last7: 'Ultimele 7 zile', last30: 'Ultimele 30 de zile'
+    today: 'Azi', yesterday: 'Ieri', last7: 'Ultimele 7 zile', last30: 'Ultimele 30 de zile', all: 'Toate datele'
   };
 
   const delogareSilentioasa = () => {
@@ -53,7 +56,6 @@ const AdminComenzi = () => {
     }
 
     try {
-      // 📦 1. Tragem Comenzile și Draft-urile
       const resComenzi = await fetch(`${API_URL}/api/dashboard?range=${range}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -69,7 +71,6 @@ const AdminComenzi = () => {
         setDrafts(dataComenzi.cosuriAbandonate || []);
       }
 
-      // 🛒 2. Tragem Produsele pentru Dropdown-ul din Modal
       try {
         const resProduse = await fetch(`${API_URL}/api/produse`, {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -79,19 +80,10 @@ const AdminComenzi = () => {
           const dataProduse = await resProduse.json();
           setProduse(dataProduse || []);
         } else {
-          setProduse([
-            { _id: 'test1', nume: 'Tricou Super Bombă' },
-            { _id: 'test2', nume: 'Adidași Premium' },
-            { _id: 'test3', nume: 'Ceas Șmecher' }
-          ]);
+          setProduse([]);
         }
       } catch (errProduse) {
         console.error("Eroare la fetch produse:", errProduse);
-        setProduse([
-          { _id: 'test1', nume: 'Tricou Super Bombă' },
-          { _id: 'test2', nume: 'Adidași Premium' },
-          { _id: 'test3', nume: 'Ceas Șmecher' }
-        ]);
       }
 
     } catch (err) { 
@@ -101,7 +93,6 @@ const AdminComenzi = () => {
     setIsLoading(false);
   };
 
-  // Efect apelat automat la încărcarea paginii sau schimbarea datei
   useEffect(() => { 
     fetchData(); 
   }, [range]);
@@ -118,7 +109,6 @@ const AdminComenzi = () => {
     }
   }, [comenzi]);
 
-  // Funcția de generare AWB
   const genereazaAWB = async (idComanda) => {
     const confirmare = window.confirm("Ești sigur că vrei să generezi AWB-ul pentru această comandă?");
     if (!confirmare) return;
@@ -157,6 +147,52 @@ const AdminComenzi = () => {
       (item.adresa?.toLowerCase().includes(term))
     );
   });
+
+  // 2. Funcția de Export în CSV
+  const exportaCSV = () => {
+    if (listaFiltrata.length === 0) {
+      arataToast('error', 'Nu există comenzi de exportat în lista curentă.');
+      return;
+    }
+
+    // Header-urile fișierului CSV
+    const headers = ['Data', 'Nume Client', 'Telefon', 'Email', 'Produs', 'Cantitate', 'Total (Lei)', 'Metoda Plata', 'Tip Livrare', 'Adresa', 'Localitate', 'Judet', 'Status', 'Sursa', 'AWB'];
+    
+    // Extragem valorile pentru fiecare comandă
+    const rows = listaFiltrata.map(c => [
+      new Date(c.createdAt || c.updatedAt).toLocaleDateString('ro-RO'),
+      `"${c.numeClient || c.nume || ''}"`,
+      `"${c.telefon || ''}"`,
+      `"${c.email || ''}"`,
+      `"${c.numeProdus || c.produs || ''}"`,
+      c.cantitate || 1,
+      c.total || c.totalComanda || c.pret || 0,
+      `"${c.metodaPlata || ''}"`,
+      `"${c.tipLivrare || ''}"`,
+      `"${c.adresa || ''}"`,
+      `"${c.localitate || ''}"`,
+      `"${c.judet || ''}"`,
+      `"${c.status || ''}"`,
+      `"${c.sursa || ''}"`,
+      `"${c.awb || ''}"`
+    ]);
+
+    // Formatăm conținutul (cu uFEFF pentru suport diacritice românești)
+    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
+      + headers.join(',') + '\n' 
+      + rows.map(e => e.join(',')).join('\n');
+
+    // Declanșăm descărcarea
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Export_Comenzi_${range}_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    arataToast('success', 'Fișierul a fost descărcat cu succes!');
+  };
 
   const openEditModal = (item, type) => {
     setFormData(item);
@@ -236,8 +272,6 @@ const AdminComenzi = () => {
 
   const actualizeazaStatus = async (id, statusNou) => {
     const token = localStorage.getItem('adminToken');
-    
-    // UPDATE OPTIMIST (schimbare instantanee vizuală)
     setComenzi(prevComenzi => 
       prevComenzi.map(c => c._id === id ? { ...c, status: statusNou } : c)
     );
@@ -278,12 +312,42 @@ const AdminComenzi = () => {
       if (res.status === 401 || res.status === 403) { delogareSilentioasa(); return; }
       if(res.ok) {
         arataToast('success', "Comandă anulată cu succes!");
-        setConfirmModal({ isOpen: false, id: null });
+        setConfirmModal({ isOpen: false, id: null, type: '' });
         setEditModal({ isOpen: false, type: '', item: null });
         fetchData();
       }
     } catch (err) { 
       arataToast('error', "Eroare server la anulare!"); 
+    }
+  };
+
+  // 3. Funcția pentru ștergere definitivă
+  const executeStergereDefinitiva = async () => {
+    const token = localStorage.getItem('adminToken');
+    try {
+      // Diferențiem dacă e comandă validă sau draft pentru a apela endpoint-ul corect
+      const endpoint = editModal.type === 'draft' 
+        ? `${API_URL}/api/comenzi/abandonat/${confirmModal.id}` 
+        : `${API_URL}/api/comenzi/${confirmModal.id}`;
+
+      const res = await fetch(endpoint, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (res.status === 401 || res.status === 403) { delogareSilentioasa(); return; }
+      
+      if(res.ok) {
+        arataToast('success', "Comandă ștearsă complet din baza de date!");
+        setConfirmModal({ isOpen: false, id: null, type: '' });
+        setEditModal({ isOpen: false, type: '', item: null });
+        fetchData();
+      } else {
+        const data = await res.json();
+        arataToast('error', data.eroare || "Eroare la ștergere!");
+      }
+    } catch (err) { 
+      arataToast('error', "Eroare server la ștergere definitivă!"); 
     }
   };
 
@@ -305,9 +369,9 @@ const AdminComenzi = () => {
       return { text: 'Facebook', bg: '#dbeafe', color: '#2563eb', border: '#bfdbfe' };
     }
     if (s.includes('tine') || s.includes('admin')) {
-      return { text: 'Creată de tine', bg: '#f3e8ff', color: '#9333ea', border: '#e9d5ff' };
+      return { text: 'Creată de Admin', bg: '#f3e8ff', color: '#9333ea', border: '#e9d5ff' };
     }
-    return { text: 'Organic / Google', bg: '#dcfce7', color: '#16a34a', border: '#bbf7d0' };
+    return { text: 'Organic / Direct', bg: '#dcfce7', color: '#16a34a', border: '#bbf7d0' };
   };
 
   if (isLoading) return <div className="ac-loader"><div className="ac-spinner"></div></div>;
@@ -316,7 +380,7 @@ const AdminComenzi = () => {
     <div className="ac-container">
       
       <div className="ac-header-bar">
-        <div className="ac-header-left">
+        <div className="ac-header-left" style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
           <h1 className="ac-page-title">Gestionare Comenzi</h1>
           <button 
             className="ac-btn-new-order" 
@@ -329,6 +393,18 @@ const AdminComenzi = () => {
             }, 'creare')}
           >
             <FiPlusSquare /> Comandă Nouă
+          </button>
+
+          {/* Butonul nou de export */}
+          <button 
+            onClick={exportaCSV}
+            style={{ 
+              display: 'flex', alignItems: 'center', gap: '5px', background: '#10b981', 
+              color: 'white', border: 'none', padding: '10px 16px', borderRadius: '8px', 
+              fontWeight: '600', cursor: 'pointer', fontSize: '0.9rem' 
+            }}
+          >
+            <FiDownload /> Exportă CSV
           </button>
         </div>
         
@@ -388,20 +464,16 @@ const AdminComenzi = () => {
             <tbody>
               {listaFiltrata.map((item) => (
                 <tr key={item._id} className={item.status === 'Anulată' ? 'ac-row-cancelled' : ''}>
-                  
-                  {/* 1. DATĂ */}
                   <td data-label="Dată">
                     {new Date(item.createdAt || item.updatedAt).toLocaleDateString('ro-RO')}
                   </td>
                   
-                  {/* 2. CLIENT */}
                   <td data-label="Client">
                     <div className="ac-truncate ac-fw-medium">{item.numeClient || '-'}</div>
                     <div style={{ color: '#475569', fontSize: '0.85rem' }}>{item.telefon}</div>
                     {item.email && <div className="ac-truncate" style={{ color: '#64748b', fontSize: '0.8rem' }}>{item.email}</div>}
                   </td>
                   
-                  {/* 3. COMANDĂ */}
                   <td data-label="Comandă">
                     <div className="ac-truncate ac-fw-medium">{item.numeProdus || 'Produs Magazin'}</div>
                     <span style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', color: '#475569', fontWeight: 'bold' }}>
@@ -409,7 +481,6 @@ const AdminComenzi = () => {
                     </span>
                   </td>
 
-                  {/* 4. PLATĂ & LIVRARE */}
                   <td data-label="Plată & Livrare">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.9rem', color: '#0f172a', fontWeight: '500' }}>
                       {item.metodaPlata?.toLowerCase().includes('card') ? <FiCreditCard style={{color: '#10b981'}}/> : <FiTruck style={{color: '#3b82f6'}}/>}
@@ -420,7 +491,6 @@ const AdminComenzi = () => {
                     </div>
                   </td>
 
-                  {/* 5. STATUS */}
                   {activeTab === 'comenzi' && (
                     <td data-label="Status">
                       <select 
@@ -443,7 +513,6 @@ const AdminComenzi = () => {
                     </td>
                   )}
 
-                  {/* 6. SURSĂ TRAFIC */}
                   <td data-label="Sursă Trafic">
                     {(() => {
                       const stilSursa = getSursaBadge(item.sursa);
@@ -464,22 +533,36 @@ const AdminComenzi = () => {
                     })()}
                   </td>
 
-                  {/* 7. TOTAL */}
                   <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938', fontWeight: 'bold' }}>
                     {item.total || item.totalComanda} Lei
                   </td>
                   
-                  {/* 8. ACȚIUNI */}
+                  {/* 4. Butoane AWB modificate */}
                   <td data-label="Acțiuni" className="text-right" style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
                     
                     {!item.awb ? (
                       <button onClick={() => genereazaAWB(item._id)} style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        📦 AWB
+                        📦 Generare AWB
                       </button>
                     ) : (
-                      <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '6px 10px', borderRadius: '6px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        ✅ {item.awb}
-                      </span>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+                        <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          ✅ {item.awb}
+                        </span>
+                        {/* Butonul de regenerare AWB, estompat, care se aprinde doar pe hover */}
+                        <button 
+                          onClick={() => genereazaAWB(item._id)} 
+                          style={{ 
+                            background: '#f8fafc', color: '#94a3b8', border: '1px dashed #cbd5e1', 
+                            padding: '2px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', 
+                            opacity: '0.7', transition: 'all 0.2s' 
+                          }} 
+                          onMouseOver={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = '#3b82f6'; e.currentTarget.style.borderColor = '#3b82f6'; }} 
+                          onMouseOut={(e) => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = '#cbd5e1'; }}
+                        >
+                          🔄 Regenerează
+                        </button>
+                      </div>
                     )}
 
                     <button onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')} className="ac-btn-edit">
@@ -602,32 +685,55 @@ const AdminComenzi = () => {
                 </button>
               )}
 
-              {editModal.type === 'comanda' && formData.status !== 'Anulată' && (
-                <button onClick={() => setConfirmModal({isOpen: true, id: formData._id})} className="ac-btn-cancel-order">
-                  Anulează Comanda
-                </button>
+              {/* Butoanele pentru Anulare și Ștergere Definitivă */}
+              {(editModal.type === 'comanda' || editModal.type === 'draft') && (
+                <div style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
+                  {editModal.type === 'comanda' && formData.status !== 'Anulată' && (
+                    <button onClick={() => setConfirmModal({isOpen: true, id: formData._id, type: 'anulare'})} className="ac-btn-cancel-order">
+                      Anulează Comanda
+                    </button>
+                  )}
+                  
+                  {/* Buton Nou - Ștergere completă */}
+                  <button 
+                    onClick={() => setConfirmModal({isOpen: true, id: formData._id, type: 'stergere'})} 
+                    style={{ background: '#ef4444', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold' }}
+                  >
+                    <FiTrash2 /> Șterge Definitiv
+                  </button>
+                </div>
               )}
             </div>
           </div>
         </div>
       )}
 
+      {/* Modal comun de confirmare (Anulare sau Ștergere) */}
       {confirmModal.isOpen && (
         <div className="ac-modal-overlay">
           <div className="ac-modal-content" style={{maxWidth: '400px'}}>
              <div style={{padding: '30px', textAlign: 'center'}}>
                <FiAlertCircle size={50} color="#ef4444" style={{marginBottom: '15px'}} />
-               <h3 style={{marginBottom: '20px', color: '#0f172a'}}>Ești sigur că anulezi comanda?</h3>
+               <h3 style={{marginBottom: '20px', color: '#0f172a'}}>
+                 {confirmModal.type === 'stergere' 
+                   ? 'Atenție! Comanda va fi ștearsă COMPLET din baza de date. Acțiunea este ireversibilă!' 
+                   : 'Ești sigur că anulezi comanda?'}
+               </h3>
                <div style={{display: 'flex', gap: '10px'}}>
-                 <button className="ac-btn-cancel-order" style={{flex: 1}} onClick={() => setConfirmModal({isOpen: false})}>Înapoi</button>
-                 <button className="ac-btn-save" style={{flex: 1, background: '#ef4444', boxShadow: 'none'}} onClick={executeAnulare}>Da, anulează</button>
+                 <button className="ac-btn-cancel-order" style={{flex: 1}} onClick={() => setConfirmModal({isOpen: false, id: null, type: ''})}>Înapoi</button>
+                 <button 
+                   className="ac-btn-save" 
+                   style={{flex: 1, background: '#ef4444', boxShadow: 'none'}} 
+                   onClick={confirmModal.type === 'stergere' ? executeStergereDefinitiva : executeAnulare}
+                 >
+                   {confirmModal.type === 'stergere' ? 'Da, șterge definitiv' : 'Da, anulează'}
+                 </button>
                </div>
              </div>
           </div>
         </div>
       )}
 
-      {/* 🛎️ RENDER UNIC NOTIFICĂRI SMART */}
       {toast && (
         <div className="admin-toast-container">
           <div className={`admin-toast ${toast.tip}`}>
