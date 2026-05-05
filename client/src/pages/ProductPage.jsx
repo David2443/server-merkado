@@ -775,42 +775,87 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
           </div>
         </div>
 
-        <div className="dynamic-content">
+       <div className="dynamic-content">
           {sectiuniActive.map((sec, idx) => (
             <div key={idx} className="builder-section">
-              {(!sec.tip || sec.tip === 'text_imagine') && (
-                <div className="info-block">
+              
+              {/* 1. MODUL: TEXT ȘI IMAGINE */}
+              {sec.tip === 'text_imagine' && (
+                <div className={`info-block aliniere-${sec.aliniere || 'stanga'}`}>
                   {sec.titlu && <h2>{sec.titlu}</h2>}
-                  {sec.text && <p>{sec.text}</p>}
-                  {sec.imagineUrl && <img src={sec.imagineUrl} alt={`${sec.titlu} - ${produs.nume}`} className="info-img" />}
+                  <div className="info-content-flex">
+                    {sec.text && <p>{sec.text}</p>}
+                    {sec.imagineUrl && <img src={sec.imagineUrl} alt={sec.titlu} className="info-img" />}
+                  </div>
                 </div>
               )}
 
-              {sec.tip === 'beneficii_grid' && (
-                <div className="procente-container">
-                  {sec.titlu && <h2>{sec.titlu}</h2>}
-                  {sec.beneficii?.map((b, i) => {
-                    const match = b.text.match(/^(\d+)%(.*)/);
-                    const proc = match ? match[1] : "99";
-                    const text = match ? match[2] : b.text;
-                    return (
-                      <div key={i} className="procent-item">
-                        <div className="procent-header">
-                          <span>{text}</span>
-                          <span className="procent-valoare">{proc}%</span>
-                        </div>
-                        <div className="procent-bar-bg">
-                          <div className="procent-bar-fill" style={{ width: `${proc}%`, background: i % 2 === 0 ? 'linear-gradient(90deg, #3b82f6, #60a5fa)' : 'linear-gradient(90deg, #10b981, #34d399)' }}></div>
-                        </div>
-                      </div>
-                    );
-                  })}
+              {/* 2. MODUL: TABEL COMPARATIV DINAMIC */}
+              {sec.tip === 'tabel_comparativ' && (
+                <div className="comparison-block dynamic-table-sec">
+                  <h2 className="comparatie-text" style={{ color: '#ffffff', marginBottom: '20px' }}>
+                    {sec.titlu || "De ce să alegi produsul nostru"}
+                  </h2>
+                  <table className="comp-table">
+                    <thead>
+                      <tr>
+                        <th style={{ color: '#000' }}>Caracteristici</th>
+                        <th style={{ color: '#000' }}>NOI</th>
+                        <th style={{ color: '#000' }}>ALȚII</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sec.randuri?.map((r, ri) => (
+                        <tr key={ri}>
+                          <td className="comparatie-text">{r.text}</td>
+                          <td>{r.noi ? <FiCheck className="c-green" /> : <FiX style={{ color: '#ff4d4d' }} />}</td>
+                          <td>{r.altii ? <FiCheck className="c-green" /> : <FiX style={{ color: '#ff4d4d' }} />}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
+
+              {/* 3. MODUL: BENEFICII CU PROCENTE (CERCURI) */}
+              {sec.tip === 'beneficii_procente' && (
+                <div className="procente-container dynamic-procente-sec">
+                  {sec.titlu && <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>{sec.titlu}</h2>}
+                  <div className="procente-flex-grid">
+                    {sec.puncte?.map((p, pi) => (
+                      <div key={pi} className="procent-circle-item">
+                        <div className="circle-wrap">
+                          <svg viewBox="0 0 36 36" className="circular-chart">
+                            <path className="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path className="circle" strokeDasharray={`${p.val}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <text x="18" y="20.35" className="percentage">{p.val}%</text>
+                          </svg>
+                        </div>
+                        <p className="procent-desc">{p.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 4. MODUL: VIDEO YOUTUBE */}
+              {sec.tip === 'video_promo' && sec.videoUrl && (
+                <div className="video-section-wrapper">
+                  {sec.titlu && <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>{sec.titlu}</h2>}
+                  <div className="video-responsive-container">
+                    <iframe 
+                      src={`https://www.youtube.com/embed/${sec.videoUrl.split('v=')[1]?.split('&')[0] || sec.videoUrl.split('/').pop()}`}
+                      title="Product Video"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                </div>
+              )}
+
             </div>
           ))}
-
-          
         </div>
 
         <div className="customer-reviews-section">
