@@ -374,36 +374,76 @@
   background: var(--orange); color: white; border: none; padding: 15px 35px; border-radius: 100px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(240, 90, 40, 0.3);
 }
 .btn-reset:hover { background: #ea580c; transform: translateY(-3px); }
-
 /* ==========================================
-   📱 RESPONSIVE MOBIL
+   📱 FIX: 2 PRODUSE PE RÂND PE TELEFON (FĂRĂ CARUSEL)
    ========================================== */
-@media (max-width: 1000px) {
-  .shop-toolbar {
-    flex-direction: column;
-    margin: -30px 20px 40px;
-    padding: 20px;
-  }
-  .search-box { max-width: 100%; }
-  .filter-group { width: 100%; flex-direction: column; }
-  .filter-item { width: 100%; }
-  .filter-item select { width: 100%; }
-}
-
-@media (max-width: 900px) {
-  .shop-page-wrapper { padding-top: 0px !important; }
-  .shop-hero h1 { font-size: 2.5rem; }
-  
-  .shop-products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
-  }
-  
-  .shop-card-body { padding: 20px 15px; }
-  .current { font-size: 1.4rem; }
-  .shop-cart-btn { width: 45px; height: 45px; }
-}
-
 @media (max-width: 500px) {
-  .shop-products-grid { grid-template-columns: 1fr; } /* Pe iPhone intră 1 card pe rând, mare și clar */
+  
+  /* 1. Forțăm Grid-ul să aibă 2 coloane egale */
+  .shop-products-grid { 
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* Fix 2 produse pe rând */
+    gap: 12px !important; /* Spațiu mai mic între ele ca să încapă perfect */
+  }
+
+  /* 2. Ajustăm cardul să arate premium chiar dacă e micșorat */
+  .shop-card {
+    border-radius: 16px !important;
+  }
+  
+  .shop-card-img {
+    padding: 8px !important;
+    border-radius: 16px 16px 0 0 !important;
+  }
+
+  .shop-card-body { 
+    padding: 12px 10px !important; 
+  }
+
+  /* 3. Micșorăm textele ca să nu iasă din chenar */
+  .shop-cat-label {
+    font-size: 0.65rem !important;
+    margin-bottom: 5px !important;
+  }
+
+  .shop-card-body h3 {
+    font-size: 0.85rem !important; /* Titlu micuț cu max 2 rânduri */
+    line-height: 1.2 !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* 4. Ascundem steluțele de recenzii pe mobil să facem loc (opțional, dar arată mai curat) */
+  .shop-rating {
+    display: none !important; 
+  }
+
+  /* 5. Ajustăm secțiunea de preț și butonul de coș */
+  .shop-price-box {
+    flex-direction: column !important; /* Punem coșul sub preț sau le înghesuim elegant */
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .current { 
+    font-size: 1.1rem !important; 
+  }
+  
+  .old {
+    font-size: 0.75rem !important;
+  }
+
+  .shop-cart-btn { 
+    width: 100% !important; /* Facem butonul de coș să fie bară subțire sub preț */
+    height: 36px !important; 
+    border-radius: 10px !important;
+    font-size: 1rem !important;
+  }
+  
+  /* Reducem dimensiunea etichetelor roșii ("TOP") */
+  .shop-badge {
+    top: 10px !important;
+    left: 10px !important;
+    padding: 4px 8px !important;
+    font-size: 0.65rem !important;
+  }
 }
