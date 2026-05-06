@@ -1203,3 +1203,33 @@ select.checkout-input {
     text-align: left !important;
   }
 }
+/* ==========================================
+   🖼️ FIX: FORMAT PĂTRAT (1080x1080) PENTRU IMAGINI PRODUS
+   ========================================== */
+
+/* 1. Pentru containerul caruselului (când sunt mai multe poze) */
+.product-carousel-main {
+  width: 100% !important;
+  height: auto !important; /* Anulăm înălțimea fixă care deforma chenarul */
+  aspect-ratio: 1 / 1 !important; /* Forțează formatul PĂTRAT 1:1 indiferent de ecran */
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 2. Pentru imaginea din carusel */
+.carousel-main-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important; /* Umple perfect tot pătratul. Dacă taie marginile și nu îți place, schimbă în 'contain' */
+}
+
+/* 3. Pentru imaginea simplă (când e un singur produs, fără carusel) */
+.main-prod-img {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1 / 1 !important; /* Forțează și imaginea singulară să fie 1080x1080 */
+  object-fit: cover !important;
+}
