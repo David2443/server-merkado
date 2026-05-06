@@ -129,7 +129,7 @@ const Shop = () => {
             <p>Am găsit <span>{filteredProduse.length}</span> produse pentru tine</p>
           </div>
 
-          <div className="shop-products-grid">
+          <div className="grila-suprema-merkado">
             {isLoading ? (
               <div className="loading-spinner">
                 <h2>Se aduc produsele...</h2>
