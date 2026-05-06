@@ -39,10 +39,14 @@ const Home = () => {
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  // 2. Fetch Produse și Scroll la Top
+// 2. Fetch Produse și Scroll la Top
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch('https://merkado-backend.onrender.com/api/produse')
+    
+    // Luăm link-ul bun de la noul server setat în Vercel
+    const API_URL = import.meta.env.VITE_API_URL; 
+
+    fetch(`${API_URL}/api/produse`)
       .then(res => res.json())
       .then(data => setProduse(data))
       .catch(err => console.error("Eroare la încărcare produse:", err));
