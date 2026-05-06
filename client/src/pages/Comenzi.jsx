@@ -738,22 +738,37 @@ const AdminComenzi = () => {
               )}
             </div>
 
-            <div className="ac-modal-footer" style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+          <div className="ac-modal-footer">
               <button onClick={handleSave} className="ac-btn-save">
-                {editModal.type === 'draft' ? 'Salvează Datele (Rămâne Draft)' : 'Salvează Modificările'}
+                {editModal.type === 'draft' ? 'Salvează Datele' : 'Salvează Modificările'}
               </button>
+              
+              {editModal.type === 'comanda' && !formData.awb && (
+                <button onClick={() => { genereazaAWB(formData._id); setEditModal({isOpen: false}); }} className="ac-btn-awb-gen">
+                  📦 Generează AWB
+                </button>
+              )}
+              {editModal.type === 'comanda' && formData.awb && (
+                <button onClick={() => { genereazaAWB(formData._id); setEditModal({isOpen: false}); }} className="ac-btn-awb-regen">
+                  🔄 Regenerează AWB
+                </button>
+              )}
+
               {editModal.type === 'draft' && (
-                <button onClick={handlePlasareComandaDinDraft} style={{ background: '#10b981', color: '#fff', border: 'none', padding: '10px 15px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                <button onClick={handlePlasareComandaDinDraft} className="ac-btn-place-order">
                   <FiCheckCircle style={{ marginRight: '5px' }} /> Plasează Comanda
                 </button>
               )}
+
               {(editModal.type === 'comanda' || editModal.type === 'draft') && (
-                <div style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
+                <div className="ac-modal-danger-actions">
                   {editModal.type === 'comanda' && formData.status !== 'Anulată' && (
-                    <button onClick={() => setConfirmModal({isOpen: true, id: formData._id, type: 'anulare'})} className="ac-btn-cancel-order">Anulează Comanda</button>
+                    <button onClick={() => setConfirmModal({isOpen: true, id: formData._id, type: 'anulare'})} className="ac-btn-cancel-order">
+                      Anulează
+                    </button>
                   )}
-                  <button onClick={() => setConfirmModal({isOpen: true, id: formData._id, type: 'stergere'})} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold' }}>
-                    <FiTrash2 /> Șterge Definitiv
+                  <button onClick={() => setConfirmModal({isOpen: true, id: formData._id, type: 'stergere'})} className="ac-btn-delete-order">
+                    <FiTrash2 /> Șterge
                   </button>
                 </div>
               )}
