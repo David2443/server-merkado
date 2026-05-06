@@ -53,43 +53,62 @@
 }
 
 /* ==========================================
-   🧭 2. BREADCRUMBS (Firul Ariadnei)
+   🧭 2. BREADCRUMBS (Premium Pill Design)
    ========================================== */
 .merkado-breadcrumbs {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 15px 0;
+  gap: 10px;
+  padding: 10px 22px;
+  margin: 25px 0 0 15px; 
   font-size: 0.85rem;
   font-family: 'Inter', sans-serif;
-  color: #64748b;
-  margin-bottom: 10px;
+  background: #ffffff; /* Fundal alb pentru contrast */
+  border: 1px solid #e2e8f0;
+  border-radius: 50px; /* Forma rotunjită (pilulă) */
+  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.05); /* Umbră fină */
+  width: fit-content;
 }
 
 .merkado-breadcrumbs a {
   color: #64748b;
   text-decoration: none;
-  transition: color 0.2s ease;
-  font-weight: 500;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .merkado-breadcrumbs a:hover {
-  color: var(--mk-orange);
+  color: var(--mk-blue);
+  transform: translateY(-1px);
 }
 
 .bc-separator {
   color: #cbd5e1;
-  font-size: 0.8rem;
+  font-weight: 800;
+  font-size: 0.9rem;
 }
 
 .bc-current {
-  color: #0f172a;
-  font-weight: 600;
+  color: var(--mk-navy);
+  font-weight: 900;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 250px;
+}
+
+/* Ajustare perfectă pentru ecrane mici (Telefoane) */
+@media (max-width: 768px) {
+  .merkado-breadcrumbs {
+    margin: 15px 10px 0 10px;
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    gap: 6px;
+  }
+  .bc-current {
+    max-width: 130px; /* Ca să nu iasă din ecran pe telefoane mici */
+  }
 }
 
 /* ==========================================
