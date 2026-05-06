@@ -1107,3 +1107,99 @@ select.checkout-input {
     flex: 0 0 80% !important; /* Ia 80% din ecran ca să vezi o bucățică din următorul card (te invită la scroll) */
   }
 }
+
+/* ==========================================
+   🛠️ OVERRIDES & FIXURI FINALE (LIPEȘTE-LE JOS DE TOT)
+   ========================================== */
+
+/* 1. ASCUNDE BUTONUL STICKY PE DESKTOP */
+.sticky-buy-wrapper {
+  display: none !important;
+}
+
+/* 2. ASCUNDE BARA DE SCROLL LA PRODUSE SIMILARE (CARUSEL CURAT) */
+.shop-products-grid {
+  -ms-overflow-style: none !important; /* IE și Edge */
+  scrollbar-width: none !important; /* Firefox */
+}
+.shop-products-grid::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari, Opera */
+}
+
+/* ==========================================
+   📱 RESPONSIVITATE TELEFON (FIX-URI MOBILE)
+   ========================================== */
+@media (max-width: 768px) {
+  
+  /* Activează butonul sticky DOAR pe telefon */
+  .sticky-buy-wrapper.show {
+    display: block !important;
+  }
+
+  /* 3. REPARAȚIE ORDINE CHECKOUT (Sumarul de plată DUPĂ adrese) */
+  .checkout-main-grid {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .checkout-summary-side {
+    order: 2 !important; /* Mută sumarul la finalul formularului */
+    margin-top: 20px !important;
+  }
+
+  /* 4. DESIGN PREMIUM PENTRU ICONIȚELE DE ÎNCREDERE PE MOBIL */
+  .trust-icons {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+  }
+  .t-icon {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 15px !important;
+    text-align: left !important;
+    width: 100%;
+  }
+  .t-icon svg {
+    font-size: 1.8rem !important;
+    margin: 0 !important;
+  }
+  .t-icon span {
+    font-size: 0.95rem !important;
+    white-space: normal !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+  }
+
+  /* 5. REPARAȚIE SECȚIUNE PROCENTE (Listă curată pe telefon) */
+  .dynamic-procente-sec {
+    padding: 30px 15px !important;
+  }
+  .procente-flex-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+  .procent-circle-item {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 15px !important;
+    gap: 20px !important;
+  }
+  .circle-wrap {
+    width: 70px !important;
+    height: 70px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  .procent-desc {
+    font-size: 0.95rem !important;
+    text-align: left !important;
+  }
+}
