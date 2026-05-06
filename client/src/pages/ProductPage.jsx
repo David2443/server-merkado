@@ -712,10 +712,18 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
               {produs.pretVechi && <span className="price-old">{produs.pretVechi} lei (preț întreg)</span>}
             </div>
 
-            <div className="bullet-points">
-              <p>✨ Soluție premium cu efect garantat</p>
-              <p>💪 Ușor de folosit, acasă la tine</p>
-              <p>⏳ Rezultate vizibile și de lungă durată</p>
+           <div className="bullet-points">
+              {produs.heroBeneficii && produs.heroBeneficii[0] ? (
+                produs.heroBeneficii.map((beneficiu, index) => (
+                  beneficiu && <p key={index}>✨ {beneficiu}</p>
+                ))
+              ) : (
+                <>
+                  <p>✨ Soluție premium cu efect garantat</p>
+                  <p>💪 Ușor de folosit, acasă la tine</p>
+                  <p>⏳ Rezultate vizibile și de lungă durată</p>
+                </>
+              )}
             </div>
 
             <div className="stock-alert">
@@ -738,6 +746,24 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
               </div>
               <span className="phone-text-sleek">COMANDĂ TELEFONICĂ</span>
             </a>
+
+{/* RECENZIA DE SUB BUTON (Apare doar dacă ai setat-o în Admin) */}
+            {produs.heroRecenzie && produs.heroRecenzie.nume && (
+              <div className="hero-mini-review" style={{ background: '#f8fafc', padding: '15px', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '25px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                  {produs.heroRecenzie.imagine ? (
+                    <img src={produs.heroRecenzie.imagine} alt="Client" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}><FiStar /></div>
+                  )}
+                  <div>
+                    <div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#0f172a' }}>{produs.heroRecenzie.nume}</div>
+                    <div className="stars" style={{ fontSize: '0.8rem' }}>{renderStele(produs.heroRecenzie.rating)}</div>
+                  </div>
+                </div>
+                <p style={{ fontSize: '0.9rem', color: '#475569', margin: 0, fontStyle: 'italic' }}>"{produs.heroRecenzie.text}"</p>
+              </div>
+            )}
 
             <div className="countdown-wrap">
               <p>Prețul <span className="text-red">va crește înapoi la {produs.pretVechi || produs.pret + 50} lei</span> când expiră timpul!</p>
@@ -766,7 +792,14 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
               <span className="dot"></span> Chiar acum se uită <strong>{vizitatoriLive} oameni</strong> la acest produs
             </div>
 
-            
+           {produs.imagineFacebook && (
+              <div className="facebook-proof-section" ref={fbSectionRef}>
+                <p className="fb-proof-title"><FiThumbsUp style={{ color: '#1877F2', marginRight: '5px' }} /> Ce spun clienții pe Facebook:</p>
+                <div className="fb-image-placeholder">
+                  <img src={produs.imagineFacebook} alt={`Păreri clienți Facebook despre ${produs.nume}`} style={{ width: '100%', height: 'auto', display: 'block' }} />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
