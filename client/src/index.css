@@ -1,7 +1,4 @@
-/* ==========================================
-   🌟 FONTURI PREMIUM (Import Google Fonts)
-   ========================================== */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
 
 /* ==========================================
    🧹 RESET GLOBAL & ANTI-GHOSTING
@@ -108,3 +105,42 @@ button, input, select, textarea {
   min-width: unset;
   width: 100%;
 }
+
+/* 1. DECLARAȚIILE DE FONT (Le pui primele în fișier) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter-v18-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter-v18-latin-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter-v18-latin-700.woff2') format('woff2');
+}
+
+/* 2. APLICAREA FONTULUI PE TOT SITE-UL */
+:root {
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Restul codului tău global... */
