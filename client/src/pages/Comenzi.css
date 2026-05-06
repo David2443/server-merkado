@@ -1197,3 +1197,106 @@ body.admin-menu-minimized .ac-container {
     font-size: 0.8rem;
   }
 }
+
+/* ==========================================================================
+   🔢 BARA DE PAGINAȚIE (Pagination Bar)
+   ========================================================================== */
+.ac-pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: var(--bg-card, #ffffff);
+  border-top: 1px solid var(--border-color, #e2e8f0);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.ac-pagination-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: var(--text-secondary, #475569);
+  font-weight: 600;
+}
+
+.ac-pagination-select {
+  padding: 8px 12px;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid #cbd5e1;
+  background-color: white;
+  color: var(--text-primary, #0f172a);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  /* Efectul șmecher de halou albastru pal ca în poza ta */
+  box-shadow: 0 0 0 4px #eff6ff; 
+}
+
+.ac-pagination-select:hover,
+.ac-pagination-select:focus {
+  border-color: var(--accent-blue, #3b82f6);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+.ac-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ac-pagination-btn {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  padding: 8px 16px;
+  border-radius: var(--radius-md, 8px);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Când butonul e activ și treci cu mouse-ul peste el */
+.ac-pagination-btn:hover:not(:disabled) {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  transform: translateY(-1px);
+}
+
+/* Starea din poză (când ești pe prima/ultima pagină și e dezactivat) */
+.ac-pagination-btn:disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.ac-pagination-info {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+}
+
+/* 📱 Responsive blană pentru mobil */
+@media (max-width: 600px) {
+  .ac-pagination-container {
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px;
+  }
+  
+  .ac-pagination-controls {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+}
