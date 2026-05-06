@@ -812,6 +812,13 @@ app.post('/api/admin/comenzi/:id/awb', verifyAdmin, async (req, res) => {
     comanda.status = 'Expediată'; 
     await comanda.save();
 
+    // 🔥 ADAUGAT: Trimitem email automat când am generat AWB-ul!
+    if (comanda.email && comanda.email.includes('@')) {
+      const msgEmail = `Pachetul tău a fost predat curierului. Număr AWB: ${numarAWBGenerat}`;
+      const htmlEmail = genereazaEmailSuperProduse("Comandă Expediată! 🚚", msgEmail, comanda, null);
+      await trimiteEmail(comanda.email, "Vești bune! Comanda ta este pe drum 🚚", htmlEmail);
+    }
+
     res.json({ success: true, awb: numarAWBGenerat, mesaj: `AWB Generat (${isLocker ? 'Locker' : 'Acasă'}) cu succes!` });
 
   } catch (err) {
@@ -1033,11 +1040,11 @@ app.patch('/api/comenzi/:id/status', verifyAdmin, async (req, res) => {
     if (statusNou === 'Confirmată' || statusNou === 'Confirmata') {
       const msg = `Comanda ta a fost confirmată și este în curs de procesare.`;
       const html = genereazaEmailSuperProduse("Comandă Confirmată ✅", msg, comandaActualizata, imagineProdus);
-      trimiteEmail(email, "Comanda ta a fost confirmată! ✅", html); 
+      await trimiteEmail(email, "Comanda ta a fost confirmată! ✅", html); // 🔥 ADAUGAT AWAIT
     } else if (statusNou === 'Trimisă' || statusNou === 'Expediată') {
       const msg = `Pachetul tău a fost predat curierului.`;
       const html = genereazaEmailSuperProduse("Comandă Expediată! 🚚", msg, comandaActualizata, imagineProdus);
-      trimiteEmail(email, "Vești bune! Comanda ta este pe drum 🚚", html);
+      await trimiteEmail(email, "Vești bune! Comanda ta este pe drum 🚚", html); // 🔥 ADAUGAT AWAIT
     } else if (statusNou === 'Livrată' || statusNou === 'Livrata') {
       const msg = `Comanda ta a fost marcată ca livrată. Sperăm să te bucuri de produs! Nu ezita să ne lași o recenzie pe site dacă ești mulțumit de achiziție.`;
       const html = genereazaEmailSuperProduse("Comandă Livrată cu succes! 📦", msg, comandaActualizata, imagineProdus);
