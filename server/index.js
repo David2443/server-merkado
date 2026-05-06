@@ -660,8 +660,22 @@ app.post('/api/recenzii', publicLimiter, async (req, res) => {
   catch (err) { res.status(400).json({ eroare: err.message }); }
 });
 
-app.get('/api/recenzii/produs/:id', async (req, res) => {
-  try { res.json(await Recenzie.find({ produsId: req.params.id, status: 'aprobata' }).sort({ createdAt: -1 })); } 
+app.get('/api/recenzii/produs/:idOrSlug', async (req, res) => {
+  try {
+    const { idOrSlug } = req.params;
+    let targetId;
+
+    // Verificăm dacă link-ul este un ID de MongoDB sau un Slug
+    if (idOrSlug.match(/^[0-9a-fA-F]{24}$/)) {
+      targetId = idOrSlug;
+    } else {
+      const produs = await Produs.findOne({ slug: idOrSlug });
+      if (!produs) return res.json([]); // Dacă nu găsește produsul, întoarce 0 recenzii
+      targetId = produs._id;
+    }
+
+    res.json(await Recenzie.find({ produsId: targetId, status: 'aprobata' }).sort({ createdAt: -1 }));
+  } 
   catch (err) { res.status(500).json({ eroare: err.message }); }
 });
 
