@@ -21,40 +21,21 @@ const listaJudete = [
   'Gorj', 'Harghita', 'Hunedoara', 'Ialomița', 'Iași', 'Ilfov', 'Maramureș', 'Mehedinți', 'Mureș', 'Neamț',
   'Olt', 'Prahova', 'Sălaj', 'Satu Mare', 'Sibiu', 'Suceava', 'Teleorman', 'Timiș', 'Tulcea', 'Vâlcea', 'Vaslui', 'Vrancea'
 ];
-
 const AdminComenzi = () => {
+  // 1. TOATE VARIABILELE (STATE) DEFINITE LA ÎNCEPUT[cite: 10, 11]
   const [activeTab, setActiveTab] = useState('comenzi');
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(15);
   const [comenzi, setComenzi] = useState([]);
   const [drafts, setDrafts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [produse, setProduse] = useState([]); 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(15);
-
-  // Resetăm la prima pagină dacă schimbi tab-ul, cauți ceva sau schimbi data
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, activeTab, range]);
-  // 🔥 STATE PENTRU BULK ACTIONS (Selecție multiplă)
   const [selectedItems, setSelectedItems] = useState([]);
-
-  // 🔥 STATE PENTRU MENIU FULLSCREEN
   const [isMenuMinimized, setIsMenuMinimized] = useState(false);
-
-  // Când apăsăm butonul, punem o clasă pe <body> ca să știe CSS-ul să ascundă meniul
-  useEffect(() => {
-    if (isMenuMinimized) {
-      document.body.classList.add('admin-menu-minimized');
-    } else {
-      document.body.classList.remove('admin-menu-minimized');
-    }
-    // Cleanup la ieșirea din componentă
-    return () => document.body.classList.remove('admin-menu-minimized');
-  }, [isMenuMinimized]);
-
-  // 🔥 STATE PENTRU NOUA LOGICĂ DE CALENDAR
-  const [range, setRange] = useState('last30'); 
+  
+  // State-uri pentru calendar și modale
   const [showDropdown, setShowDropdown] = useState(false);
   const [dateRange, setDateRange] = useState([
     {
@@ -63,13 +44,11 @@ const AdminComenzi = () => {
       key: 'selection'
     }
   ]);
-  
-  // Modal states
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, id: null, type: '' });
   const [editModal, setEditModal] = useState({ isOpen: false, type: '', item: null });
   const [formData, setFormData] = useState({});
 
-  // 🔥 State-uri pentru Adrese & Lockere
+  // State-uri pentru Adrese & Lockere
   const [listaLocalitatiFiltrate, setListaLocalitatiFiltrate] = useState([]);
   const [dropdownLocalitateDeschis, setDropdownLocalitateDeschis] = useState(false);
   const [cautareLocalitate, setCautareLocalitate] = useState('');
@@ -77,10 +56,24 @@ const AdminComenzi = () => {
   const [loadingLockers, setLoadingLockers] = useState(false);
   const [eroareLockere, setEroareLockere] = useState('');
   const [cautareLocker, setCautareLocker] = useState('');
-
   const [toast, setToast] = useState(null);
 
+  // 2. ABIA ACUM PUNEM EFECTELE (useEffect)[cite: 10]
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, activeTab, range]);
+
+  useEffect(() => {
+    if (isMenuMinimized) {
+      document.body.classList.add('admin-menu-minimized');
+    } else {
+      document.body.classList.remove('admin-menu-minimized');
+    }
+    return () => document.body.classList.remove('admin-menu-minimized');
+  }, [isMenuMinimized]);
+
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  // ... restul codului continuă de aici la fel
 
   const rangeLabels = {
     today: 'Azi', yesterday: 'Ieri', last7: 'Ultimele 7 zile', 
