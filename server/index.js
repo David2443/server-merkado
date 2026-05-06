@@ -119,7 +119,7 @@ const produsSchema = new mongoose.Schema({
   
   // 🔥 AICI E MAGIA: I-AM DAT VOIE SĂ SALVEZE CATEGORIA
   categorie: { type: String, default: 'Toate' }, 
-  
+  galerieImagini: [String],
   heroBeneficii: [String], 
   heroRecenzie: { nume: String, text: String, rating: Number, imagine: String },
   imagineFacebook: String,
