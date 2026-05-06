@@ -1,41 +1,40 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
-// --- Componente Globale ---
+// --- Componente Globale (Încărcate normal, fiindcă apar imediat) ---
 import Navbar from './components/Navbar';
 import Footer from './components/Footer'; 
 import ScrollToTop from './components/ScrollToTop';
 
-// --- Pagini Publice ---
-import Home from './pages/Home';
-import Shop from './pages/Shop';
-import ProductPage from './pages/ProductPage';
-import Contact from './pages/Contact';
-import About from './pages/About';
+// --- Pagini Încărcate "Lazy" (Se descarcă DOAR când clientul intră pe ele) ---
+const Home = lazy(() => import('./pages/Home'));
+const Shop = lazy(() => import('./pages/Shop'));
+const ProductPage = lazy(() => import('./pages/ProductPage'));
+const Contact = lazy(() => import('./pages/Contact'));
+const About = lazy(() => import('./pages/About'));
 
 // --- Pagini Legale ---
-import Livrare from './pages/Livrare';
-import Retur from './pages/Retur';
-import Termeni from './pages/Termeni';
-import Confidentialitate from './pages/Confidentialitate';
-import Cookies from './pages/Cookies';
+const Livrare = lazy(() => import('./pages/Livrare'));
+const Retur = lazy(() => import('./pages/Retur'));
+const Termeni = lazy(() => import('./pages/Termeni'));
+const Confidentialitate = lazy(() => import('./pages/Confidentialitate'));
+const Cookies = lazy(() => import('./pages/Cookies'));
 
 // --- Pagini Cont & Auth ---
-import Account from './pages/Account';
-import Login from './pages/Login';
-import Forgot from './pages/Forgot'; 
-import ResetPassword from './pages/ResetPassword'; 
+const Account = lazy(() => import('./pages/Account'));
+const Login = lazy(() => import('./pages/Login'));
+const Forgot = lazy(() => import('./pages/Forgot')); 
+const ResetPassword = lazy(() => import('./pages/ResetPassword')); 
 
 // --- Pagini Admin ---
-import Admin from './pages/Admin';
+const Admin = lazy(() => import('./pages/Admin'));
 
 function App() {
   // 1. Luăm URL-ul curent pentru a ști unde ne aflăm
   const location = useLocation();
   
   // 2. Verificăm dacă suntem pe o pagină de Admin
-  // Dacă link-ul începe cu "/admin", asta va fi "true"
   const isAdminPage = location.pathname.startsWith('/admin');
 
   // 3. Salvare UTM Source (pentru reclame)
@@ -48,6 +47,16 @@ function App() {
     }
   }, []);
 
+  // 4. Fallback-ul (Ce vede clientul pentru jumătate de secundă cât se descarcă pagina)
+  const renderLoader = () => (
+    <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8fafc' }}>
+      <div className="merkado-spinner-container">
+        <div className="merkado-spin-ring"></div>
+        <div className="merkado-spin-logo" style={{ color: '#e61938' }}>M</div>
+      </div>
+    </div>
+  );
+
   return (
     <HelmetProvider>
       <div className="app-container">
@@ -59,32 +68,34 @@ function App() {
 
         {/* 🎯 MAIN CONTENT AREA */}
         <main className="main-content">
-          <Routes>
-            {/* --- Rute Publice --- */}
-            <Route path="/" element={<Home />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/produs/:id" element={<ProductPage />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<About />} />
-            
-            {/* --- Rute Legale --- */}
-            <Route path="/livrare" element={<Livrare />} />
-            <Route path="/retur" element={<Retur />} />
-            <Route path="/termeni" element={<Termeni />} />
-            <Route path="/confidentialitate" element={<Confidentialitate />} />
-            <Route path="/cookies" element={<Cookies />} />
+          {/* Suspense este "plasa de siguranță" care arată loader-ul cât timp React aduce fișierul paginii */}
+          <Suspense fallback={renderLoader()}>
+            <Routes>
+              {/* --- Rute Publice --- */}
+              <Route path="/" element={<Home />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/produs/:id" element={<ProductPage />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<About />} />
+              
+              {/* --- Rute Legale --- */}
+              <Route path="/livrare" element={<Livrare />} />
+              <Route path="/retur" element={<Retur />} />
+              <Route path="/termeni" element={<Termeni />} />
+              <Route path="/confidentialitate" element={<Confidentialitate />} />
+              <Route path="/cookies" element={<Cookies />} />
 
-            {/* --- Rute Autentificare --- */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/forgot-password" element={<Forgot />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
+              {/* --- Rute Autentificare --- */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/forgot-password" element={<Forgot />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-            {/* --- Rute Admin --- */}
-            <Route path="/admin" element={<Admin />} />
-            {/* Ai aveai o rută dublată de /admin/login care ducea tot către <Login />. O lăsăm dacă ai nevoie de ea! */}
-            <Route path="/admin/login" element={<Login />} />
-          </Routes>
+              {/* --- Rute Admin --- */}
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/login" element={<Login />} />
+            </Routes>
+          </Suspense>
         </main>
 
         {/* <footer> (Apare DOAR dacă nu suntem pe Admin) */}
