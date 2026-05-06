@@ -607,7 +607,7 @@ const AdminComenzi = () => {
               </button>
             </div>
           </div>
-        )}
+        )}  
       </div>
 
       {/* 🔥 MODAL EDITARE CU LOGICĂ DE LOCKER & ADRESE */}
