@@ -100,15 +100,24 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
 
   // --- MOTOR PENTRU GALERIE MULTIPLĂ (SLIDER) ---
   const adaugaInGalerie = (files) => {
-    Array.from(files).forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({
-          ...prev,
-          galerieImagini: [...(prev.galerieImagini || []), reader.result]
-        }));
-      };
-      reader.readAsDataURL(file);
+    // 1. Luăm fișierele și creăm o promisiune pentru fiecare ca să așteptăm să se încarce
+    const promisiuni = Array.from(files).map(file => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    // 2. Așteptăm ca toate pozele să fie transformate în Base64
+    Promise.all(promisiuni).then(rezultateNoi => {
+      setFormData(prev => ({
+        ...prev,
+        // Adăugăm pozele noi la cele vechi (dacă există)
+        galerieImagini: [...(prev.galerieImagini || []), ...rezultateNoi]
+      }));
     });
   };
 
