@@ -375,74 +375,121 @@
 }
 .btn-reset:hover { background: #ea580c; transform: translateY(-3px); }
 /* ==========================================
-   📱 FIX: 2 PRODUSE PE RÂND PE TELEFON (FĂRĂ CARUSEL)
+   🚫 ASCUNDEM BUTOANELE DE INIMĂ ȘI COȘ
    ========================================== */
-@media (max-width: 500px) {
-  
-  /* 1. Forțăm Grid-ul să aibă 2 coloane egale */
-  .shop-products-grid { 
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important; /* Fix 2 produse pe rând */
-    gap: 12px !important; /* Spațiu mai mic între ele ca să încapă perfect */
-  }
+.shop-wishlist, 
+.shop-cart-btn {
+  display: none !important;
+}
 
-  /* 2. Ajustăm cardul să arate premium chiar dacă e micșorat */
-  .shop-card {
+/* ==========================================
+   📱 RESPONSIVE MOBIL (REPARAT 100%)
+   ========================================== */
+@media (max-width: 1000px) {
+  /* Reparăm bara de căutare să nu se mai strivească */
+  .shop-toolbar {
+    flex-direction: column !important;
+    margin: -30px 20px 40px !important;
+    padding: 20px !important;
+    gap: 15px !important;
+  }
+  
+  /* Căutarea și filtrele iau toată lățimea ecranului și stau una sub alta */
+  .search-box { 
+    max-width: 100% !important; 
+    width: 100% !important;
+  }
+  .filter-group { 
+    width: 100% !important; 
+    flex-direction: column !important; 
+    gap: 15px !important;
+  }
+  .filter-item { width: 100% !important; }
+  .filter-item select { width: 100% !important; }
+}
+
+@media (max-width: 900px) {
+  .shop-page-wrapper { padding-top: 0px !important; }
+  .shop-hero h1 { font-size: 2.5rem !important; }
+}
+
+@media (max-width: 500px) {
+  /* Spațiere mai finuță pe telefon la bara de căutare */
+  .shop-toolbar {
+    margin: -20px 15px 30px !important;
+    padding: 15px !important;
     border-radius: 16px !important;
   }
+
+  /* 🔥 GRID: Fix 2 produse pe rând, scroll vertical în jos, FĂRĂ CARUSEL */
+  .shop-products-grid { 
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important; 
+  }
+
+  /* CARD PRODUS: Design curat tip app nativ */
+  .shop-card {
+    border-radius: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+  }
   
+  /* POZA: Fără spații albe (padding 0), lipită de marginile cardului */
   .shop-card-img {
-    padding: 8px !important;
-    border-radius: 16px 16px 0 0 !important;
+    padding: 0 !important; 
+    border-radius: 12px 12px 0 0 !important;
+    aspect-ratio: 4/5 !important; /* Format mai înalt, arată premium */
+  }
+  
+  .shop-card-img img {
+    border-radius: 12px 12px 0 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
   }
 
   .shop-card-body { 
     padding: 12px 10px !important; 
+    display: flex !important;
+    flex-direction: column !important;
+    flex-grow: 1 !important;
+    justify-content: space-between !important;
   }
 
-  /* 3. Micșorăm textele ca să nu iasă din chenar */
   .shop-cat-label {
     font-size: 0.65rem !important;
-    margin-bottom: 5px !important;
+    margin-bottom: 4px !important;
   }
 
+  /* Titlul trunchiat la fix 2 rânduri ca să se alinieze frumos cardurile */
   .shop-card-body h3 {
-    font-size: 0.85rem !important; /* Titlu micuț cu max 2 rânduri */
+    font-size: 0.85rem !important;
     line-height: 1.2 !important;
     margin-bottom: 8px !important;
+    min-height: 2rem !important; 
   }
 
-  /* 4. Ascundem steluțele de recenzii pe mobil să facem loc (opțional, dar arată mai curat) */
+  /* Ascundem steluțele de recenzii pe mobil pentru că aglomerează cardul mic */
   .shop-rating {
     display: none !important; 
   }
 
-  /* 5. Ajustăm secțiunea de preț și butonul de coș */
+  /* Prețul stă ordonat dedesubt */
   .shop-price-box {
-    flex-direction: column !important; /* Punem coșul sub preț sau le înghesuim elegant */
+    flex-direction: column !important; 
     align-items: flex-start !important;
-    gap: 8px !important;
+    gap: 2px !important;
   }
 
-  .current { 
-    font-size: 1.1rem !important; 
-  }
+  .current { font-size: 1.1rem !important; }
+  .old { font-size: 0.75rem !important; }
   
-  .old {
-    font-size: 0.75rem !important;
-  }
-
-  .shop-cart-btn { 
-    width: 100% !important; /* Facem butonul de coș să fie bară subțire sub preț */
-    height: 36px !important; 
-    border-radius: 10px !important;
-    font-size: 1rem !important;
-  }
-  
-  /* Reducem dimensiunea etichetelor roșii ("TOP") */
+  /* Eticheta roșie cu Ofertă adaptată la cardul mic */
   .shop-badge {
-    top: 10px !important;
-    left: 10px !important;
+    top: 8px !important;
+    left: 8px !important;
     padding: 4px 8px !important;
     font-size: 0.65rem !important;
   }
