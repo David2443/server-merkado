@@ -15,8 +15,18 @@ import {
 import './ProductPage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
-const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY ;
-const stripePromise = loadStripe(STRIPE_KEY);
+const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+
+// Facem o variabilă goală. Nu încărcăm Stripe încă!
+let stripePromise = null; 
+
+// Creăm o funcție care trezește Stripe DOAR când e apelată
+const getStripe = () => {
+  if (!stripePromise) {
+    stripePromise = loadStripe(STRIPE_KEY);
+  }
+  return stripePromise;
+};
 
 const listaJudete = [
   'Alba', 'Arad', 'Argeș', 'Bacău', 'Bihor', 'Bistrița-Năsăud', 'Botoșani', 'Brăila', 'Brașov', 'București',
@@ -1292,7 +1302,7 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
                       </button>
                     ) : (
                       <div className="stripe-container-box">
-                        <Elements stripe={stripePromise}>
+                       <Elements stripe={getStripe()}>
                           <StripePaymentForm
                             total={totalCheckout}
                             dateClient={dateClient}
