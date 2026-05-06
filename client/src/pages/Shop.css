@@ -413,49 +413,61 @@
   .shop-hero h1 { font-size: 2.5rem !important; }
 }
 
+/* ==========================================
+   📱 FIX BLINDAT: 2 PRODUSE PE RÂND + POZĂ 1080x1080 (1:1)
+   ========================================== */
 @media (max-width: 500px) {
-  /* Spațiere mai finuță pe telefon la bara de căutare */
+  /* Filtrele - asezate frumos */
   .shop-toolbar {
     margin: -20px 15px 30px !important;
     padding: 15px !important;
     border-radius: 16px !important;
   }
 
-  /* 🔥 GRID: Fix 2 produse pe rând, scroll vertical în jos, FĂRĂ CARUSEL */
+  /* 🔥 DISTRUGEM CARUSELUL - Forțăm rânduri care cad în jos */
   .shop-products-grid { 
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px !important; 
+    grid-auto-flow: row !important; /* FORȚEAZĂ ELEMENTELE SĂ CADĂ PE RÂNDUL URMĂTOR */
+    gap: 12px !important; 
+    width: 100% !important;
+    overflow-x: hidden !important; /* OMOARĂ SCROLL-UL ORIZONTAL */
+    white-space: normal !important; /* Împiedică alinierea pe un singur rând */
   }
 
-  /* CARD PRODUS: Design curat tip app nativ */
   .shop-card {
     border-radius: 12px !important;
     display: flex !important;
     flex-direction: column !important;
-    height: 100% !important;
+    width: 100% !important; /* Ocupă fix jumătate de ecran, nu mai mult */
+    margin: 0 !important;
   }
   
-  /* POZA: Fără spații albe (padding 0), lipită de marginile cardului */
+  /* 🔥 FORȚARE POZĂ PĂTRATĂ 1080x1080 (Aspect Ratio 1:1) */
   .shop-card-img {
     padding: 0 !important; 
     border-radius: 12px 12px 0 0 !important;
-    aspect-ratio: 4/5 !important; /* Format mai înalt, arată premium */
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important; /* Asta o face pătrată perfect, indiferent de ecran */
+    position: relative !important;
+    overflow: hidden !important;
+    background: #f8fafc !important; 
   }
   
   .shop-card-img img {
-    border-radius: 12px 12px 0 0 !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important;
+    object-fit: cover !important; /* Taie surplusul ca să umple pătratul perfect, fără să o strivească */
+    border-radius: 12px 12px 0 0 !important;
   }
 
   .shop-card-body { 
     padding: 12px 10px !important; 
     display: flex !important;
     flex-direction: column !important;
-    flex-grow: 1 !important;
-    justify-content: space-between !important;
   }
 
   .shop-cat-label {
@@ -463,20 +475,19 @@
     margin-bottom: 4px !important;
   }
 
-  /* Titlul trunchiat la fix 2 rânduri ca să se alinieze frumos cardurile */
+  /* Titlul - forțat să ocupe 2 rânduri ca să se alinieze toate cardurile perfect */
   .shop-card-body h3 {
     font-size: 0.85rem !important;
     line-height: 1.2 !important;
     margin-bottom: 8px !important;
     min-height: 2rem !important; 
+    white-space: normal !important; /* Dacă era trunchiat de un nowrap, ăsta îl repară */
   }
 
-  /* Ascundem steluțele de recenzii pe mobil pentru că aglomerează cardul mic */
-  .shop-rating {
-    display: none !important; 
-  }
+  /* Ascundem steluțele (nu vrem înghesuială) */
+  .shop-rating { display: none !important; }
 
-  /* Prețul stă ordonat dedesubt */
+  /* Prețul ordonat */
   .shop-price-box {
     flex-direction: column !important; 
     align-items: flex-start !important;
@@ -486,11 +497,12 @@
   .current { font-size: 1.1rem !important; }
   .old { font-size: 0.75rem !important; }
   
-  /* Eticheta roșie cu Ofertă adaptată la cardul mic */
+  /* Eticheta "Ofertă" */
   .shop-badge {
     top: 8px !important;
     left: 8px !important;
     padding: 4px 8px !important;
     font-size: 0.65rem !important;
+    z-index: 5 !important;
   }
 }
