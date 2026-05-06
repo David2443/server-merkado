@@ -29,7 +29,13 @@ const AdminComenzi = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [produse, setProduse] = useState([]); 
   const [searchTerm, setSearchTerm] = useState('');
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(15);
+
+  // Resetăm la prima pagină dacă schimbi tab-ul, cauți ceva sau schimbi data
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, activeTab, range]);
   // 🔥 STATE PENTRU BULK ACTIONS (Selecție multiplă)
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -203,6 +209,12 @@ const AdminComenzi = () => {
     const term = searchTerm.toLowerCase();
     return (item.numeClient?.toLowerCase().includes(term) || item.telefon?.includes(term) || item.email?.toLowerCase().includes(term) || item.adresa?.toLowerCase().includes(term));
   });
+
+  // 🔥 LOGICĂ PENTRU PAGINAȚIE (Să nu se încarce 1000 deodată)
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const elementePePagina = listaFiltrata.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(listaFiltrata.length / itemsPerPage);
 
   // 🔥 FUNCȚII PENTRU BULK ACTIONS (Selecție Multiplă)
   const handleSelectAll = (e) => {
@@ -479,7 +491,7 @@ const AdminComenzi = () => {
               </tr>
             </thead>
             <tbody>
-              {listaFiltrata.map((item) => (
+             {elementePePagina.map((item) => (
                 <tr key={item._id} className={item.status === 'Anulată' ? 'ac-row-cancelled' : ''}>
                   <td style={{ paddingLeft: '15px' }}>
                     <input type="checkbox" checked={selectedItems.includes(item._id)} onChange={() => handleSelectItem(item._id)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
@@ -556,6 +568,46 @@ const AdminComenzi = () => {
             </tbody>
           </table>
         </div>
+        {/* 🔥 BARA DE PAGINAȚIE 🔥 */}
+        {listaFiltrata.length > 0 && (
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 25px', background: '#fff', borderTop: '1px solid #e2e8f0', flexWrap: 'wrap', gap: '15px' }}>
+            <div style={{ fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>
+              Afișează: 
+              <select 
+                value={itemsPerPage} 
+                onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }} 
+                style={{ marginLeft: '10px', padding: '6px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', cursor: 'pointer', fontWeight: 'bold' }}
+              >
+                <option value={15}>15 / pagină</option>
+                <option value={50}>50 / pagină</option>
+                <option value={100}>100 / pagină</option>
+                <option value={999999}>Toate (Lent)</option>
+              </select>
+            </div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <button 
+                disabled={currentPage === 1} 
+                onClick={() => setCurrentPage(prev => prev - 1)} 
+                style={{ background: currentPage === 1 ? '#f8fafc' : '#eff6ff', color: currentPage === 1 ? '#94a3b8' : '#2563eb', border: '1px solid', borderColor: currentPage === 1 ? '#e2e8f0' : '#bfdbfe', padding: '8px 16px', borderRadius: '8px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', fontWeight: 'bold', transition: 'all 0.2s' }}
+              >
+                &laquo; Înapoi
+              </button>
+              
+              <span style={{ fontSize: '0.95rem', fontWeight: '700', color: '#0f172a' }}>
+                Pagina {currentPage} din {totalPages || 1}
+              </span>
+              
+              <button 
+                disabled={currentPage === totalPages || totalPages === 0} 
+                onClick={() => setCurrentPage(prev => prev + 1)} 
+                style={{ background: currentPage === totalPages || totalPages === 0 ? '#f8fafc' : '#eff6ff', color: currentPage === totalPages || totalPages === 0 ? '#94a3b8' : '#2563eb', border: '1px solid', borderColor: currentPage === totalPages || totalPages === 0 ? '#e2e8f0' : '#bfdbfe', padding: '8px 16px', borderRadius: '8px', cursor: currentPage === totalPages || totalPages === 0 ? 'not-allowed' : 'pointer', fontWeight: 'bold', transition: 'all 0.2s' }}
+              >
+                Înainte &raquo;
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 🔥 MODAL EDITARE CU LOGICĂ DE LOCKER & ADRESE */}
