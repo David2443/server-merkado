@@ -637,10 +637,11 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
                   </button>
                   
                   <img 
-                    src={imaginiProdus[currentImageIndex]} 
-                    alt={`${produs.nume} - Imaginea ${currentImageIndex + 1}`} 
-                    className="carousel-main-img" 
-                  />
+  src={imaginiProdus[currentImageIndex]} 
+  alt={`${produs.nume} - Imaginea ${currentImageIndex + 1}`} 
+  className="carousel-main-img" 
+  fetchpriority="high" 
+/>
                   
                   <button 
                     className="carousel-nav next" 
