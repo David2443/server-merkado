@@ -231,17 +231,27 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
               <div className="editor-col">
                 <label>Galerie Imagini Produs (Trage una sau mai multe)</label>
                 
-                <div
+                <label
                     className="drop-zone"
                     onDragOver={preventDefault}
                     onDrop={e => {
                         preventDefault(e);
                         adaugaInGalerie(e.dataTransfer.files);
                     }}
+                    style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                 >
                   <FiUploadCloud size={30} />
-                  <p>Trage pozele aici</p>
-                </div>
+                  <p>Trage pozele aici sau <strong>Apasă pentru a alege</strong></p>
+                  
+                  {/* Input ascuns ca să poți alege din PC/Telefon */}
+                  <input 
+                    type="file" 
+                    multiple 
+                    accept="image/*" 
+                    onChange={e => adaugaInGalerie(e.target.files)} 
+                    style={{ display: 'none' }} 
+                  />
+                </label>
 
                 {/* SLIDER-UL MAGIC */}
                 {formData.galerieImagini && formData.galerieImagini.length > 0 && (
