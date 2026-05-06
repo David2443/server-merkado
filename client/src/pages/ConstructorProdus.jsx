@@ -295,31 +295,36 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
               </div>
 <div className="editor-col">
                 <label>Dovadă Facebook (Screenshot)</label>
-                <div className="drop-zone" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], 'imagineFacebook'); }}>
-                  {formData.imagineFacebook ? (
-                    <div className="slider-wrapper" style={{ padding: 0 }}>
-                      <div className="slide-image-container">
-                        <img src={formData.imagineFacebook} alt="FB" />
-                        <button 
-                          type="button"
-                          className="btn-delete-slide"
-                          onClick={(e) => { 
-                            e.preventDefault(); 
-                            e.stopPropagation(); 
-                            setFormData(prev => ({ ...prev, imagineFacebook: '' })); 
-                          }} 
-                        >
-                          <FiX />
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <FiUploadCloud size={30} />
-                      <p>Trage screenshot FB aici</p>
-                    </>
-                  )}
+                
+                {/* 1. Zona punctată de Drop (Rămâne mereu vizibilă sus, exact ca la galerie) */}
+                <div 
+                  className="drop-zone" 
+                  onDragOver={preventDefault} 
+                  onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], 'imagineFacebook'); }}
+                >
+                  <FiUploadCloud size={30} />
+                  <p>Trage screenshot FB aici</p>
                 </div>
+
+                {/* 2. Poza afișată DEDESUBT, exact ca la galerie */}
+                {formData.imagineFacebook && (
+                  <div className="slider-wrapper">
+                    <div className="slide-image-container">
+                      <img src={formData.imagineFacebook} alt="FB" />
+                      <button 
+                        type="button"
+                        className="btn-delete-slide"
+                        onClick={(e) => { 
+                          e.preventDefault(); 
+                          e.stopPropagation(); 
+                          setFormData(prev => ({ ...prev, imagineFacebook: '' })); 
+                        }} 
+                      >
+                        <FiX />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
 
