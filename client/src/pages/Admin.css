@@ -400,17 +400,17 @@ body {
   opacity: 1;
   visibility: visible;
 }
-
 /* =========================================================
    📱 RESPONSIVE PENTRU TELEFON ȘI TABLETĂ
    ========================================================= */
 @media (max-width: 900px) {
   .admin-layout { 
     flex-direction: column; 
-    padding-top: 65px; /* Compensează header-ul mobil fix */
+    /* Am mutat padding-ul de aici... */
   }
 
   .mobile-nav-header { display: flex; }
+  
   .close-menu-btn { 
     display: flex; 
     background: rgba(255, 255, 255, 0.1);
@@ -437,7 +437,8 @@ body {
 
   .admin-content { 
     margin-left: 0; 
-    padding: 20px 10px !important; 
+    /* AICI E FIX-UL: Padding-top 80px ca să facă loc navbar-ului! */
+    padding: 80px 10px 20px 10px !important; 
     width: 100% !important;
   }
 
