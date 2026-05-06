@@ -294,15 +294,25 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
                 )}
               </div>
 
-              <div className="editor-col">
+             <div className="editor-col full glass-box">
                 <label>Dovadă Facebook (Screenshot)</label>
                 <div className="drop-zone fb" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], 'imagineFacebook'); }}>
                   {formData.imagineFacebook ? (
                     <div style={{ position: 'relative', display: 'inline-block' }}>
                       <img src={formData.imagineFacebook} alt="FB" />
-                      <button type="button" onClick={(e) => { e.stopPropagation(); stergeImagine('imagineFacebook'); }} style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px 8px', cursor: 'pointer' }}><FiTrash2 /></button>
+                      <button 
+                        type="button" 
+                        onClick={(e) => { 
+                          e.preventDefault(); 
+                          e.stopPropagation(); 
+                          setFormData(prev => ({ ...prev, imagineFacebook: '' })); 
+                        }} 
+                        style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px 8px', cursor: 'pointer', zIndex: 20 }}
+                      >
+                        <FiTrash2 />
+                      </button>
                     </div>
-                  ) : <><FiFacebook size={30} /><p>Trage screenshot FB</p></>}
+                  ) : <><FiFacebook size={30} /><p>Trage screenshot FB aici</p></>}
                 </div>
               </div>
 
