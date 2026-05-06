@@ -218,10 +218,19 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
+    useEffect(() => {
+      const fetchData = async () => {
       try {
-        const resProd = await fetch(`${API_URL}/api/produse/${id}`);
+        // 🔥 MAGIE: Cerem absolut TOT de la server simultan, nu pe rând!
+        const [resProd, resRec, resTrans, resToate] = await Promise.all([
+          fetch(`${API_URL}/api/produse/${id}`),
+          fetch(`${API_URL}/api/recenzii/produs/${id}`),
+          fetch(`${API_URL}/api/transport`),
+          fetch(`${API_URL}/api/produse`)
+        ]);
+
+        if (!resProd.ok) throw new Error("Produsul nu a fost găsit");
+        
         const dataProd = await resProd.json();
         setProdus(dataProd);
 
@@ -235,16 +244,13 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
           setPachet({ qty: 1, pret: dataProd.pret || 69, text: 'Pachet Standard' });
         }
 
-        const resRec = await fetch(`${API_URL}/api/recenzii/produs/${id}`);
         if (resRec.ok) setRecenzii(await resRec.json());
-
-        const resTrans = await fetch(`${API_URL}/api/transport`);
+        
         if (resTrans.ok) {
           const dataTrans = await resTrans.json();
           setOptiuniTransport(dataTrans.filter(m => m.activ));
         }
 
-        const resToate = await fetch(`${API_URL}/api/produse`);
         if (resToate.ok) {
           const toate = await resToate.json();
           const similare = toate.filter(p => p._id !== id).slice(0, 4);
@@ -283,41 +289,7 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
     };
   }, [id]);
 
- // 🇷🇴 HOOK PENTRU LOCALITĂȚI (Corectat pentru DIACRITICE)
-  useEffect(() => {
-    if (!dateClient.judet) {
-      setListaLocalitatiFiltrate([]);
-      return;
-    }
 
-    const fetchLocalitati = async () => {
-      try {
-        const res = await fetch(`/localitati.json?t=${new Date().getTime()}`); 
-        if (!res.ok) throw new Error("Serverul nu a găsit fișierul localitati.json");
-        
-        const toateLocalitatile = await res.json();
-        
-        // 🔥 MAGIA: Funcție care șterge diacriticele (ă, î, ș, ț, â) ca să compare corect!
-        const eliminaDiacritice = (str) => {
-          return str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : '';
-        };
-
-        const filtrate = toateLocalitatile.filter(loc => {
-          const judetDinDate = loc.county_name || '';
-          // Comparăm ignorând diacriticele și literele mari/mici
-          return eliminaDiacritice(judetDinDate) === eliminaDiacritice(dateClient.judet);
-        });
-        
-        filtrate.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-        setListaLocalitatiFiltrate(filtrate);
-
-      } catch (err) {
-        console.error("❌ Eroare la încărcarea localităților:", err.message);
-      }
-    };
-
-    fetchLocalitati();
-  }, [dateClient.judet]);
 
   const renderStele = (rating, interactive = false) => {
     return [...Array(5)].map((_, i) => (
