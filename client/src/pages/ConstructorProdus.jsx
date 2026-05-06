@@ -294,17 +294,7 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
                 )}
               </div>
 
-              <div className="editor-col">
-                <label>Dovadă Facebook (Screenshot)</label>
-                <div className="drop-zone fb" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], 'imagineFacebook'); }}>
-                  {formData.imagineFacebook ? (
-                    <div style={{ position: 'relative', display: 'inline-block' }}>
-                      <img src={formData.imagineFacebook} alt="FB" />
-                      <button type="button" onClick={(e) => { e.stopPropagation(); stergeImagine('imagineFacebook'); }} style={{ position: 'absolute', top: '5px', right: '5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '5px 8px', cursor: 'pointer' }}><FiTrash2 /></button>
-                    </div>
-                  ) : <><FiFacebook size={30} /><p>Trage screenshot FB</p></>}
-                </div>
-              </div>
+              
 
               <div className="editor-col full glass-box">
                 <h3>Preț, Titlu și Categorie</h3>
@@ -397,35 +387,9 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
                 </div>
               </div>
 
-              <div className="editor-col full glass-box">
-                <h3>Cele 3 Beneficii Rapide (Lângă preț)</h3>
-                <div className="row">
-                  {formData.heroBeneficii.map((b, i) => (
-                    <input key={i} type="text" placeholder={`Beneficiu ${i+1}`} value={b} onChange={e => {
-                      const copy = [...formData.heroBeneficii]; 
-                      copy[i] = e.target.value; 
-                      setFormData({...formData, heroBeneficii: copy});
-                    }} />
-                  ))}
-                </div>
-              </div>
+            
 
-              <div className="editor-col full glass-box">
-                <h3>Recenzia de sub Butonul de Comandă</h3>
-                <div className="row">
-                  <div className="mini-drop" title="Trage poza clientului aici" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], '', ['heroRecenzie', 'imagine']); }} style={{ position: 'relative' }}>
-                    {formData.heroRecenzie.imagine ? (
-                      <>
-                        <img src={formData.heroRecenzie.imagine} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                        <button type="button" onClick={(e) => { e.stopPropagation(); stergeImagine('', ['heroRecenzie', 'imagine']); }} style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '2px 5px', fontSize: '10px', cursor: 'pointer' }}><FiX /></button>
-                      </>
-                    ) : <FiImage />}
-                  </div>
-                  <input type="text" placeholder="Nume Client (Ex: Marian D.)" value={formData.heroRecenzie.nume} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, nume: e.target.value}})} />
-                  <input type="number" min="1" max="5" placeholder="Stele (1-5)" value={formData.heroRecenzie.rating} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, rating: e.target.value}})} />
-                </div>
-                <textarea rows="3" placeholder="Scrie aici recenzia care va convinge clientul..." value={formData.heroRecenzie.text} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, text: e.target.value}})} />
-              </div>
+             
 
             </div>
           </div>

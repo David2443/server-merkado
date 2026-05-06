@@ -766,12 +766,7 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
               <span className="dot"></span> Chiar acum se uită <strong>{vizitatoriLive} oameni</strong> la acest produs
             </div>
 
-            <div className="facebook-proof-section" ref={fbSectionRef}>
-              <p className="fb-proof-title"><FiThumbsUp style={{ color: '#1877F2', marginRight: '5px' }} /> Ce spun clienții pe Facebook:</p>
-              <div className="fb-image-placeholder">
-                <img src="https://via.placeholder.com/600x250/f0f2f5/1c1e21?text=Aici+vine+poza+ta+cu+comentariile+de+pe+Facebook" alt={`Păreri clienți Facebook despre ${produs.nume}`} />
-              </div>
-            </div>
+            
           </div>
         </div>
 
