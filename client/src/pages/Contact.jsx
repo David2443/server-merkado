@@ -76,13 +76,13 @@ const Contact = () => {
             <div className="icon-wrapper blue"><FiPhoneCall /></div>
             <h3>Suport</h3>
             {/* Ai grijă să pui numărul tău real aici */}
-            <a href="tel:0700000000" className="contact-link">0700 000 000</a> 
+            <a href="tel:0723717438" className="contact-link">0723 717 438</a> 
           </div>
           <div className="info-card">
             <div className="icon-wrapper green"><FiMail /></div>
             <h3>Email</h3>
             {/* Modifică adresa cu cea de la Merkado */}
-            <a href="mailto:contact@merkado.ro" className="contact-link">contact@merkado.ro</a>
+            <a href="mailto:contact@merkado.ro" className="contact-link">superprodusele@gmail.com</a>
           </div>
         </div>
 
