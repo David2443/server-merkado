@@ -597,8 +597,7 @@
 
 @keyframes popIcon { 0% { transform: scale(0); } 100% { transform: scale(1); } }
 
-
-/* 💥 C. BENEFICII PROCENTE (CERCURI NEON) */
+/* 💥 C. BENEFICII PROCENTE (CERCURI Orizontale PREMIUM) */
 .dynamic-procente-sec {
   background: #ffffff;
   padding: 50px;
@@ -616,59 +615,58 @@
 }
 
 .procente-flex-grid {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Face cardurile pe grid flexibil */
+  gap: 30px;
 }
 
+/* MAGIA: Transformă în rând orizontal */
 .procent-circle-item {
-  width: 160px;
-  text-align: center;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  gap: 25px; /* Spațiu între cerc și text */
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-align: left; /* Aliniază textul la stânga lângă cerc */
 }
 
 .procent-circle-item:hover {
-  transform: translateY(-15px);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 163, 255, 0.1);
+  background: #ffffff;
+  border-color: #bae6fd;
 }
 
 .circle-wrap {
-  background: #f8fafc;
+  width: 90px; /* Cerc mai mic ca să arate elegant în stânga */
+  height: 90px;
+  flex-shrink: 0; /* Împiedică strivirea cercului dacă textul e lung */
+  background: #ffffff;
   border-radius: 50%;
-  padding: 15px;
+  padding: 8px;
   box-shadow: inset 0 4px 10px rgba(0,0,0,0.05), 0 10px 20px rgba(0, 163, 255, 0.1);
-  margin-bottom: 20px;
   transition: all 0.3s ease;
+  margin: 0; 
 }
 
-.procent-circle-item:hover .circle-wrap { background: #ffffff; box-shadow: inset 0 0 0 transparent, 0 15px 30px rgba(0, 163, 255, 0.2); }
+.procent-circle-item:hover .circle-wrap {
+  box-shadow: inset 0 0 0 transparent, 0 10px 20px rgba(0, 163, 255, 0.25);
+}
 
-.circular-chart { display: block; margin: 0 auto; width: 100%; height: 100%; }
-
+.circular-chart { display: block; width: 100%; height: 100%; }
 .circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 2.5; }
+.circle { fill: none; stroke-width: 3; stroke-linecap: round; stroke: var(--mk-blue); filter: drop-shadow(0 0 4px rgba(0, 163, 255, 0.4)); transition: stroke-dasharray 1.5s ease; }
+.percentage { fill: var(--mk-navy); font-family: 'Inter', sans-serif; font-size: 0.65em; text-anchor: middle; font-weight: 900; }
 
-.circle { 
-  fill: none; 
-  stroke-width: 2.8; 
-  stroke-linecap: round; 
-  stroke: var(--mk-blue); 
-  filter: drop-shadow(0 0 4px rgba(0, 163, 255, 0.4));
-  transition: stroke-dasharray 1.5s cubic-bezier(0.4, 0, 0.2, 1); 
-}
-
-.percentage { 
-  fill: var(--mk-navy); 
-  font-family: 'Inter', sans-serif; 
-  font-size: 0.55em; 
-  text-anchor: middle; 
-  font-weight: 900; 
-}
-
-.procent-desc { 
-  font-size: 1rem; 
-  font-weight: 600; 
-  color: #475569; 
-  line-height: 1.4; 
+.procent-desc {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.4;
+  margin: 0; 
 }
 
 /* 💥 D. VIDEO YOUTUBE RESPONSIVE */
