@@ -315,7 +315,7 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
     try {
       const res = await fetch(`${API_URL}/api/recenzii`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formRecenzie, produsId: id })
+        body: JSON.stringify({ ...formRecenzie, produsId: produs._id })
       });
       if (res.ok) {
         setMesajForm('✅ Recenzia a fost trimisă spre aprobare!');
