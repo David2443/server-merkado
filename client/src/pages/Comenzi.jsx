@@ -483,81 +483,70 @@ const AdminComenzi = () => {
               </tr>
             </thead>
             <tbody>
-             {elementePePagina.map((item) => (
-                <tr key={item._id} className={item.status === 'Anulată' ? 'ac-row-cancelled' : ''}>
-                  <td style={{ paddingLeft: '15px' }}>
-                    <input type="checkbox" checked={selectedItems.includes(item._id)} onChange={() => handleSelectItem(item._id)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
-                  </td>
-                  <td data-label="Dată">{new Date(item.createdAt || item.updatedAt).toLocaleDateString('ro-RO')}</td>
-                  <td data-label="Client">
-                    <div className="ac-truncate ac-fw-medium">{item.numeClient || '-'}</div>
-                    <div style={{ color: '#475569', fontSize: '0.85rem' }}>{item.telefon}</div>
-                    {item.email && <div className="ac-truncate" style={{ color: '#64748b', fontSize: '0.8rem' }}>{item.email}</div>}
-                  </td>
-                  <td data-label="Comandă">
-                    <div className="ac-truncate ac-fw-medium">{item.numeProdus || 'Produs Magazin'}</div>
-                    <span style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', color: '#475569', fontWeight: 'bold' }}>x{item.cantitate || 1} buc</span>
-                  </td>
-                  <td data-label="Plată & Livrare">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.9rem', color: '#0f172a', fontWeight: '500' }}>
-                      {item.metodaPlata?.toLowerCase().includes('card') ? <FiCreditCard style={{color: '#10b981'}}/> : <FiTruck style={{color: '#3b82f6'}}/>} {item.metodaPlata || 'Ramburs'}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', color: '#64748b', marginTop: '3px' }}>
-                      {item.tipLivrare === 'locker' ? <><FiBox /> Easybox</> : <><FiTruck /> Curier</>}
-                    </div>
-                  </td>
-                  {activeTab === 'comenzi' && (
-                    <td data-label="Status">
-                      <select className="ac-status-select" style={{ backgroundColor: getStatusStyle(item.status).bg, color: getStatusStyle(item.status).color, borderColor: getStatusStyle(item.status).border }} value={item.status || 'Nouă'} onChange={(e) => actualizeazaStatus(item._id, e.target.value)}>
-                        <option value="Nouă">Nouă</option><option value="Confirmată">Confirmată</option><option value="Trimisă">Trimisă</option>
-                        <option value="Livrată">Livrată</option><option value="Returnată">Returnată</option><option value="Anulată">Anulată</option>
-                      </select>
-                    </td>
-                  )}
-                  <td data-label="Sursă Trafic">
-                    {(() => {
-                      const stilSursa = getSursaBadge(item.sursa);
-                      return <span style={{ background: stilSursa.bg, color: stilSursa.color, border: `1px solid ${stilSursa.border}`, padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-block' }}>{stilSursa.text}</span>;
-                    })()}
-                  </td>
-                  <td data-label="Total" className="ac-fw-bold" style={{ color: '#e61938', fontWeight: 'bold' }}>{item.total || item.totalComanda} Lei</td>
-                  
-                  {/* 🔥 STATUS AWB - BAZAT PE EXISTENȚA CODULUI 🔥 */}
-                  <td data-label="Status AWB">
-                    {item.awb ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
-                        <span style={{ background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                          ✅ Generat
-                        </span>
-                        <span style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 'bold' }}>{item.awb}</span>
-                      </div>
-                    ) : (
-                      <span style={{ background: '#fee2e2', color: '#dc2626', border: '1px solid #fecaca', padding: '4px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', display: 'inline-block' }}>
-                        ❌ Negenerat
-                      </span>
-                    )}
-                  </td>
+  {elementePePagina.map((item) => (
+    <tr key={item._id} className="ac-table-row">
+      
+      {/* 📱 CELULA PENTRU TELEFON (Apare doar pe mobil) */}
+      <td className="mobile-order-row">
+        <div className="mo-main-line">
+          <div className="mo-left">
+            <div className="mo-check" onClick={e => e.stopPropagation()}>
+              <input type="checkbox" checked={selectedItems.includes(item._id)} onChange={() => handleSelectItem(item._id)} />
+            </div>
+            <div className="mo-info">
+              <span className="mo-name">{item.numeClient || 'Client Nou'}</span>
+              <span className="mo-phone">{item.telefon || 'Fără telefon'}</span>
+            </div>
+          </div>
+          
+          <button className="mo-edit-btn" onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')}>
+            Editează
+          </button>
+        </div>
 
-                  {/* 🔥 ACȚIUNI - BUTON DE GENERARE AWB ȘI EDITARE 🔥 */}
-                  <td data-label="Acțiuni" className="text-right" style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
-                    {!item.awb ? (
-                      <button onClick={() => genereazaAWB(item._id)} style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}>
-                        📦 Generează AWB
-                      </button>
-                    ) : (
-                      <button onClick={() => genereazaAWB(item._id)} style={{ background: '#f8fafc', color: '#3b82f6', border: '1px dashed #3b82f6', padding: '6px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 'bold' }}>
-                        🔄 Regenerează
-                      </button>
-                    )}
-                    
-                    <button onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')} className="ac-btn-edit" title="Editează Comanda">
-                      <FiEdit2 />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {listaFiltrata.length === 0 && ( <tr><td colSpan="10" style={{textAlign: 'center', padding: '30px', color: '#64748b'}}>Nicio comandă găsită.</td></tr> )}
-            </tbody>
+        <div className="mo-details-line">
+          <div className="mo-meta">
+            <span className="mo-id">#{item._id.toString().slice(-5).toUpperCase()}</span>
+            <span className="mo-total">{item.total || item.totalComanda} Lei</span>
+          </div>
+          <div className="mo-status-badges">
+            <span className={`mo-badge status-${(item.status || 'noua').toLowerCase().replace('ă', 'a').replace('ș', 's').replace('ț', 't')}`}>
+              {item.status || 'Nouă'}
+            </span>
+            {item.awb && <span className="mo-badge awb">AWB</span>}
+          </div>
+        </div>
+      </td>
+
+      {/* 💻 CELULELE PENTRU DESKTOP (Se ascund pe mobil) */}
+      <td className="desktop-only" style={{ paddingLeft: '15px' }}>
+        <input type="checkbox" checked={selectedItems.includes(item._id)} onChange={() => handleSelectItem(item._id)} style={{ width: '18px', height: '18px' }} />
+      </td>
+      <td className="desktop-only">{new Date(item.createdAt || item.updatedAt).toLocaleDateString('ro-RO')}</td>
+      <td className="desktop-only">
+        <div className="ac-fw-medium">{item.numeClient}</div>
+        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>{item.telefon}</div>
+      </td>
+      <td className="desktop-only">{item.numeProdus} <span className="ac-qty">x{item.cantitate || 1}</span></td>
+      <td className="desktop-only">{item.metodaPlata}</td>
+      {activeTab === 'comenzi' && (
+        <td className="desktop-only">
+          <select className="ac-status-select" value={item.status || 'Nouă'} onChange={(e) => actualizeazaStatus(item._id, e.target.value)}>
+            <option value="Nouă">Nouă</option><option value="Confirmată">Confirmată</option><option value="Trimisă">Trimisă</option>
+            <option value="Livrată">Livrată</option><option value="Anulată">Anulată</option>
+          </select>
+        </td>
+      )}
+      <td className="desktop-only" style={{ color: '#e61938', fontWeight: 'bold' }}>{item.total || item.totalComanda} Lei</td>
+      <td className="desktop-only">
+        {item.awb ? <span className="awb-ok">✅ {item.awb}</span> : <span className="awb-no">❌ Lipsă</span>}
+      </td>
+      <td className="desktop-only text-right">
+        <button onClick={() => openEditModal(item, 'comanda')} className="ac-btn-edit"><FiEdit2 /></button>
+      </td>
+    </tr>
+  ))}
+</tbody>
           </table>
         </div>
         {/* 🔥 BARA DE PAGINAȚIE 🔥 */}
