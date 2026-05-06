@@ -430,64 +430,61 @@
 @keyframes toastSlideIn { 0% { opacity: 0; transform: translateX(100px) scale(0.8); } 70% { transform: translateX(-10px) scale(1.05); } 100% { opacity: 1; transform: translateX(0) scale(1); } }
 
 /* ==========================================================================
-   📱 👑 REDESIGN TOTAL MOBIL - STIL APP PREMIUM (iOS/ANDROID NATIVE)
+   📱 👑 REDESIGN TOTAL MOBIL - STIL APP PREMIUM (GRID SYSTEM PERFECT)
    ========================================================================== */
 @media (max-width: 900px) {
   
-  /* 1. Reset containere pentru a elimina spațiul alb inutil */
-  .ac-container { padding: 12px !important; background-color: #f1f5f9 !important; }
-  .ac-header-bar { border-radius: 16px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-  .ac-page-title { font-size: 1.5rem; letter-spacing: -0.5px; margin-bottom: 10px; }
+  /* 1. Reset containere (Folosim la maxim spațiul de pe ecran) */
+  .ac-container { padding: 10px !important; background-color: #f1f5f9 !important; }
+  .ac-header-bar { border-radius: 16px; padding: 15px; margin-bottom: 15px; flex-direction: column !important; align-items: stretch !important; gap: 15px !important; }
+  .ac-header-left, .ac-header-right { width: 100% !important; justify-content: space-between !important; }
+  .ac-page-title { font-size: 1.6rem !important; text-align: center; width: 100%; margin-bottom: 5px !important; }
+  .ac-search-box, .ac-search-box input, .ac-filter-container, .ac-filter-container > button { width: 100% !important; justify-content: center; }
 
-  /* 2. Tab-urile - Stil Segmented Control (ca pe iPhone) */
+  /* 2. Tab-urile - Stil Segmented Control (Ca pe iPhone) */
   .ac-tabs {
-    display: flex !important;
-    flex-direction: row !important;
-    background: #e2e8f0 !important;
-    padding: 4px !important;
-    border-radius: 12px !important;
-    gap: 0 !important;
-    margin-bottom: 20px !important;
+    display: flex !important; flex-direction: row !important; background: #e2e8f0 !important;
+    padding: 4px !important; border-radius: 12px !important; gap: 0 !important; margin-bottom: 20px !important;
   }
   .ac-tab {
-    flex: 1 !important;
-    padding: 10px 5px !important;
-    font-size: 0.85rem !important;
-    border: none !important;
-    justify-content: center !important;
-    border-radius: 8px !important;
-    transition: all 0.2s ease !important;
+    flex: 1 !important; padding: 12px 5px !important; font-size: 0.85rem !important; border: none !important;
+    justify-content: center !important; border-radius: 8px !important; transition: all 0.2s ease !important;
   }
   .ac-tab.active { background: #fff !important; color: var(--primary) !important; box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important; }
 
-  /* 3. Transformăm Tabelul în Carduri "Smart" */
+  /* =========================================================
+     🔥 3. MAGIA GRID PENTRU CARTONAȘE (FĂRĂ SUPRAPUNERI)
+     ========================================================= */
   .ac-table thead { display: none !important; }
-  .ac-table, .ac-table tbody, .ac-table tbody tr { display: block !important; width: 100% !important; border: none !important; }
+  .ac-table, .ac-table tbody { display: block !important; width: 100% !important; border: none !important; }
 
   .ac-table tbody tr {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important; /* Fix 2 coloane egale */
+    gap: 12px 15px !important; /* Spațiu între coloane și rânduri */
     background: #ffffff !important;
     border-radius: 20px !important;
-    margin-bottom: 16px !important;
-    padding: 18px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
-    border: 1px solid #eef2f6 !important;
-    position: relative;
+    margin-bottom: 15px !important;
+    padding: 18px 15px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04) !important;
+    border: 1px solid #e2e8f0 !important;
+    position: relative !important;
   }
 
-  /* 4. Layout-ul interior al cardului - Grid pe 2 coloane */
   .ac-table td {
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
-    padding: 8px 0 !important;
+    padding: 0 !important;
     border: none !important;
     text-align: left !important;
+    width: 100% !important;
   }
 
-  /* Label-ul (Textul gri mic de deasupra datei/numelui) */
-  .ac-table td::before {
+  /* Eticheta mică și gri de deasupra datelor */
+  .ac-table td[data-label]::before {
     content: attr(data-label);
-    font-size: 10px !important;
+    font-size: 0.65rem !important;
     font-weight: 800 !important;
     color: #94a3b8 !important;
     text-transform: uppercase !important;
@@ -495,80 +492,76 @@
     margin-bottom: 4px !important;
   }
 
-  /* Excepții pentru elemente specifice să arate profi */
-  
-  /* DATA și TOTALUL să stea pe același rând (Header Card) */
+  /* RÂNDUL 1: Checkbox & Dată */
+  .ac-table td:nth-child(1) { grid-column: 1 / 2; align-items: flex-start; justify-content: center; }
   .ac-table td[data-label="Dată"] { 
-    border-bottom: 1px solid #f1f5f9 !important; 
-    margin-bottom: 10px !important;
-    padding-bottom: 12px !important;
+    grid-column: 2 / 3; 
+    align-items: flex-end !important; 
+    font-weight: 700; color: #475569;
   }
+  .ac-table td[data-label="Dată"]::before { display: none !important; } /* Ascundem textul "Dată" ca să arate clean */
+
+  /* RÂNDUL 2: Client & Total */
+  .ac-table td[data-label="Client"] { grid-column: 1 / 2; }
+  .ac-table td[data-label="Client"] div:first-child { font-size: 1.05rem !important; font-weight: 800 !important; color: var(--primary) !important; }
   
-  .ac-table td[data-label="Total"] {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    padding: 0 !important;
-  }
+  .ac-table td[data-label="Total"] { grid-column: 2 / 3; align-items: flex-end !important; }
   .ac-table td[data-label="Total"]::before { text-align: right; width: 100%; }
-  .ac-table td[data-label="Total"] span, 
-  .ac-table td[data-label="Total"] { font-size: 1.1rem !important; color: #1e293b !important; font-weight: 900 !important; }
+  .ac-table td[data-label="Total"] { font-size: 1.25rem !important; color: #e61938 !important; font-weight: 900 !important; }
 
-  /* Clientul să fie mai mare */
-  .ac-table td[data-label="Client"] div:first-child { font-size: 1rem !important; font-weight: 700 !important; color: var(--primary) !important; }
+  /* RÂNDUL 3: Comandă & Plată/Livrare */
+  .ac-table td[data-label="Comandă"] { grid-column: 1 / 2; }
+  .ac-table td[data-label="Comandă"] div { font-size: 0.9rem !important; white-space: normal !important; max-width: 100% !important; }
+  .ac-table td[data-label="Plată & Livrare"] { grid-column: 2 / 3; }
+  
+  /* RÂNDUL 4: Status (Dropdown) & Status AWB */
+  .ac-table td[data-label="Status"] { grid-column: 1 / 2; }
+  .ac-status-select { width: 100% !important; height: 38px !important; padding: 5px 10px !important; font-size: 0.8rem !important; }
+  .ac-table td[data-label="Status AWB"] { grid-column: 2 / 3; }
 
-  /* Statusul să fie o pastilă centrată frumos */
-  .ac-table td[data-label="Status"] {
-    width: 100% !important;
-    align-items: center !important;
-    padding: 12px 0 !important;
-  }
-  .ac-status-select {
-    width: 100% !important;
-    height: 44px !important;
-    text-align: center !important;
-    border-radius: 12px !important;
-    font-size: 0.9rem !important;
-  }
+  /* RÂNDUL 5: Sursa Trafic (Se întinde pe tot rândul) */
+  .ac-table td[data-label="Sursă Trafic"] { grid-column: 1 / -1; }
+  .ac-table td[data-label="Sursă Trafic"] span { padding: 4px 8px !important; font-size: 0.75rem !important; }
 
-  /* 5. Butoanele de Acțiune - Stil "Bottom Sticky" sau Butoane late App */
+  /* RÂNDUL 6: Acțiuni (Se întinde pe tot rândul jos) */
   .ac-table td[data-label="Acțiuni"] {
-    width: 100% !important;
+    grid-column: 1 / -1;
     flex-direction: row !important;
-    gap: 8px !important;
+    gap: 10px !important;
     padding-top: 15px !important;
-    border-top: 1px solid #f1f5f9 !important;
+    border-top: 1px dashed #e2e8f0 !important;
     margin-top: 5px !important;
   }
   .ac-table td[data-label="Acțiuni"]::before { display: none !important; }
-  
-  /* Butonul de AWB ocupă restul spațiului, Edit e mai mic lângă */
-  .ac-table td[data-label="Acțiuni"] button:first-child { flex: 3 !important; height: 48px !important; border-radius: 12px !important; }
-  .ac-table td[data-label="Acțiuni"] .ac-btn-edit { flex: 1 !important; height: 48px !important; border-radius: 12px !important; }
+  .ac-table td[data-label="Acțiuni"] button:first-child { flex: 1 !important; height: 44px !important; border-radius: 10px !important; justify-content: center !important; }
+  .ac-table td[data-label="Acțiuni"] .ac-btn-edit { flex: 0 0 44px !important; width: 44px !important; height: 44px !important; border-radius: 10px !important; }
 
-  /* 6. Fix Modal (Sertarul de editare) */
+  /* =========================================================
+     4. FIX PAGINAȚIE MOBIL (Bara aia de jos)
+     ========================================================= */
+  .ac-table-wrapper + div {
+    flex-direction: column !important;
+    gap: 15px !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 15px !important;
+    border-radius: 16px !important;
+  }
+  .ac-table-wrapper + div > div { width: 100% !important; justify-content: center !important; }
+
+  /* =========================================================
+     5. FIX MODAL (Sertarul care vine de jos pt editare)
+     ========================================================= */
   .ac-modal-overlay { align-items: flex-end !important; padding: 0 !important; }
-  .ac-modal-content {
-    border-radius: 24px 24px 0 0 !important;
-    max-height: 94vh !important;
-    border: none !important;
-  }
+  .ac-modal-content { border-radius: 24px 24px 0 0 !important; max-height: 90vh !important; }
   .ac-modal-header { border-radius: 24px 24px 0 0 !important; padding: 20px !important; }
-  .ac-modal-body { padding: 20px !important; padding-bottom: 100px !important; }
+  .ac-modal-body { padding: 20px !important; padding-bottom: 90px !important; } /* Spațiu pt footer fixed */
+  .ac-form-row { flex-direction: column !important; gap: 0 !important; margin-bottom: 0 !important; }
   
-  /* Butoanele de salvare din modal să stea lipite jos (Floating) */
   .ac-modal-footer {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    background: rgba(255,255,255,0.9) !important;
-    backdrop-filter: blur(10px) !important;
-    padding: 15px 20px 30px 20px !important;
-    border-top: 1px solid #e2e8f0 !important;
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 10px !important;
-    z-index: 999 !important;
+    position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100% !important;
+    padding: 15px !important; background: rgba(255,255,255,0.95) !important; backdrop-filter: blur(10px);
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.05) !important; flex-direction: row !important; flex-wrap: wrap !important; z-index: 100 !important;
   }
+  .ac-btn-save, .ac-btn-cancel-order { flex: 1; padding: 14px !important; display: flex; justify-content: center; }
 }
