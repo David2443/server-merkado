@@ -517,3 +517,31 @@
     font-size: 0.75rem !important; 
   }
 }
+/* ==========================================
+   🛑 FIX: OPREȘTE CARDUL DIN A DEVENI PANOU URIAȘ PE PC
+   ========================================== */
+@media (min-width: 900px) {
+  .shop-products-grid, .grila-suprema-merkado {
+    display: grid !important;
+    /* Limităm coloana la maxim 320px! Nu o mai lăsăm să se întindă pe tot ecranul */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 320px)) !important;
+    justify-content: start !important; /* Dacă e doar 1 produs, îl aliniază frumos la stânga */
+    gap: 30px !important;
+    align-items: start !important; /* Oprește cardul din a se lungi în jos */
+  }
+
+  .shop-card {
+    width: 100% !important;
+    max-width: 320px !important; /* BARIERĂ: Cardul nu va depăși niciodată 320px lățime */
+    height: fit-content !important;
+  }
+}
+
+/* Și o mică siguranță pentru Tablete */
+@media (max-width: 899px) and (min-width: 601px) {
+  .shop-products-grid, .grila-suprema-merkado {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* 2 pe rând pe tabletă */
+    gap: 20px !important;
+  }
+}
