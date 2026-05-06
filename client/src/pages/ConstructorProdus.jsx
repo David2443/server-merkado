@@ -408,18 +408,7 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
                 </div>
               </div>
 
-              <div className="editor-col full glass-box">
-                <h3>Cele 3 Beneficii Rapide (Lângă preț)</h3>
-                <div className="row">
-                  {formData.heroBeneficii.map((b, i) => (
-                    <input key={i} type="text" placeholder={`Beneficiu ${i+1}`} value={b} onChange={e => {
-                      const copy = [...formData.heroBeneficii]; 
-                      copy[i] = e.target.value; 
-                      setFormData({...formData, heroBeneficii: copy});
-                    }} />
-                  ))}
-                </div>
-              </div>
+          
 
               <div className="editor-col full glass-box">
                 <h3>Recenzia de sub Butonul de Comandă</h3>
