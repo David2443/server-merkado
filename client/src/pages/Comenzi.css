@@ -485,3 +485,184 @@ body.admin-menu-minimized .admin-content {
 body.admin-menu-minimized .ac-container {
   padding: 15px !important; 
 }
+/* ==========================================================================
+   📱 👑 RESPONSIVITATE PREMIUM ADMIN COMENZI (FIX TELEFON & TABLETĂ)
+   ========================================================================== */
+@media (max-width: 900px) {
+  
+  /* Containerul principal pe mobil respiră mai bine */
+  .ac-container { 
+    padding: 10px !important; 
+    margin-top: 10px !important;
+  }
+  
+  /* Bara de header (Search, Filtre, Butoane) */
+  .ac-header-bar { 
+    flex-direction: column; 
+    align-items: stretch; 
+    padding: 15px; 
+    gap: 15px;
+  }
+  
+  .ac-header-left, .ac-header-right { 
+    flex-direction: column; 
+    align-items: stretch; 
+    width: 100%; 
+  }
+  
+  /* Input-uri full-width pe mobil */
+  .ac-search-box input { width: 100% !important; }
+  .ac-btn-new-order, .ac-btn, .ac-filter-container button { 
+    width: 100% !important; 
+    justify-content: center; 
+    padding: 14px; 
+  }
+  
+  /* Dropdown adaptat */
+  .ac-dropdown { 
+    width: 100%; 
+    right: 0; 
+    top: calc(100% + 5px); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  /* --- 📊 TABELUL COMENZILOR PE MOBIL --- */
+  
+  /* Cardul care conține tabelul să ocupe tot spațiul */
+  .ac-main-card {
+    border-radius: 12px;
+    margin-bottom: 30px;
+  }
+
+  /* Menținem scroll-ul orizontal pe mobil, dar îl facem extrem de fluid */
+  .ac-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Scroll mătăsos pe iOS */
+    padding-bottom: 5px; /* Spațiu pt scrollbar */
+  }
+
+  /* Ascundem bara de scroll pe mobil pentru a părea aplicație nativă, sau o lăsăm subțire */
+  .ac-table-wrapper::-webkit-scrollbar {
+    height: 4px; /* Mai subțire pe telefon */
+  }
+  .ac-table-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--primary); /* Mai vizibil pe mobil */
+  }
+
+  /* Asigurăm că tabelul nu se strânge: îi forțăm o lățime minimă */
+  .ac-table {
+    min-width: 900px; /* Adaptează în funcție de câte coloane ai */
+  }
+
+  .ac-table th, .ac-table td {
+    padding: 15px 12px; /* Mai puțin padding ca să încapă mai multe informații */
+    font-size: 0.9rem; /* Text o idee mai mic */
+  }
+
+  /* Modificăm selectorul de status ca să nu fie imens pe mobil */
+  .ac-status-select {
+    padding: 6px 30px 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  /* --- 📝 MODALUL (FORMULARUL) DE VIZUALIZARE/ADĂUGARE COMANDĂ --- */
+  
+  /* Modalul ia 100% lățime și înălțime (aproape) */
+  .ac-modal-content { 
+    border-radius: 16px 16px 0 0; /* Arată ca un sertar ridicat de jos pe iOS */
+    margin: 15px 0 0 0; 
+    max-height: 98vh; 
+    height: 100%;
+    align-self: flex-end; /* Împins în josul ecranului */
+  }
+
+  /* Overlay-ul centrează modalul mai jos */
+  .ac-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  
+  .ac-modal-header { 
+    padding: 20px; 
+    position: sticky;
+    top: 0;
+  }
+  
+  .ac-modal-body { 
+    padding: 20px; 
+  }
+
+  /* Formularele se pun una sub alta */
+  .ac-form-row { 
+    flex-direction: column; 
+    gap: 0; 
+  }
+  
+  .ac-form-group {
+    margin-bottom: 15px;
+  }
+
+  /* Butoanele de la finalul modalului (Save / Cancel) */
+  .ac-modal-footer { 
+    flex-direction: column-reverse; /* Butonul principal sus, cancel jos */
+    padding: 20px; 
+    gap: 10px;
+  }
+  
+  .ac-modal-footer button { 
+    width: 100%; 
+    justify-content: center; 
+    margin: 0 !important;
+  }
+
+  /* Butonul X de închidere */
+  .ac-close-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* --- 🏷️ TAB-URI (NOI vs DRAFT-URI) --- */
+  .ac-tabs { 
+    flex-direction: row; /* Păstrăm orizontal dacă sunt puține */
+    justify-content: space-between;
+    border-bottom: none; 
+    gap: 5px; 
+    background: var(--bg-card);
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 15px;
+  }
+  
+  .ac-tab { 
+    flex: 1; /* Împart spațiul egal */
+    justify-content: center;
+    border-radius: 8px; 
+    border-bottom: none !important; 
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+  
+  /* Fundal vizibil pentru tab-ul activ pe mobil în loc de linie sub */
+  .ac-tab.active { background: var(--primary); color: white; }
+  .ac-tab.drafts-tab.active { background: #ea580c; color: white; }
+  
+  /* Notificările să nu se suprapună peste butoanele telefonului */
+  .admin-toast-container {
+    bottom: 20px;
+    right: 15px;
+    left: 15px;
+  }
+  .admin-toast {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Fix suplimentar pentru telefoane foarte mici (sub 400px lățime) */
+@media (max-width: 400px) {
+  .ac-page-title {
+    font-size: 1.5rem;
+  }
+}
