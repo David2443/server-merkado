@@ -483,70 +483,71 @@ const AdminComenzi = () => {
               </tr>
             </thead>
             <tbody>
-  {elementePePagina.map((item) => (
-    <tr key={item._id} className="ac-table-row">
-      
-      {/* 📱 CELULA PENTRU TELEFON (Apare doar pe mobil) */}
-      <td className="mobile-order-row">
-        <div className="mo-main-line">
-          <div className="mo-left">
-            <div className="mo-check" onClick={e => e.stopPropagation()}>
-              <input type="checkbox" checked={selectedItems.includes(item._id)} onChange={() => handleSelectItem(item._id)} />
-            </div>
-            <div className="mo-info">
-              <span className="mo-name">{item.numeClient || 'Client Nou'}</span>
-              <span className="mo-phone">{item.telefon || 'Fără telefon'}</span>
-            </div>
-          </div>
-          
-          <button className="mo-edit-btn" onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')}>
-            Editează
-          </button>
-        </div>
+              {elementePePagina.map((item) => (
+                <tr key={item._id} className="ac-table-row">
+                  
+                  {/* =========================================================
+                      📱 VIEW MOBIL: SUPER MINIMAL (Nume, Telefon, Editează)
+                      ========================================================= */}
+                  <td className="mobile-only-cell">
+                    <div className="mo-minimal-card" onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')}>
+                       <div className="mo-left-group">
+                         <input 
+                           type="checkbox" 
+                           className="mo-checkbox"
+                           checked={selectedItems.includes(item._id)} 
+                           onChange={(e) => { e.stopPropagation(); handleSelectItem(item._id); }} 
+                         />
+                         <div className="mo-info-group">
+                           <span className="mo-nume-client">{item.numeClient || 'Client Nou'}</span>
+                           <span className="mo-telefon-client">{item.telefon || 'Fără nr. telefon'}</span>
+                         </div>
+                       </div>
+                       
+                       <button className="mo-btn-editeaza" onClick={(e) => { e.stopPropagation(); openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft'); }}>
+                         Editează
+                       </button>
+                    </div>
+                  </td>
 
-        <div className="mo-details-line">
-          <div className="mo-meta">
-            <span className="mo-id">#{item._id.toString().slice(-5).toUpperCase()}</span>
-            <span className="mo-total">{item.total || item.totalComanda} Lei</span>
-          </div>
-          <div className="mo-status-badges">
-            <span className={`mo-badge status-${(item.status || 'noua').toLowerCase().replace('ă', 'a').replace('ș', 's').replace('ț', 't')}`}>
-              {item.status || 'Nouă'}
-            </span>
-            {item.awb && <span className="mo-badge awb">AWB</span>}
-          </div>
-        </div>
-      </td>
-
-      {/* 💻 CELULELE PENTRU DESKTOP (Se ascund pe mobil) */}
-      <td className="desktop-only" style={{ paddingLeft: '15px' }}>
-        <input type="checkbox" checked={selectedItems.includes(item._id)} onChange={() => handleSelectItem(item._id)} style={{ width: '18px', height: '18px' }} />
-      </td>
-      <td className="desktop-only">{new Date(item.createdAt || item.updatedAt).toLocaleDateString('ro-RO')}</td>
-      <td className="desktop-only">
-        <div className="ac-fw-medium">{item.numeClient}</div>
-        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>{item.telefon}</div>
-      </td>
-      <td className="desktop-only">{item.numeProdus} <span className="ac-qty">x{item.cantitate || 1}</span></td>
-      <td className="desktop-only">{item.metodaPlata}</td>
-      {activeTab === 'comenzi' && (
-        <td className="desktop-only">
-          <select className="ac-status-select" value={item.status || 'Nouă'} onChange={(e) => actualizeazaStatus(item._id, e.target.value)}>
-            <option value="Nouă">Nouă</option><option value="Confirmată">Confirmată</option><option value="Trimisă">Trimisă</option>
-            <option value="Livrată">Livrată</option><option value="Anulată">Anulată</option>
-          </select>
-        </td>
-      )}
-      <td className="desktop-only" style={{ color: '#e61938', fontWeight: 'bold' }}>{item.total || item.totalComanda} Lei</td>
-      <td className="desktop-only">
-        {item.awb ? <span className="awb-ok">✅ {item.awb}</span> : <span className="awb-no">❌ Lipsă</span>}
-      </td>
-      <td className="desktop-only text-right">
-        <button onClick={() => openEditModal(item, 'comanda')} className="ac-btn-edit"><FiEdit2 /></button>
-      </td>
-    </tr>
-  ))}
-</tbody>
+                  {/* =========================================================
+                      💻 VIEW DESKTOP (Rămân cele 10 coloane clasice, ascunse pe mobil)
+                      ========================================================= */}
+                  <td className="desktop-only-cell" style={{ paddingLeft: '15px' }}>
+                     <input type="checkbox" checked={selectedItems.includes(item._id)} onChange={() => handleSelectItem(item._id)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                  </td>
+                  <td className="desktop-only-cell">{new Date(item.createdAt || item.updatedAt).toLocaleDateString('ro-RO')}</td>
+                  <td className="desktop-only-cell">
+                    <div className="ac-fw-medium">{item.numeClient || '-'}</div>
+                    <div style={{ color: '#475569', fontSize: '0.85rem' }}>{item.telefon}</div>
+                  </td>
+                  <td className="desktop-only-cell">
+                    <div className="ac-fw-medium">{item.numeProdus || 'Produs'}</div>
+                    <span style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', color: '#475569', fontWeight: 'bold' }}>x{item.cantitate || 1}</span>
+                  </td>
+                  <td className="desktop-only-cell">
+                    <div style={{ fontWeight: '500' }}>{item.metodaPlata || 'Ramburs'}</div>
+                  </td>
+                  {activeTab === 'comenzi' && (
+                    <td className="desktop-only-cell">
+                      <select className="ac-status-select" value={item.status || 'Nouă'} onChange={(e) => actualizeazaStatus(item._id, e.target.value)}>
+                        <option value="Nouă">Nouă</option><option value="Confirmată">Confirmată</option><option value="Trimisă">Trimisă</option>
+                        <option value="Livrată">Livrată</option><option value="Anulată">Anulată</option>
+                      </select>
+                    </td>
+                  )}
+                  <td className="desktop-only-cell">{item.sursa || 'Direct'}</td>
+                  <td className="desktop-only-cell" style={{ color: '#e61938', fontWeight: 'bold' }}>{item.total || item.totalComanda} Lei</td>
+                  <td className="desktop-only-cell">
+                    {item.awb ? <span style={{ color: '#16a34a' }}>✅ AWB</span> : <span style={{ color: '#dc2626' }}>❌ Lipsă</span>}
+                  </td>
+                  <td className="desktop-only-cell text-right">
+                     <button onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')} className="ac-btn-edit">Editează</button>
+                  </td>
+                </tr>
+              ))}
+              {listaFiltrata.length === 0 && ( <tr><td colSpan="10" style={{textAlign: 'center', padding: '30px'}}>Nicio comandă găsită.</td></tr> )}
+            </tbody>
           </table>
         </div>
         {/* 🔥 BARA DE PAGINAȚIE 🔥 */}

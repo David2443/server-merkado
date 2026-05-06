@@ -548,3 +548,98 @@
   .mo-badge.status-trimisa { background: #dbeafe; color: #1e40af; }
   .mo-badge.awb { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
 }
+/* Ascunde celula de mobil pe calculatoare */
+.mobile-only-cell { display: none !important; }
+
+@media (max-width: 900px) {
+  /* 1. ASCUNDEM TABELUL DE DESKTOP COMPLET */
+  .desktop-only-cell, .ac-table thead { display: none !important; }
+  
+  /* 2. FORȚĂM PAGINA SĂ NU IASĂ DIN ECRAN (Zero Scroll) */
+  html, body, .ac-container, .ac-table-wrapper {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* Anulăm structura de tabel */
+  .ac-table, .ac-table tbody, .ac-table tr {
+    display: block !important;
+    width: 100% !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 3. SETĂRI PENTRU CELULA DE MOBIL */
+  .mobile-only-cell {
+    display: block !important;
+    width: 100% !important;
+    padding: 6px 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 4. CARTONAȘUL MINIMAL (Fix ce ai cerut) */
+  .mo-minimal-card {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    background: #ffffff !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    cursor: pointer;
+  }
+
+  /* STÂNGA: Checkbox + Nume + Telefon */
+  .mo-left-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    overflow: hidden !important; /* Taie numele prea lungi ca să nu spargă ecranul */
+  }
+
+  .mo-checkbox {
+    width: 20px !important;
+    height: 20px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mo-info-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+  }
+
+  .mo-nume-client {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 160px !important; /* La telefoane mici se face "Ionut..." */
+  }
+
+  .mo-telefon-client {
+    font-size: 0.9rem !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+  }
+
+  /* DREAPTA: Butonul Editează */
+  .mo-btn-editeaza {
+    background: #f1f5f9 !important;
+    color: #3b82f6 !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 10px 16px !important;
+    border-radius: 8px !important;
+    font-size: 0.9rem !important;
+    font-weight: 800 !important;
+    flex-shrink: 0 !important; /* Zid de beton: Nu-l lasă pe nume să-l strivească */
+  }
+}
