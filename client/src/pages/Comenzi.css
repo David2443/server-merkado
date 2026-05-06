@@ -431,117 +431,58 @@
 @keyframes dropdownPop { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes toastSlideIn { 0% { opacity: 0; transform: translateX(100px) scale(0.8); } 70% { transform: translateX(-10px) scale(1.05); } 100% { opacity: 1; transform: translateX(0) scale(1); } }
 /* ==========================================================================
-   📱 👑 MOBIL: CARDURI REALE VERTICALE (ZERO SCROLL ORIZONTAL)
+   🛑 FIX DEFINITIV: OPRIM ORICE ELEMENT SĂ IASĂ DIN CARD PE MOBIL
    ========================================================================== */
 @media (max-width: 900px) {
   
-  /* 1. UCIDEM CONTAINERUL CARE FĂCEA SCROLL-UL ORIZONTAL */
-  .ac-table-wrapper {
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
-    width: 100% !important;
-    padding: 0 !important;
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-  }
-
-  /* 2. TABELUL DEVINE UN SIMPLU BLOC (Nu mai are comportament de tabel) */
-  .ac-table, .ac-table tbody, .ac-table tr, .ac-table td {
-    display: block !important;
-    width: 100% !important;
+  /* 1. Regula de aur: Totul se calculează corect, fără a depăși 100% */
+  .ac-table * {
     box-sizing: border-box !important;
-    white-space: normal !important; /* Oprește textul din a ieși din ecran */
-    word-wrap: break-word !important; 
-    overflow-wrap: break-word !important;
+    max-width: 100% !important;
   }
 
-  .ac-table thead {
-    display: none !important; /* Capul de tabel e complet șters pe telefon */
-  }
-
-  /* 3. FIECARE COMANDĂ DEVINE UN CARTONAȘ INDEPENDENT */
+  /* 2. ZIDUL DE BETON: Tăiem orice ar încerca să iasă din card */
   .ac-table tbody tr {
-    background: #ffffff !important;
-    border-radius: 20px !important;
-    padding: 20px !important;
-    margin-bottom: 20px !important;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08) !important;
-    border: 2px solid #e2e8f0 !important;
-    position: relative;
+    width: 100% !important;
+    overflow: hidden !important; /* Taie marginile care depășesc */
+    position: relative !important;
   }
 
-  /* 4. ELEMENTELE DIN CARTONAȘ STAU UNA SUB ALTA CLAR */
-  .ac-table td {
-    border: none !important;
-    padding: 12px 0 !important;
-    border-bottom: 1px dashed #f1f5f9 !important; /* Linie fină între informații */
-    text-align: left !important;
-  }
-  
-  .ac-table td:last-child {
-    border-bottom: none !important;
-    padding-bottom: 0 !important;
-    padding-top: 15px !important;
+  /* 3. FIX STATUS: Nu mai lăsăm dropdown-ul să se umfle */
+  .ac-table td[data-label="Status"] {
+    width: 100% !important;
+    padding-right: 0 !important;
   }
 
-  /* Pune o etichetă mică deasupra fiecărei informații ca să știi ce e (bazat pe data-label) */
-  .ac-table td[data-label]::before {
-    content: attr(data-label);
-    display: block !important;
-    font-size: 0.75rem !important;
-    font-weight: 900 !important;
-    color: #94a3b8 !important;
-    text-transform: uppercase !important;
-    margin-bottom: 6px !important;
-    letter-spacing: 0.5px !important;
-  }
-
-  /* Facem Totalul să sară în ochi */
-  .ac-table td[data-label="Total"] {
-    font-size: 1.4rem !important;
-    font-weight: 900 !important;
-    color: #ef4444 !important;
-  }
-
-  /* 5. BUTOANELE DE ACȚIUNE MARI ȘI ACCESIBILE */
-  .ac-table td:last-child,
-  .ac-table td[data-label="Acțiuni"] {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 10px !important;
-    border-top: 1px solid #e2e8f0 !important;
-    margin-top: 5px !important;
-  }
-  
-  .ac-table td:last-child::before,
-  .ac-table td[data-label="Acțiuni"]::before {
-    display: none !important; /* Ascundem textul "Acțiuni" ca să facem loc butoanelor */
-  }
-
-  .ac-table td:last-child button {
-    flex: 1 !important;
-    height: 50px !important;
-    border-radius: 12px !important;
-    font-size: 1rem !important;
-    font-weight: bold !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-  }
-  
-  /* Butonul de EDIT rămâne mic, cel de AWB/Factură ia restul locului */
-  .ac-table td:last-child .ac-btn-edit {
-    flex: 0 0 50px !important;
-    width: 50px !important;
-  }
-
-  /* 6. STATUSUL ESTE UȘOR DE APĂSAT */
   .ac-status-select {
     width: 100% !important;
-    height: 45px !important;
-    font-size: 1rem !important;
-    border-radius: 10px !important;
-    background-color: #f8fafc !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important; /* Asta îl oprește să sară din ecran */
+  }
+
+  /* 4. FIX BUTOANE ACȚIUNI: Le lăsăm să se ducă pe rândul următor dacă nu încap */
+  .ac-table td:last-child,
+  .ac-table td[data-label="Acțiuni"] {
+    width: 100% !important;
+    flex-wrap: wrap !important; /* Magia: dacă nu au loc pe lățime, se pun unul sub altul */
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .ac-table td[data-label="Acțiuni"] button {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 🎁 BONUS: Mutăm Checkbox-ul (care atârna urât sus-stânga) în dreapta-sus, fix pe colț */
+  .ac-table td:nth-child(1) {
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+    padding: 0 !important;
+    width: auto !important;
+    border: none !important;
+    margin: 0 !important;
+    z-index: 10 !important;
   }
 }
