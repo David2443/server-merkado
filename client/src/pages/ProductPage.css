@@ -992,3 +992,118 @@ select.checkout-input {
 @keyframes spinPremium { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.85); opacity: 0.5; } }
 @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+/* ==========================================
+   🔔 FIX POPUP VÂNZĂRI (DESKTOP & MOBILE)
+   ========================================== */
+.sales-popup {
+  position: fixed;
+  bottom: 30px;
+  left: 30px; /* Poziție perfectă stânga-jos pe desktop */
+  background: white;
+  border-radius: 16px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  z-index: 9998;
+  transform: translateY(150px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border-left: 4px solid var(--mk-green);
+  max-width: 360px; /* Fixează lățimea ca să nu se întindă pe tot ecranul */
+}
+
+.sales-popup.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Aici am oprit poza din a se face uriașă */
+.sales-popup-img {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.sales-popup-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sales-popup-info p { margin: 0; font-size: 0.85rem; color: var(--mk-gray); line-height: 1.2; }
+.sales-popup-info .sales-popup-prod { font-weight: 800; color: var(--mk-navy); font-size: 0.95rem; }
+.sales-popup-info small { color: var(--mk-green); font-weight: 700; font-size: 0.75rem; }
+
+@media (max-width: 768px) {
+  .sales-popup {
+    bottom: 20px; left: 10px; right: 10px; max-width: none; width: calc(100% - 20px);
+  }
+  .sales-popup.lifted {
+    bottom: 95px !important; /* Se ridică când apare butonul lipicios */
+  }
+}
+
+/* ==========================================
+   🛍️ FIX "CLIENȚII AU MAI CUMPĂRAT" (CARUSEL ORIZONTAL)
+   ========================================== */
+
+/* Suprascriem inline-style-ul din React pentru a-l face Flexbox orizontal */
+.shop-products-grid {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important; /* Activează scroll-ul orizontal (carusel) */
+  justify-content: center !important; /* Dacă e un singur produs, îl ține pe centru */
+  gap: 25px !important;
+  padding-bottom: 20px !important; /* Spațiu pentru scrollbar */
+  scrollbar-width: thin;
+}
+
+/* Scrollbar personalizat și curat pentru carusel */
+.shop-products-grid::-webkit-scrollbar { height: 8px; }
+.shop-products-grid::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+.shop-products-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+.shop-card {
+  flex: 0 0 calc(33.333% - 17px) !important; /* Fix 3 carduri pe rând pe desktop */
+  max-width: 320px !important; /* Nu-l lăsăm să se facă uriaș */
+  min-width: 260px !important; /* Nu-l lăsăm să se strivească */
+  display: flex !important;
+  flex-direction: column !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shop-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+}
+
+/* Fix pentru poze: taie din poză ca să încapă perfect, fără să o strivească */
+.shop-card img {
+  width: 100% !important;
+  height: 220px !important;
+  object-fit: cover !important; 
+  border-radius: 10px !important;
+}
+
+/* Magia pt 1 singur produs: dacă e singur, să nu ia doar 33%, ci o lățime fixă pe mijloc */
+.shop-products-grid > :only-child {
+  flex: 0 0 320px !important;
+}
+
+/* Responsivitate pentru Telefon la Carusel */
+@media (max-width: 768px) {
+  .shop-products-grid {
+    justify-content: flex-start !important; /* Pe mobil îl aliniem la stânga să poți da scroll */
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+  
+  .shop-card {
+    flex: 0 0 80% !important; /* Ia 80% din ecran ca să vezi o bucățică din următorul card (te invită la scroll) */
+  }
+}
