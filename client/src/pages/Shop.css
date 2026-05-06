@@ -416,42 +416,54 @@
 /* ==========================================
    📱 FIX BLINDAT: 2 PRODUSE PE RÂND + POZĂ 1080x1080 (1:1)
    ========================================== */
-@media (max-width: 500px) {
-  /* Filtrele - asezate frumos */
-  .shop-toolbar {
-    margin: -20px 15px 30px !important;
-    padding: 15px !important;
-    border-radius: 16px !important;
+/* ==========================================
+   🔥 MOARTEA CARUSELULUI - GRID MOBIL SUPREM
+   ========================================== */
+@media (max-width: 600px) {
+  
+  /* 1. TĂIEM RĂUL DE LA RĂDĂCINĂ: Părinții nu mai au voie să facă scroll orizontal */
+  .shop-page-wrapper, 
+  .shop-main-content, 
+  .container {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important; /* Omorâm scroll-ul orizontal pe toată pagina */
+    box-sizing: border-box !important;
+    display: block !important; /* Anulăm orice flexbox global ascuns */
   }
 
-  /* 🔥 DISTRUGEM CARUSELUL - Forțăm rânduri care cad în jos */
+  /* 2. GRILA BLINDATĂ: Fix 2 coloane, interzis să iasă din ecran */
   .shop-products-grid { 
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    grid-auto-flow: row !important; /* FORȚEAZĂ ELEMENTELE SĂ CADĂ PE RÂNDUL URMĂTOR */
-    gap: 12px !important; 
+    grid-template-columns: 1fr 1fr !important; /* Exact două coloane egale */
+    gap: 12px !important;
     width: 100% !important;
-    overflow-x: hidden !important; /* OMOARĂ SCROLL-UL ORIZONTAL */
-    white-space: normal !important; /* Împiedică alinierea pe un singur rând */
+    box-sizing: border-box !important;
+    padding: 0 10px !important; /* Margini subțiri stânga/dreapta pe ecran */
+    white-space: normal !important; /* Interzicem alinierea forțată pe un rând */
+    align-items: stretch !important; /* Cardurile vor avea aceeași înălțime pe rând */
   }
 
+  /* 3. CARDUL: Îl obligăm să se comprime, să nu mai împingă grila */
   .shop-card {
     border-radius: 12px !important;
     display: flex !important;
     flex-direction: column !important;
-    width: 100% !important; /* Ocupă fix jumătate de ecran, nu mai mult */
+    width: 100% !important;
+    min-width: 0 !important; /* 🔥 SECRETUL MAGIC: Împiedică grid-ul să explodeze în lățime */
     margin: 0 !important;
+    overflow: hidden !important;
   }
   
-  /* 🔥 FORȚARE POZĂ PĂTRATĂ 1080x1080 (Aspect Ratio 1:1) */
+  /* 4. POZA: Pătrat Perfect 1080x1080 (Aspect Ratio 1:1) */
   .shop-card-img {
-    padding: 0 !important; 
-    border-radius: 12px 12px 0 0 !important;
     width: 100% !important;
-    aspect-ratio: 1 / 1 !important; /* Asta o face pătrată perfect, indiferent de ecran */
+    aspect-ratio: 1 / 1 !important; /* Taie mereu într-un pătrat 1 la 1 */
+    padding: 0 !important;
+    margin: 0 !important;
     position: relative !important;
-    overflow: hidden !important;
     background: #f8fafc !important; 
+    border-radius: 12px 12px 0 0 !important;
   }
   
   .shop-card-img img {
@@ -460,14 +472,15 @@
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important; /* Taie surplusul ca să umple pătratul perfect, fără să o strivească */
-    border-radius: 12px 12px 0 0 !important;
+    object-fit: cover !important; /* Umple pătratul perfect fără să strivească imaginea */
   }
 
+  /* 5. CORPUL CARDULUI: Ordonat și trunchiat */
   .shop-card-body { 
     padding: 12px 10px !important; 
     display: flex !important;
     flex-direction: column !important;
+    flex-grow: 1 !important; /* Împinge prețul mereu jos */
   }
 
   .shop-cat-label {
@@ -475,20 +488,22 @@
     margin-bottom: 4px !important;
   }
 
-  /* Titlul - forțat să ocupe 2 rânduri ca să se alinieze toate cardurile perfect */
+  /* Titlul - forțat să ocupe fix 2 rânduri, fără să strice cardul */
   .shop-card-body h3 {
     font-size: 0.85rem !important;
     line-height: 1.2 !important;
     margin-bottom: 8px !important;
-    min-height: 2rem !important; 
-    white-space: normal !important; /* Dacă era trunchiat de un nowrap, ăsta îl repară */
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    white-space: normal !important;
   }
-
-  /* Ascundem steluțele (nu vrem înghesuială) */
-  .shop-rating { display: none !important; }
 
   /* Prețul ordonat */
   .shop-price-box {
+    margin-top: auto !important; /* Se lipește de baza cardului */
+    display: flex !important;
     flex-direction: column !important; 
     align-items: flex-start !important;
     gap: 2px !important;
