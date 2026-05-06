@@ -442,18 +442,41 @@ const ConstructorProdus = ({ token, idProdus, inapoiLaGestiune }) => {
 
               <div className="editor-col full glass-box">
                 <h3>Recenzia de sub Butonul de Comandă</h3>
-                <div className="row">
-                  <div className="mini-drop" title="Trage poza clientului aici" onDragOver={preventDefault} onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], '', ['heroRecenzie', 'imagine']); }} style={{ position: 'relative' }}>
+                <h3>Recenzia de sub Butonul de Comandă</h3>
+                <div className="row" style={{ alignItems: 'center', gap: '15px' }}>
+                  
+                  {/* ZONA DE POZĂ REPARATĂ */}
+                  <div 
+                    className="mini-drop" 
+                    title="Trage poza clientului aici" 
+                    onDragOver={preventDefault} 
+                    onDrop={e => { preventDefault(e); handleFileDrop(e.dataTransfer.files[0], '', ['heroRecenzie', 'imagine']); }} 
+                    style={{ position: 'relative', flex: '0 0 60px', height: '60px', background: '#f8fafc', border: '2px dashed #cbd5e1', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
                     {formData.heroRecenzie.imagine ? (
                       <>
                         <img src={formData.heroRecenzie.imagine} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                        <button type="button" onClick={(e) => { e.stopPropagation(); stergeImagine('', ['heroRecenzie', 'imagine']); }} style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', padding: '2px 5px', fontSize: '10px', cursor: 'pointer' }}><FiX /></button>
+                        <button 
+                          type="button" 
+                          onClick={(e) => { 
+                            e.preventDefault();
+                            e.stopPropagation(); 
+                            // Funcția directă și sigură de ștergere
+                            setFormData(prev => ({ ...prev, heroRecenzie: { ...prev.heroRecenzie, imagine: '' } })); 
+                          }} 
+                          style={{ position: 'absolute', top: '-5px', right: '-10px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
+                        >
+                          <FiX size={12} />
+                        </button>
                       </>
-                    ) : <FiImage />}
+                    ) : <FiImage size={20} color="#94a3b8" />}
                   </div>
-                  <input type="text" placeholder="Nume Client (Ex: Marian D.)" value={formData.heroRecenzie.nume} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, nume: e.target.value}})} />
-                  <input type="number" min="1" max="5" placeholder="Stele (1-5)" value={formData.heroRecenzie.rating} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, rating: e.target.value}})} />
+
+                  {/* RESTUL INPUTURILOR */}
+                  <input style={{ flex: 2 }} type="text" placeholder="Nume Client (Ex: Marian D.)" value={formData.heroRecenzie.nume} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, nume: e.target.value}})} />
+                  <input style={{ flex: 1 }} type="number" min="1" max="5" placeholder="Stele (1-5)" value={formData.heroRecenzie.rating} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, rating: e.target.value}})} />
                 </div>
+                <textarea rows="3" style={{ marginTop: '15px' }} placeholder="Scrie aici recenzia care va convinge clientul..." value={formData.heroRecenzie.text} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, text: e.target.value}})} />
                 <textarea rows="3" placeholder="Scrie aici recenzia care va convinge clientul..." value={formData.heroRecenzie.text} onChange={e => setFormData({...formData, heroRecenzie: {...formData.heroRecenzie, text: e.target.value}})} />
               </div>
             </div>
