@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { 
   FiEdit2, FiCheckCircle, FiX, FiPhoneCall, 
   FiShoppingBag, FiAlertCircle, FiCalendar, FiChevronDown,
@@ -21,10 +20,11 @@ const listaJudete = [
   'Gorj', 'Harghita', 'Hunedoara', 'Ialomița', 'Iași', 'Ilfov', 'Maramureș', 'Mehedinți', 'Mureș', 'Neamț',
   'Olt', 'Prahova', 'Sălaj', 'Satu Mare', 'Sibiu', 'Suceava', 'Teleorman', 'Timiș', 'Tulcea', 'Vâlcea', 'Vaslui', 'Vrancea'
 ];
-const AdminComenzi = () => {
-  // 1. TOATE VARIABILELE (STATE) DEFINITE LA ÎNCEPUT[cite: 10, 11]
-  const [activeTab, setActiveTab] = useState('comenzi');
 
+const AdminComenzi = () => {
+  // 1. TOATE VARIABILELE (STATE) DEFINITE LA ÎNCEPUT
+  const [activeTab, setActiveTab] = useState('comenzi');
+  const [range, setRange] = useState('last30'); 
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -35,7 +35,7 @@ const AdminComenzi = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [isMenuMinimized, setIsMenuMinimized] = useState(false);
   
-  // State-uri pentru calendar și modale
+  // State-uri pentru calendar și modale[cite: 11]
   const [showDropdown, setShowDropdown] = useState(false);
   const [dateRange, setDateRange] = useState([
     {
@@ -48,7 +48,7 @@ const AdminComenzi = () => {
   const [editModal, setEditModal] = useState({ isOpen: false, type: '', item: null });
   const [formData, setFormData] = useState({});
 
-  // State-uri pentru Adrese & Lockere
+  // State-uri pentru Adrese & Lockere[cite: 11]
   const [listaLocalitatiFiltrate, setListaLocalitatiFiltrate] = useState([]);
   const [dropdownLocalitateDeschis, setDropdownLocalitateDeschis] = useState(false);
   const [cautareLocalitate, setCautareLocalitate] = useState('');
@@ -58,7 +58,14 @@ const AdminComenzi = () => {
   const [cautareLocker, setCautareLocker] = useState('');
   const [toast, setToast] = useState(null);
 
-  // 2. ABIA ACUM PUNEM EFECTELE (useEffect)[cite: 10]
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+  const rangeLabels = {
+    today: 'Azi', yesterday: 'Ieri', last7: 'Ultimele 7 zile', 
+    last30: 'Ultimele 30 de zile', all: 'Toate datele', custom: 'Interval Personalizat'
+  };
+
+  // 2. ABIA ACUM PUNEM EFECTELE (useEffect) CARE FOLOSESC STATE-URILE[cite: 10]
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, activeTab, range]);
@@ -71,14 +78,6 @@ const AdminComenzi = () => {
     }
     return () => document.body.classList.remove('admin-menu-minimized');
   }, [isMenuMinimized]);
-
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-  // ... restul codului continuă de aici la fel
-
-  const rangeLabels = {
-    today: 'Azi', yesterday: 'Ieri', last7: 'Ultimele 7 zile', 
-    last30: 'Ultimele 30 de zile', all: 'Toate datele', custom: 'Interval Personalizat'
-  };
 
   const arataToast = (tip, mesaj) => {
     setToast({ tip, mesaj });
