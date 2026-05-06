@@ -389,7 +389,8 @@
   /* Reparăm bara de căutare să nu se mai strivească */
   .shop-toolbar {
     flex-direction: column !important;
-    margin: -30px 20px 40px !important;
+    /* 🔥 AICI ERA PROBLEMA: am scos "-30px" și l-am făcut "20px" normal */
+    margin: 15px 20px 40px !important;
     padding: 20px !important;
     gap: 15px !important;
   }
@@ -410,18 +411,18 @@
 
 @media (max-width: 900px) {
   .shop-page-wrapper { padding-top: 0px !important; }
-  .shop-hero h1 { font-size: 2.5rem !important; }
-}
-
-/* ==========================================
-   🔥 GRILA SUPREMĂ - OCOLEȘTE ORICE EROARE VECHE
-   ========================================== */
-
-/* Pe PC - Rămâne normal */
-.grila-suprema-merkado {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 35px;
+  
+  /* 🔥 Dăm mai mult spațiu de respirație textului din Hero pe telefon */
+  .shop-hero { 
+    padding: 40px 20px 20px !important; 
+  }
+  .shop-hero h1 { 
+    font-size: 2.2rem !important; 
+    margin-bottom: 10px !important;
+  }
+  .shop-hero p {
+    font-size: 1rem !important;
+  }
 }
 
 /* ==========================================
