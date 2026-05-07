@@ -434,6 +434,10 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
 // 💾 Salvare automată draft (Coș Abandonat)
   const salveazaDraft = async () => {
     if (dateClient.telefon && dateClient.telefon.length >= 10) {
+      
+      // Citim de unde a venit omul
+      const sursaTrafic = localStorage.getItem('sursa_trafic') || 'Organic / Direct';
+
       try {
         await fetch(`${API_URL}/api/comenzi/abandonat`, {
           method: 'POST',
@@ -441,9 +445,19 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
           body: JSON.stringify({
             telefon: dateClient.telefon,
             numeClient: dateClient.nume || 'Anonim',
-            total: totalCheckout
+            total: totalCheckout,
+            sursa: sursaTrafic // 🔥 Trimitem sursa în baza de date!
           })
         });
+
+        // 🔥 Îi spunem și lui Facebook că omul a început completarea comenzii
+        if (window.fbq) {
+          window.fbq('track', 'InitiateCheckout', {
+            value: Number(totalCheckout).toFixed(2),
+            currency: 'RON'
+          });
+        }
+
       } catch (err) { console.log("Eroare la salvare draft:", err); }
     }
   };
