@@ -499,8 +499,7 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
     samedayLockerId: tipLivrare === 'locker' ? lockerSelectat?.id : null,
     extraOptions: extra
   });
-
-  const handleFinalizeCash = async () => {
+const handleFinalizeCash = async () => {
     if (!validateForm()) return;
     setLoadingComanda(true);
 
@@ -515,6 +514,14 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
       if (res.ok) {
         setComandaTrimisa(true);
         localStorage.removeItem('sursa_trafic');
+        
+        // 🔥 MAGIA: Trimitem conversia (Achiziția) către Facebook!
+        if (window.fbq) {
+          window.fbq('track', 'Purchase', {
+            value: Number(totalCheckout).toFixed(2),
+            currency: 'RON'
+          });
+        }
       }
       else {
         const errorData = await res.json();
@@ -527,7 +534,7 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
     }
   };
 
-  const handlePaymentSuccess = async (paymentId) => {
+ const handlePaymentSuccess = async (paymentId) => {
     const sursaTrafic = localStorage.getItem('sursa_trafic') || 'Organic / Direct';
 
     try {
@@ -539,8 +546,18 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
       if (res.ok) {
         setComandaTrimisa(true);
         localStorage.removeItem('sursa_trafic');
+        
+        // 🔥 MAGIA: Trimitem conversia (Achiziția) către Facebook pentru plata cu cardul!
+        if (window.fbq) {
+          window.fbq('track', 'Purchase', {
+            value: Number(totalCheckout).toFixed(2),
+            currency: 'RON'
+          });
+        }
       }
-    } catch (err) { arataToast('error', "Eroare salvare plată în dashboard."); }
+    } catch (err) { 
+      arataToast('error', "Eroare salvare plată în dashboard."); 
+    }
   };
 
   const openLockerMap = () => {
