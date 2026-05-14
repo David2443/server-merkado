@@ -22,7 +22,7 @@ const Home = () => {
   const reviewsRef = useRef(null);
   const categoriesRef = useRef(null);
 
-  const numarTelefonSuport = import.meta.env.VITE_PHONE_NUMBER || "40723717438"; 
+  const numarTelefonSuport = import.meta.env.VITE_PHONE_NUMBER || "40775577248"; 
 
   // 1. Timer Recurent
   useEffect(() => {

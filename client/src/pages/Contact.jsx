@@ -76,7 +76,7 @@ const Contact = () => {
             <div className="icon-wrapper blue"><FiPhoneCall /></div>
             <h3>Suport</h3>
             {/* Ai grijă să pui numărul tău real aici */}
-            <a href="tel:0723717438" className="contact-link">0723 717 438</a> 
+            <a href="tel:0775577248" className="contact-link">0775 577 248</a> 
           </div>
           <div className="info-card">
             <div className="icon-wrapper green"><FiMail /></div>
