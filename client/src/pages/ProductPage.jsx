@@ -446,11 +446,13 @@ const [cautareLocalitate, setCautareLocalitate] = useState('');
             telefon: dateClient.telefon,
             numeClient: dateClient.nume || 'Anonim',
             total: totalCheckout,
-            sursa: sursaTrafic // 🔥 Trimitem sursa în baza de date!
+            produsId: produs._id,        // 🔥 Trimitem ID-ul produsului
+            numeProdus: produs.nume,     // 🔥 Trimitem numele produsului
+            sursa: sursaTrafic           // 🔥 Trimitem sursa
           })
         });
 
-        // 🔥 Îi spunem și lui Facebook că omul a început completarea comenzii
+        // Îi spunem și lui Facebook că omul a început completarea comenzii
         if (window.fbq) {
           window.fbq('track', 'InitiateCheckout', {
             value: Number(totalCheckout).toFixed(2),

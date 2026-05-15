@@ -169,7 +169,11 @@ const cosAbandonatSchema = new mongoose.Schema({
   telefon: { type: String, required: true, unique: true }, 
   numeClient: String,
   total: Number,
-  status: { type: String, default: 'Deschis' }
+  status: { type: String, default: 'Deschis' },
+  // 🔥 Am adăugat câmpurile noi:
+  produsId: { type: mongoose.Schema.Types.ObjectId, ref: 'Produs' },
+  numeProdus: String,
+  sursa: String
 }, { timestamps: true });
 const CosAbandonat = mongoose.model('CosAbandonat', cosAbandonatSchema);
 
@@ -628,11 +632,22 @@ app.post('/api/comenzi/noua', publicLimiter, async (req, res) => {
 
 app.post('/api/comenzi/abandonat', publicLimiter, async (req, res) => {  
   try {
-    const { telefon, numeClient, total } = req.body;
+    // Extragem toate datele trimise de frontend
+    const { telefon, numeClient, total, produsId, numeProdus, sursa } = req.body;
+    
     if (!telefon || telefon.length < 10) return res.status(400).json({eroare: "Telefon invalid"});
+    
     await CosAbandonat.findOneAndUpdate(
       { telefon: telefon },
-      { numeClient, total, status: 'Deschis', updatedAt: Date.now() },
+      { 
+        numeClient, 
+        total, 
+        produsId,       // Salvăm ID-ul
+        numeProdus,     // Salvăm Numele Produsului
+        sursa,          // Salvăm Sursa (ex: Facebook)
+        status: 'Deschis', 
+        updatedAt: Date.now() 
+      },
       { upsert: true, returnDocument: 'after' }
     );
     res.json({ success: true });

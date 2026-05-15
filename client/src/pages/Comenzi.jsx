@@ -486,29 +486,35 @@ const AdminComenzi = () => {
               {elementePePagina.map((item) => (
                 <tr key={item._id} className="ac-table-row">
                   
-                  {/* =========================================================
-                      📱 VIEW MOBIL: SUPER MINIMAL (Nume, Telefon, Editează)
-                      ========================================================= */}
-                  <td className="mobile-only-cell">
-                    <div className="mo-minimal-card" onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')}>
-                       <div className="mo-left-group">
-                         <input 
-                           type="checkbox" 
-                           className="mo-checkbox"
-                           checked={selectedItems.includes(item._id)} 
-                           onChange={(e) => { e.stopPropagation(); handleSelectItem(item._id); }} 
-                         />
-                         <div className="mo-info-group">
-                           <span className="mo-nume-client">{item.numeClient || 'Client Nou'}</span>
-                           <span className="mo-telefon-client">{item.telefon || 'Fără nr. telefon'}</span>
-                         </div>
-                       </div>
-                       
-                       <button className="mo-btn-editeaza" onClick={(e) => { e.stopPropagation(); openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft'); }}>
-                         Editează
-                       </button>
-                    </div>
-                  </td>
+                {/* =========================================================
+    📱 VIEW MOBIL: SUPER MINIMAL (Nume, Telefon, Produs, Editează)
+    ========================================================= */}
+<td className="mobile-only-cell">
+  <div className="mo-minimal-card" onClick={() => openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft')}>
+     <div className="mo-left-group">
+       <input 
+         type="checkbox" 
+         className="mo-checkbox"
+         checked={selectedItems.includes(item._id)} 
+         onChange={(e) => { e.stopPropagation(); handleSelectItem(item._id); }} 
+       />
+       <div className="mo-info-group">
+         <span className="mo-nume-client">{item.numeClient || 'Client Nou'}</span>
+         <span className="mo-telefon-client">{item.telefon || 'Fără nr. telefon'}</span>
+         
+         {/* 🔥 Aici apare produsul, exact sub telefon */}
+         <span style={{ fontSize: '0.8rem', color: '#3b82f6', fontWeight: '800', marginTop: '2px' }}>
+           🛒 {item.numeProdus || 'Produs nesalvat'}
+         </span>
+         
+       </div>
+     </div>
+     
+     <button className="mo-btn-editeaza" onClick={(e) => { e.stopPropagation(); openEditModal(item, activeTab === 'comenzi' ? 'comanda' : 'draft'); }}>
+       Editează
+     </button>
+  </div>
+</td>
 
                   {/* =========================================================
                       💻 VIEW DESKTOP (Rămân cele 10 coloane clasice, ascunse pe mobil)
