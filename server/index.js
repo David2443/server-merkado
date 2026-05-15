@@ -116,13 +116,12 @@ const produsSchema = new mongoose.Schema({
   pret: Number,
   pretVechi: Number,
   imaginePrincipala: String,
-  
-  // 🔥 AICI E MAGIA: I-AM DAT VOIE SĂ SALVEZE CATEGORIA
   categorie: { type: String, default: 'Toate' }, 
   galerieImagini: [String],
   heroBeneficii: [String], 
   heroRecenzie: { nume: String, text: String, rating: Number, imagine: String },
   imagineFacebook: String,
+  culori: [String], // 🔥 MAGIA: Aici vom salva culorile (ex: ["Alb", "Negru"])
   stocFictiv: { type: Number, default: 5 },
   vizitatoriLiveMin: { type: Number, default: 10 },
   vizitatoriLiveMax: { type: Number, default: 25 },
@@ -269,8 +268,8 @@ const trimiteInEawb = async (comanda) => {
         billing_address_id: 279010 
       },
       address_from: {
-        email: "contact@merkado.ro", 
-        phone: "0700000000",       
+        email: "superprodusele@gmail.com", 
+        phone: "0723717438",       
         contact: "Merkado", 
         country_code: "RO",
         locality_id: LOCALITY_PREDARE_ID, 
